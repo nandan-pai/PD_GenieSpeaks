@@ -1,0 +1,23 @@
+{
+  "name": "pd_geniespeaks",
+  "version": "1.0.0",
+  "description": "While searching for a product to purchase, we often rely on reviews for it found on different websites to know about the experiences of people before purchasing it, especially in cases of larger monetary investments. If history is evident, there have been multiple cases where “too-good-to-be-true” deals have blinded customers to make purchases that ended up as a scam.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nandan-pai/PD_GenieSpeaks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nandan-pai/PD_GenieSpeaks/issues"
+  },
+  "homepage": "https://github.com/nandan-pai/PD_GenieSpeaks#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
