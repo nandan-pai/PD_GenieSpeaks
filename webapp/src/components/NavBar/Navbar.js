@@ -1,19 +1,40 @@
 import React from "react";
 import styles from "./Navbar.module.css";
-import { Button, Stack } from "@chakra-ui/react";
+import {
+	Button,
+	IconButton,
+	Stack,
+	Text,
+	useColorMode,
+} from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 function Navbar() {
+	const { colorMode, toggleColorMode } = useColorMode();
+	const isDark = colorMode === "dark";
+
 	return (
 		<div className={styles.header}>
-			<a href='#defult'>GENIESPEAKS</a>
-			<Stack direction='row' spacing={14} align='right'>
+			<a href='/'>
+				<Text color={isDark ? "white" : "black"} fontWeight='bold'>
+					GENIESPEAKS
+				</Text>
+			</a>
+			<Stack direction='row' spacing={14} align='right' mt={2}>
 				<div className={styles.left_buttons} float='right'>
+					<IconButton
+						ml={4}
+						icon={isDark ? <FaSun /> : <FaMoon />}
+						isRound='true'
+						onClick={toggleColorMode}
+						className={styles.left_buttons}
+					/>
 					<Button
 						as='button'
 						borderRadius='md'
 						bg='transparent'
-						color='gray.900'
+						color={isDark ? "white" : "gray.900"}
 						px={4}
 						h={8}
 						ml='1000px'
@@ -24,8 +45,8 @@ function Navbar() {
 					<Box
 						as='button'
 						borderRadius='md'
-						bg='black'
-						color='white'
+						bg={isDark ? "white" : "black"}
+						color={isDark ? "black" : "white"}
 						px={4}
 						h={8}
 						ml='20px'
