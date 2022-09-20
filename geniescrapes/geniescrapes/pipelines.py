@@ -13,8 +13,8 @@ class GeniescrapesPipeline:
     '''GeniescrapesPipeline'''
     def __init__(self) -> None:
         self.conn = pymongo.MongoClient(
-            host="localhost",
-            port=27017
+            host="mongodb+srv://nandan-pai:<password>@geniespeaks.lsyiivk.mongodb.net/?retryWrites=true&w=majority",
+            # port=27017
         )
         dbref = self.conn['GenieSpeaks']
 
