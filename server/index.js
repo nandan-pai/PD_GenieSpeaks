@@ -5,7 +5,11 @@ const PORT = process.env.PORT || 5000
 
 console.log('Connecting to DB...')
 
-mongoose.connect(process.env.MERN_DB_URI, {
+var password = encodeURIComponent("GenieCapstone12#$");
+
+var connectionString = `mongodb+srv://nandan-pai:${password}@geniespeaks.lsyiivk.mongodb.net/GenieSpeaks?retryWrites=true&w=majority`;
+
+mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }, (err) => {

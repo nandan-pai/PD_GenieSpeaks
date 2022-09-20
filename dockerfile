@@ -1,6 +1,7 @@
 FROM node:14
 WORKDIR /usr/src/app
-COPY package*.json app.js ./
+COPY /server ./server
+WORKDIR /usr/src/app/server
 RUN npm i
-EXPOSE 80
-CMD ["node", "app.js"]
+EXPOSE 5000
+CMD ["npm", "run", "server"]
