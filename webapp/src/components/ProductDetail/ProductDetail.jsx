@@ -10,6 +10,9 @@ import {
 	Text,
 	Icon,
 	Image,
+	Spacer,
+	Grid,
+	GridItem,
 } from "@chakra-ui/react";
 import ProgressBar from "../Views/ProgressBar";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
@@ -43,71 +46,93 @@ function ProductDetail() {
 		return (
 			<>
 				<LandingNavBar />
-				<HStack className={styles.img}>
+				<Grid templateColumns='repeat(3, 1fr)' m={10}>
+					<GridItem colSpan={1}>
+						<Image
+							src={productInfo.images[0]}
+							w='300px'
+							h='300px'
+							// className={styles.box3}
+						/>
+					</GridItem>
+					<GridItem colSpan={2}>
+						<Box textAlign={["left", "left"]}>
+							<Box mt='130px'>
+								<Heading mb='10px' fontSize='xl' textAlign={["left", "left"]}>
+									{productInfo.title}
+								</Heading>
+								<HStack mb='50px' alignSelf={["left", "left"]}>
+									<Icon as={FaRegThumbsUp} color='green' />
+									<Text fontWeight='semibold' color='green'>
+										95.6%
+									</Text>
+								</HStack>
+							</Box>
+							<HStack>
+								<Text mr={7}>Usability</Text>
+								<Container>
+									<ProgressBar clr='green' val='80' />
+								</Container>
+								<Text ml={5} color='green'>
+									4 / 5
+								</Text>
+							</HStack>
+							<HStack>
+								<Text mr={10}>Design</Text>
+								<Container>
+									<ProgressBar clr='red' val='30' />
+								</Container>
+								<Text ml={5} color='red'>
+									2 / 5
+								</Text>
+							</HStack>
+							<HStack>
+								<Text>Build Quality</Text>
+								<Container>
+									<ProgressBar clr='orange' val='60' />
+								</Container>
+								<Text ml={5} color='orange'>
+									3 / 5
+								</Text>
+							</HStack>
+							<Box>
+								<Heading fontSize='lg' mt='50px' textAlign={["left", "left"]}>
+									Customer Reviews
+								</Heading>
+							</Box>
+							<Container size='2xl' maxW='800px' maxH='200px'>
+								{isLoading ? (
+									<div></div>
+								) : (
+									productInfo.reviews.map((review, index) => {
+										return (
+											<ReviewCard
+												key={review._id}
+												name={review.user.name}
+												title={review.title}
+												desc={review.description}
+												upVote='18'
+											/>
+										);
+									})
+								)}
+							</Container>
+						</Box>
+					</GridItem>
 					{/* <VStack spacing={4}>
 					<Box h='50px' w='50px' bg='yellow.200' className={styles.box1} />
 					<Box h='50px' w='50px' bg='tomato' className={styles.box2} />
 					<Box h='50px' w='50px' bg='pink.100' className={styles.box3} />
 				</VStack> */}
-					<Stack>
+					{/* <Stack>
 						<Image
 							src={productInfo.images[0]}
 							w='300px'
 							h='300px'
 							className={styles.box3}
 						/>
-						{/* <Box h='300px' w='300px' bg='blue.100' className={styles.box} /> */}
-					</Stack>
-				</HStack>
-				<Box ml='500px'>
-					<Box mt='130px'>
-						<Heading as='h4' size='md' textAlign={["left", "center"]}>
-							{productInfo.title}
-						</Heading>
-						<HStack ml='480px'>
-							<Icon as={FaRegThumbsUp} color='green' />
-							<Text fontWeight='semibold' color='green'>
-								95.6%
-							</Text>
-						</HStack>
-					</Box>
-					<Container maxW='lg'>
-						<ProgressBar clr='green' val='80' />
-						<ProgressBar clr='red' val='30' />
-						<ProgressBar clr='orange' val='60' />
-					</Container>
-					<Box>
-						<Heading as='h5' size='s' mt='25px' textAlign={["left", "center"]}>
-							Customer Reviews
-						</Heading>
-					</Box>
-					<Container size='2xl' maxW='800px' maxH='200px'>
-						{isLoading ? (
-							<div></div>
-						) : (
-							productInfo.reviews.map((review, index) => {
-								return (
-									<ReviewCard
-										key={review._id}
-										name={review.user.name}
-										desc={review.description}
-										upVote='18'
-									/>
-								);
-							})
-						)}
-						{/* <ReviewCard
-						name='Customer 1'
-						desc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-						upVote='18'
-					/>
-					<ReviewCard
-						name='Customer 2'
-						desc="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-						upVote='8'
-					/> */}
-					</Container>
-				</Box>
+					</Stack> */}
+				</Grid>
 			</>
 		);
 	}
