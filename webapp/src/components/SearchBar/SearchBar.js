@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	FormControl,
 	FormErrorMessage,
 	FormHelperText,
 	Input,
-	Button,
 } from "@chakra-ui/react";
 
-const SearchBar = () => {
-	const [input, setInput] = useState("");
+const SearchBar = (props) => {
+	// const [input, setInput] = useState("");
 
-	const handleInputChange = (event) => setInput(event.target.value);
+	// const handleInputChange = (event) => setInput(event.target.value);
 
-	const isError = input === "";
+	const isError = props.searchQuery === "";
 
 	// const [ display, setDisplay ] = useState(false);
 	// const [ options, setOptions ] = useState([]);
@@ -28,8 +27,10 @@ const SearchBar = () => {
 			<div>
 				<Input
 					type='text'
-					value={input}
-					onChange={handleInputChange}
+					value={props.searchQuery}
+					onChange={(e) => {
+						props.setSearchQuery(e.target.value);
+					}}
 					placeholder='Search for products or organization'
 					width='50%'
 					mt='15rem'
@@ -41,10 +42,6 @@ const SearchBar = () => {
 				) : (
 					<FormErrorMessage></FormErrorMessage>
 				)}
-
-				<Button mt={4} colorScheme='gray' size='lg'>
-					Search
-				</Button>
 			</div>
 		</FormControl>
 	);
