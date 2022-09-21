@@ -4,15 +4,14 @@ import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import Filters from "../Filters/Filters";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { ApiBaseUrl } from "../../config";
 
 const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [productList, setProductList] = useState([]);
 	const getProductList = useCallback(() => {
-		axios
-			.get(`http://localhost:5000/api/prod/search?query=${searchQuery}`)
-			.then((res) => {
-				setProductList(res.data.productList);
-			});
+		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}`).then((res) => {
+			setProductList(res.data.productList);
+		});
 	}, [searchQuery]);
 
 	useEffect(getProductList, [searchQuery, getProductList, setProductList]);

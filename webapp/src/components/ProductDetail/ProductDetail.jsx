@@ -25,6 +25,7 @@ import {
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { ApiBaseUrl } from "../../config";
 
 function ProductDetail() {
 	const [productInfo, setProductInfo] = useState({});
@@ -32,7 +33,7 @@ function ProductDetail() {
 	const { id } = useParams();
 
 	const getProductInfo = () => {
-		axios.get(`http://localhost:5000/api/prod?id=${id}`).then((res) => {
+		axios.get(`${ApiBaseUrl}/prod?id=${id}`).then((res) => {
 			setProductInfo(res.data.productData);
 			setIsLoading(false);
 		});

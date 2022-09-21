@@ -43,7 +43,6 @@ const ReviewCard = (props) => {
 						{props.verified && <GoVerified />}
 					</HStack>
 					<HStack mb='2'>
-						{props.review_star}
 						<Icon as={FaStar} color='yellow' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
