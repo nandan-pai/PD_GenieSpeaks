@@ -2,7 +2,7 @@ import { Button, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import Navbar from "../NavBar/Navbar";
+import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import SearchBar from "../SearchBar/SearchBar";
 import "./LandingPage.css";
 
@@ -17,14 +17,16 @@ export default function LandingPage(props) {
 
 	return (
 		<div className='container'>
-			<Navbar />
-			<SearchBar
-				searchQuery={props.searchQuery}
-				setSearchQuery={props.setSearchQuery}
-			/>
-			<Button mt={4} colorScheme='gray' size='lg' onClick={handleSubmit}>
-				Search
-			</Button>
+			<LandingNavBar />
+			<div className='content'>
+				<SearchBar
+					searchQuery={props.searchQuery}
+					setSearchQuery={props.setSearchQuery}
+				/>
+				<Button mt={4} colorScheme='gray' size='lg' onClick={handleSubmit}>
+					Search
+				</Button>
+			</div>
 		</div>
 	);
 }

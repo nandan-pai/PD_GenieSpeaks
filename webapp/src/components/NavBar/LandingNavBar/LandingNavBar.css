@@ -4,7 +4,7 @@
     padding: 20px 10px;
 }
 
-.header a {
+.header .logo {
     float: left;
     text-align: center;
     padding: 12px;
@@ -14,10 +14,10 @@
     border-radius: 4px;
 }
 
-.header a:hover {
+/* .header a:hover {
     background-color: #ddd;
     color: black;
-}
+} */
 
 /* .header-xright {
     float: right;

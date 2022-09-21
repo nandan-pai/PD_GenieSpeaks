@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
 
-import styles from "./ReviewCard.module.css";
+import styles from "./ReviewCard.css";
 
 const Card = (props) => {
 	return (

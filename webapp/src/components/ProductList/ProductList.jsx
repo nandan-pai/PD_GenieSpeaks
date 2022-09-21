@@ -1,6 +1,6 @@
 import { Grid, GridItem, Heading, Spacer } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
-import Navbar from "../NavBar/Navbar";
+import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import Filters from "../Filters/Filters";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
@@ -19,7 +19,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 
 	return (
 		<div className='prodList'>
-			<Navbar />
+			<LandingNavBar />
 			<Grid templateColumns='repeat(4, 1fr)' gap={6}>
 				<GridItem colSpan={3}>
 					<Heading fontSize='2xl' ml='25vw'>
@@ -39,8 +39,9 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 								key={product._id}
 								_id={product._id}
 								productName={product.title}
-								price='1,29,999'
-								noOfReviews='52'
+								productImage={product.images[0]}
+								price={product.price ? product.price : "1,24,561"}
+								noOfReviews={product.review_count ? product.review_count : "22"}
 								satisfactionRating='98.5'
 							/>
 						);

@@ -1,5 +1,5 @@
-import styles from "./ProductDetail.module.css";
-import Navbar from "../NavBar/Navbar";
+import styles from "./ProductDetail.css";
+import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import {
 	VStack,
 	Box,
@@ -42,7 +42,7 @@ function ProductDetail() {
 	} else {
 		return (
 			<>
-				<Navbar />
+				<LandingNavBar />
 				<HStack className={styles.img}>
 					{/* <VStack spacing={4}>
 					<Box h='50px' w='50px' bg='yellow.200' className={styles.box1} />

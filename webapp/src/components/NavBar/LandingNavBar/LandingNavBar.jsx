@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Navbar.module.css";
+import styles from "./LandingNavBar.css";
 import { Link } from "react-router-dom";
 import {
 	Button,
@@ -11,14 +11,18 @@ import {
 import { Box } from "@chakra-ui/react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-function Navbar() {
+const LandingNavBar = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	return (
 		<div className={styles.header}>
 			<Link to='/'>
-				<Text color={isDark ? "white" : "black"} fontWeight='bold'>
+				<Text
+					className='logo'
+					color={isDark ? "white" : "black"}
+					fontWeight='bold'
+				>
 					GENIESPEAKS
 				</Text>
 			</Link>
@@ -58,6 +62,6 @@ function Navbar() {
 			</Stack>
 		</div>
 	);
-}
+};
 
-export default Navbar;
+export default LandingNavBar;

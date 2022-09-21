@@ -6,6 +6,7 @@ import {
 	Heading,
 	HStack,
 	Icon,
+	Image,
 	LinkBox,
 	LinkOverlay,
 	Text,
@@ -21,7 +22,14 @@ import { useNavigate } from "react-router-dom";
 
 import "./ProductCard.css";
 
-const Card = ({ productName, price, noOfReviews, satisfactionRating, _id }) => {
+const Card = ({
+	productName,
+	price,
+	noOfReviews,
+	productImage,
+	satisfactionRating,
+	_id,
+}) => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
@@ -42,7 +50,7 @@ const Card = ({ productName, price, noOfReviews, satisfactionRating, _id }) => {
 			bgColor={isDark ? "" : "white"}
 		>
 			<HStack spacing={8}>
-				<Box bgColor='blue.500' w='200px' h='150px'></Box>
+				<Image src={productImage} w='100px' h='100px' />
 				<Box p={5}>
 					<Grid templateColumns='repeat(3, 1fr)' gap={10}>
 						<GridItem colSpan={2}>
