@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./LandingNavBar.css";
+import "./LandingNavBar.css";
 import { Link } from "react-router-dom";
 import {
 	Button,
@@ -16,7 +16,7 @@ const LandingNavBar = () => {
 	const isDark = colorMode === "dark";
 
 	return (
-		<div className={styles.header}>
+		<div className="header">
 			<Link to='/'>
 				<Text
 					className='logo'
@@ -27,14 +27,7 @@ const LandingNavBar = () => {
 				</Text>
 			</Link>
 			<Stack direction='row' spacing={14} align='right' mt={2}>
-				<div className={styles.left_buttons} float='right'>
-					<IconButton
-						ml={4}
-						icon={isDark ? <FaSun /> : <FaMoon />}
-						isRound='true'
-						onClick={toggleColorMode}
-						className={styles.left_buttons}
-					/>
+				<div className="left_buttons" float='right'>
 					<Button
 						as='button'
 						borderRadius='md'
@@ -58,6 +51,13 @@ const LandingNavBar = () => {
 					>
 						Create a free account
 					</Box>
+					<IconButton
+						ml={4}
+						icon={isDark ? <FaSun /> : <FaMoon />}
+						isRound='true'
+						onClick={toggleColorMode}
+						className="left_buttons"
+					/>
 				</div>
 			</Stack>
 		</div>
