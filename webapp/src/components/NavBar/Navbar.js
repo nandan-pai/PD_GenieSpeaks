@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Navbar.module.css";
+import { Link } from "react-router-dom";
 import {
 	Button,
 	IconButton,
@@ -16,11 +17,11 @@ function Navbar() {
 
 	return (
 		<div className={styles.header}>
-			<a href='/'>
+			<Link to='/'>
 				<Text color={isDark ? "white" : "black"} fontWeight='bold'>
 					GENIESPEAKS
 				</Text>
-			</a>
+			</Link>
 			<Stack direction='row' spacing={14} align='right' mt={2}>
 				<div className={styles.left_buttons} float='right'>
 					<IconButton

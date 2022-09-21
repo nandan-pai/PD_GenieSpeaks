@@ -19,16 +19,16 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import "./Card.css";
+import "./ProductCard.css";
 
-const Card = ({ productName, price, noOfReviews, satisfactionRating }) => {
+const Card = ({ productName, price, noOfReviews, satisfactionRating, _id }) => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	const navigate = useNavigate();
 
 	const handleClick = () => {
-		navigate("/productDetail");
+		navigate(`/product/${_id}`);
 	};
 
 	return (

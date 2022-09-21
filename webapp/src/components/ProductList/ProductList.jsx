@@ -1,18 +1,29 @@
 import { Grid, GridItem, Heading, Spacer } from "@chakra-ui/react";
-import React from "react";
-import Card from "../Card/Card";
+import ProductCard from "../Card/ProductCard/ProductCard";
 import Navbar from "../NavBar/Navbar";
 import Filters from "../Filters/Filters";
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 
-function ProductList() {
+const ProductList = ({ searchQuery, setSearchQuery }) => {
+	const [productList, setProductList] = useState([]);
+	const getProductList = useCallback(() => {
+		axios
+			.get(`http://localhost:5000/api/prod/search?query=${searchQuery}`)
+			.then((res) => {
+				setProductList(res.data.productList);
+			});
+	}, [searchQuery]);
+
+	useEffect(getProductList, [searchQuery, getProductList, setProductList]);
+
 	return (
 		<div className='prodList'>
 			<Navbar />
-			{/* <div className='content'> */}
 			<Grid templateColumns='repeat(4, 1fr)' gap={6}>
 				<GridItem colSpan={3}>
 					<Heading fontSize='2xl' ml='25vw'>
-						iPhone 13 Pro
+						{searchQuery}
 					</Heading>
 				</GridItem>
 
@@ -22,29 +33,22 @@ function ProductList() {
 					<Filters />
 				</GridItem>
 				<GridItem colSpan={3}>
-					<Card
-						productName='Apple iPhone 13 128GB'
-						price='1,29,999'
-						noOfReviews='52'
-						satisfactionRating='98.5'
-					/>
-					<Card
-						productName='Apple iPhone 13 256GB'
-						price='1,49,999'
-						noOfReviews='36'
-						satisfactionRating='98.2'
-					/>
-					<Card
-						productName='Apple iPhone 13 1TB'
-						price='1,99,999'
-						noOfReviews='102'
-						satisfactionRating='97'
-					/>
+					{productList.map((product, index) => {
+						return (
+							<ProductCard
+								key={product._id}
+								_id={product._id}
+								productName={product.title}
+								price='1,29,999'
+								noOfReviews='52'
+								satisfactionRating='98.5'
+							/>
+						);
+					})}
 				</GridItem>
 			</Grid>
-			{/* </div> */}
 		</div>
 	);
-}
+};
 
 export default ProductList;

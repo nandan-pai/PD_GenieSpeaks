@@ -6,9 +6,9 @@ import Navbar from "../NavBar/Navbar";
 import SearchBar from "../SearchBar/SearchBar";
 import "./LandingPage.css";
 
-export default function LandingPage() {
-	const { colorMode } = useColorMode();
-	const isDark = colorMode === "dark";
+export default function LandingPage(props) {
+	// const { colorMode } = useColorMode();
+	// const isDark = colorMode === "dark";
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
@@ -18,7 +18,10 @@ export default function LandingPage() {
 	return (
 		<div className='container'>
 			<Navbar />
-			<SearchBar />
+			<SearchBar
+				searchQuery={props.searchQuery}
+				setSearchQuery={props.setSearchQuery}
+			/>
 			<Button mt={4} colorScheme='gray' size='lg' onClick={handleSubmit}>
 				Search
 			</Button>
