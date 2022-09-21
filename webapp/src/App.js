@@ -1,12 +1,19 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "./components/LandingPage/LandingPage";
+import ProductList from "./components/ProductList/ProductList";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
 import "./App.css";
-// import LandingPage from "./components/LandingPage/LandingPage";
-import ProdDetails from "./components/ProductDetails/ProdDetails";
 
 function App() {
 	return (
 		<div className='App'>
-			{/* <LandingPage /> */}
-			<ProdDetails />
+			<BrowserRouter>
+				<Routes>
+					<Route path='/' element={<LandingPage />} />
+					<Route path='/search' element={<ProductList />} />
+					<Route path='/productDetail' element={<ProductDetail />} />
+				</Routes>
+			</BrowserRouter>
 		</div>
 	);
 }

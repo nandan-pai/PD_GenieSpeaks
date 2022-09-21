@@ -41,10 +41,6 @@ const SearchBar = () => {
 				) : (
 					<FormErrorMessage></FormErrorMessage>
 				)}
-
-				<Button mt={4} colorScheme='gray' size='lg'>
-					Search
-				</Button>
 			</div>
 		</FormControl>
 	);
