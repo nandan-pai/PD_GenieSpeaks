@@ -1,1 +1,1 @@
-export const ApiBaseUrl = "http://localhost:5000/api";
+export const ApiBaseUrl = "https://gsserver.azurewebsites.net/api";
