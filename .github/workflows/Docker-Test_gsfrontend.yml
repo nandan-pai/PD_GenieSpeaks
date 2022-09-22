@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: geniespeaks.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_9c7f19f74ce342df802412d2ef81331f }}/webapp:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./webapp.dockerfile
 
   deploy:
     runs-on: ubuntu-latest
