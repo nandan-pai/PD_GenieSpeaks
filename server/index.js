@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const app = require('./server.js')
 
-const PORT = process.env.server_port || 5000
+const PORT = process.env.SERVER_PORT || 5000
 
 console.log('Connecting to DB...')
 
