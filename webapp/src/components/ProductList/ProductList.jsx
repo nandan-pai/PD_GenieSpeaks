@@ -9,8 +9,12 @@ import { ApiBaseUrl } from "../../config";
 const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [productList, setProductList] = useState([]);
 	const getProductList = useCallback(() => {
+		console.log(`${ApiBaseUrl}/prod/search?query=${searchQuery}`)
 		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}`).then((res) => {
-			setProductList(res.data.productList);
+			console.log(res.data.productList)
+			if(res.data.productList !== undefined){
+				setProductList(res.data.productList);
+			}
 		});
 	}, [searchQuery]);
 
