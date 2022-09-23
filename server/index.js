@@ -5,7 +5,7 @@ const PORT = process.env.SERVER_PORT || 5000
 
 console.log('Connecting to DB...')
 
-mongoose.connect(process.env.MONGO_ATLAS_URL, {
+mongoose.connect(process.env.MONGO_ATLAS_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }, (err) => {
