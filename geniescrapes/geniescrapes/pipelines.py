@@ -189,8 +189,8 @@ class GeniescrapesPipeline:
         new_prod_id = self.create_product(
             title=item['title'],
             images=item['images'],
-            organization=[organizationID],
-            scrapped_from=scrapped_from,
+            organization=organizationID,
+            scrapped_from=[scrapped_from],
             reviews=reviewIDs,
             attributes=item['attributes'],
             identifiers=item['identifiers'])
