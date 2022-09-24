@@ -6,6 +6,7 @@
 
 # useful for handling different item types with a single interface
 '''Pipeline to feed data into MongoDB'''
+import os
 import pymongo
 
 
@@ -13,7 +14,7 @@ class GeniescrapesPipeline:
     '''GeniescrapesPipeline'''
     def __init__(self) -> None:
         self.conn = pymongo.MongoClient(
-            host="mongodb+srv://geniespeaks:GenieCapstone@geniespeaks.lsyiivk.mongodb.net/GenieSpeaks?retryWrites=true&w=majority",
+            host=os.environ.get('MONGO_ATLAS_URI', default='mongodb://localhost:27017'),
             # port=27017
         )
         dbref = self.conn['GenieSpeaks']
