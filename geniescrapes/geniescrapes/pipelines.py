@@ -6,6 +6,7 @@
 
 # useful for handling different item types with a single interface
 '''Pipeline to feed data into MongoDB'''
+import os
 import pymongo
 
 
@@ -13,10 +14,11 @@ class GeniescrapesPipeline:
     '''GeniescrapesPipeline'''
     def __init__(self) -> None:
         self.conn = pymongo.MongoClient(
-            host="mongodb+srv://geniespeaks:GenieCapstone@geniespeaks.lsyiivk.mongodb.net/GenieSpeaks?retryWrites=true&w=majority",
+            host=os.environ.get('MONGO_ATLAS_URI', default='mongodb://localhost:27017'),
             # port=27017
         )
-        dbref = self.conn['GenieSpeaks']
+        dbref = self.conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaks')]
+        
 
         self.product = dbref['Product']
         self.review = dbref['Review']
@@ -187,8 +189,8 @@ class GeniescrapesPipeline:
         new_prod_id = self.create_product(
             title=item['title'],
             images=item['images'],
-            organization=[organizationID],
-            scrapped_from=scrapped_from,
+            organization=organizationID,
+            scrapped_from=[scrapped_from],
             reviews=reviewIDs,
             attributes=item['attributes'],
             identifiers=item['identifiers'])

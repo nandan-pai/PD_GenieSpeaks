@@ -65,7 +65,7 @@ router.get('/search', async (req, res) => {
       ]
     }
 
-    const productList = await Product.find(queryOptions)
+    let productList = await Product.find(queryOptions)
       .populate({
         path: 'organization',
         select: 'name'
@@ -74,6 +74,26 @@ router.get('/search', async (req, res) => {
         path: 'ecommerce.$*.ecommerceID',
         select: 'name'
       })
+
+    productList = productList.map(product => {
+      const tempProd = {
+        _id: product._id,
+        title: product.title,
+        images: product.images,
+        organization: product.organization
+      }
+      tempProd["review_count"] = product.reviews.length
+      min_price = 0
+      for (let j = 0; j < product.ecommerce.length; j++) {
+        if (min_price === 0) {
+          min_price = product.ecommerce[j].get("curr_price")
+        } else if (product.ecommerce[j].get("curr_price") < min_price) {
+          min_price = product.ecommerce[j].get("curr_price")
+        }
+      }
+      tempProd["price"] = min_price
+      return tempProd
+    })
 
     res.status(200).json({ productList })
   } catch (e) {
