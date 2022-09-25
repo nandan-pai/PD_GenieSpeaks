@@ -12,13 +12,19 @@ import pymongo
 
 class GeniescrapesPipeline:
     '''GeniescrapesPipeline'''
+
     def __init__(self) -> None:
         self.conn = pymongo.MongoClient(
-            host=os.environ.get('MONGO_ATLAS_URI', default='mongodb://localhost:27017'),
+            host=os.environ.get('MONGO_ATLAS_URI',
+                                default='mongodb://localhost:27017'),
             # port=27017
         )
-        dbref = self.conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaks')]
-        
+        print(os.environ.get('MONGO_ATLAS_URI',
+              default='mongodb://localhost:27017'))
+        dbref = self.conn[os.environ.get(
+            'MONGO_DB_NAME', default='GenieSpeaksTV3')]
+        print(self.conn[os.environ.get(
+            'MONGO_DB_NAME', default='GenieSpeaksTV3')])
 
         self.product = dbref['Product']
         self.review = dbref['Review']
@@ -57,7 +63,7 @@ class GeniescrapesPipeline:
             print("Failed to create the ECommerce", error)
             return None
 
-    def create_review(self, title, description, images, reviewed_on, scrapped_on, review_star, verified, product, scrapped_from, user):
+    def create_review(self, title, description, images, reviewed_on, scrapped_on, review_star, verified, product, ecommerce, user):
         '''creates review and stores it in database and returns the reviewID'''
         try:
             new_review = {}
@@ -70,7 +76,7 @@ class GeniescrapesPipeline:
             new_review["user"] = user
             new_review["scrapped_on"] = scrapped_on
             new_review["reviewed_on"] = reviewed_on
-            new_review["ecommerce"] = scrapped_from
+            new_review["ecommerce"] = ecommerce
             new_review["verified"] = verified
 
             saved_review = self.review.insert_one(new_review)
@@ -98,7 +104,7 @@ class GeniescrapesPipeline:
             print("Failed to create the user", error)
             return None
 
-    def create_product(self, title, images, organization, scrapped_from, reviews, attributes, identifiers):
+    def create_product(self, title, images, organization, ecommerce, reviews, attributes, identifiers):
         '''creates product and stores it in database and returns the productID'''
         try:
             new_prod = {}
@@ -106,7 +112,7 @@ class GeniescrapesPipeline:
             new_prod['title'] = title
             new_prod['images'] = images
             new_prod['organization'] = organization
-            new_prod['ecommerce'] = scrapped_from
+            new_prod['ecommerce'] = ecommerce
             new_prod['reviews'] = reviews
             new_prod['attributes'] = attributes
             new_prod['identifiers'] = identifiers
@@ -149,60 +155,62 @@ class GeniescrapesPipeline:
             return None
 
     def process_item(self, item, spider):
-        organizationID = self.getOrganizationID(name=item['organization'])
-        ecomID = self.getECommerceID(
-            name=item['scrapped_from']['ecommerceSite'])
-        reviewIDs = []
+        '''pipeline to store data into mongodb'''
+
+        org_id = self.getOrganizationID(name=item['organization'])
+        ecom_id = self.getECommerceID(
+            name=item['ecommerce']['ecommerceSite'])
+        review_ids = []
         for review in item['reviews']:
-            userID = self.getUserID(name=review['user'])
-            reviewID = self.create_review(
+            user_id = self.getUserID(name=review['user'])
+            review_id = self.create_review(
                 title=review['title'],
                 description=review['description'],
                 review_star=review['review_star'],
                 images=review['images'],
                 product="",
-                user=userID,
-                scrapped_from=ecomID,
+                user=user_id,
+                ecommerce=ecom_id,
                 reviewed_on=review['reviewed_on'],
                 scrapped_on=review['scrapped_on'],
                 verified=review['verified']
             )
 
-            reviewIDs.append(
-                reviewID
+            review_ids.append(
+                review_id
             )
 
             self.user.update_one(
-                {"_id": userID}, {"$push": {"reviews": reviewID}}
+                {"_id": user_id}, {"$push": {"reviews": review_id}}
             )
 
-        scrapped_from = {
-            'ecommerceID': ecomID,
-            'rating': item['scrapped_from']['rating'],
-            'last_scrapped': item['scrapped_from']['last_scrapped'],
-            'scrapped_times': item['scrapped_from']['scrapped_times'],
-            'init_price': item['scrapped_from']['init_price'],
-            'curr_price': item['scrapped_from']['curr_price'],
-            'identifiers': item['scrapped_from']['identifiers']
+        ecommerce = {
+            'ecommerceID': ecom_id,
+            'rating': item['ecommerce']['rating'],
+            'last_scrapped': item['ecommerce']['last_scrapped'],
+            'scrapped_times': item['ecommerce']['scrapped_times'],
+            'init_price': item['ecommerce']['init_price'],
+            'curr_price': item['ecommerce']['curr_price'],
+            'identifiers': item['ecommerce']['identifiers']
         }
 
         new_prod_id = self.create_product(
             title=item['title'],
             images=item['images'],
-            organization=organizationID,
-            scrapped_from=[scrapped_from],
-            reviews=reviewIDs,
+            organization=org_id,
+            ecommerce=[ecommerce],
+            reviews=review_ids,
             attributes=item['attributes'],
             identifiers=item['identifiers'])
 
         self.ecommerce.update_one(
-            {"_id": ecomID}, {"$push": {"products_scrapped": new_prod_id}}
+            {"_id": ecom_id}, {"$push": {"products_scrapped": new_prod_id}}
         )
         self.organization.update_one(
-            {"_id": organizationID}, {"$push": {"products": new_prod_id}}
+            {"_id": org_id}, {"$push": {"products": new_prod_id}}
         )
-        for reviewID in reviewIDs:
+        for review_id in review_ids:
             self.review.update_one(
-                {"_id": reviewID}, {"$set": {"product": new_prod_id}}
+                {"_id": review_id}, {"$set": {"product": new_prod_id}}
             )
         return item
