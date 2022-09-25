@@ -1,1 +1,1 @@
-export const ApiBaseUrl = "https://geniespeaks.azurewebsites.net/api";
+export const ApiBaseUrl = "https://gsserver.azurewebsites.net/api";
