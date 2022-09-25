@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import {
 	FormControl,
-	FormErrorMessage,
-	FormHelperText,
 	Input,
+	InputGroup,
+	InputLeftElement,
 } from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
 
 const SearchBar = (props) => {
 	// const [input, setInput] = useState("");
@@ -24,7 +25,8 @@ const SearchBar = (props) => {
 
 	return (
 		<FormControl isInvalid={isError}>
-			<div>
+			<InputGroup width='50%' size='lg' m='auto' mt='15rem'>
+				<InputLeftElement pointerEvents='none' children={<FaSearch />} />
 				<Input
 					type='text'
 					value={props.searchQuery}
@@ -32,17 +34,8 @@ const SearchBar = (props) => {
 						props.setSearchQuery(e.target.value);
 					}}
 					placeholder='Search for products or organization'
-					width='50%'
-					mt='15rem'
 				/>
-				{!isError ? (
-					<FormHelperText>
-						Enter the product or organization name
-					</FormHelperText>
-				) : (
-					<FormErrorMessage></FormErrorMessage>
-				)}
-			</div>
+			</InputGroup>
 		</FormControl>
 	);
 };
