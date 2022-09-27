@@ -8,6 +8,8 @@ on:
     branches:
       - master
       - integration
+    paths:
+      - webapp/**
   workflow_dispatch:
 
 jobs:

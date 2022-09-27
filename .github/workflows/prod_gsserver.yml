@@ -8,6 +8,8 @@ on:
     branches:
       - master
       - integration
+    paths:
+      - server/**
   workflow_dispatch:
 
 jobs:
