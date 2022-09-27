@@ -8,15 +8,14 @@ class AmazonSpider(scrapy.Spider):
     name = "AmazonScraper"
     total_scraped_items = 0
     curr_prod_no = 0
+    query = None
 
     custom_settings = {
         'FEED_URI': f".\\logs\\{time.strftime('%d%m%y_%H%M%S', time.localtime())}_amazon.csv"
     }
 
     def start_requests(self):
-        # self.logger.info("page\trprod\ttprod\tcitem\ttitem")
-        self.logger.info(
-            "CurrProdNo\tTotalProdReq\tFromPage\tASIN")
+        self.logger.info("CurrProdNo\tTotalProdReq\tFromPage\tASIN")
 
         self.query = getattr(self, 'query', None)
 
@@ -33,7 +32,6 @@ class AmazonSpider(scrapy.Spider):
                 continue
             product_url = f"https://www.amazon.in/dp/{asin}"
             self.curr_prod_no += 1
-            # request =
             yield scrapy.Request(
                 url=product_url,
                 callback=self.parse_product_response,
@@ -68,9 +66,6 @@ class AmazonSpider(scrapy.Spider):
         '''parse_product_image_list'''
         images = []
         try:
-            # img_lst = response.xpath(
-            #     '//img[@class="a-dynamic-image a-stretch-vertical"]/@src').extract()
-            # print(img_lst)
             images.append(re.search(
                 '"large":"(.*?)"', response.text).groups()[0])
         except Exception as error:
@@ -147,6 +142,7 @@ class AmazonSpider(scrapy.Spider):
         return organization, attributes, identifiers
 
     def parse_product_response(self, response, asin, page, product_url, curr_prod_no):
+        '''parsing each products by visiting the page'''
         title = self.parse_product_title(response=response)
         ecommerce = {
             'ecommerceSite': 'Amazon',

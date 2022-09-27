@@ -7,15 +7,14 @@ class FlipkartSpider(scrapy.Spider):
     name = "FlipkartScraper"
     total_scraped_items = 0
     curr_prod_no = 0
+    query = None
 
     custom_settings = {
         'FEED_URI': f".\\logs\\{time.strftime('%d%m%y_%H%M%S', time.localtime())}_flipkart.csv"
     }
 
     def start_requests(self):
-        # self.logger.info("page\trprod\ttprod\tcitem\ttitem")
-        self.logger.info(
-            "CurrProdNo\tTotalProdReq\tFromPage\tdataID")
+        self.logger.info("CurrProdNo\tTotalProdReq\tFromPage\tdataID")
 
         self.query = getattr(self, 'query', None)
 
@@ -42,19 +41,7 @@ class FlipkartSpider(scrapy.Spider):
                                curr_prod_no=self.curr_prod_no),
             )
 
-        # next_page = response.xpath(
-        #     '//li[@class="a-last"]/a/@href').extract_first()
-        # self.total_raw_products += len(raw_products)
-        # self.total_scraped_items += self.curr_page_scraped_items
-        # self.logger.info(
-        #     f"{self.page}\t{len(raw_products)}\t{self.total_raw_products}\t{self.curr_page_scraped_items}\t{self.total_scraped_items}")
-        # self.curr_page_scraped_items = 0
-        # self.page += 1
-
         if page != 30:
-            # if self.curr_page_scraped_items == 0:
-            #     outs.close()
-            #     return
             url = "https://www.flipkart.com/search?" + \
                 urlencode({'q': self.query, 'page': page+1})
             yield scrapy.Request(
@@ -80,11 +67,6 @@ class FlipkartSpider(scrapy.Spider):
         '''parse_product_image_list'''
         images = []
         try:
-            # img_lst = response.xpath(
-            #     '//img[@class="a-dynamic-image a-stretch-vertical"]/@src').extract()
-            # print(img_lst)
-            # images.append(re.search(
-            #     '"large":"(.*?)"', response.text).groups()[0])
             pass
         except Exception as error:
             self.logger.warning(
@@ -156,6 +138,7 @@ class FlipkartSpider(scrapy.Spider):
         return attributes, identifiers
 
     def parse_product_response(self, response, data_id, page, product_url, curr_prod_no):
+        '''parsing each products by visiting the page'''
         title, organization = self.parse_product_title_org(response=response)
         ecommerce = {
             'ecommerceSite': 'Flipkart',
