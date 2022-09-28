@@ -20,9 +20,23 @@ We plan to achieve this goal by scraping reviews from various authentic websites
 
 **Developers:** [Shivansh Pandey](https://github.com/shivansh1012) (Lead), [Gaurav Gupta](https://github.com/GauravGupta035), [Noor Poonia](https://github.com/noorpoonia), [Nandan Pai](https://github.com/nandan-pai) and [Shambhavi Jhala](https://github.com/shambhavi210)
 
-# Product Architecture
+# WebApp Architecture
 
-![Product/webapp architecture](./images/webapp%20architecture.png)
+![Webapp architecture](./images/webapp%20architecture.png)
+
+# Product Architecture (C3 Model)
+
+## Level 1: System Context Diagram
+
+![Level 1: System Context Diagram](./images/System%20Context.png)
+
+## Level 2: Container Diagram
+
+![Level 2: Container Diagram](./images/Container.png)
+
+## Level 3: Component Diagram
+
+![Level 3: Component Diagram](./images/Component.png)
 
 # DevSecOps Architecture
 
