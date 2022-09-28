@@ -116,6 +116,7 @@ function ProductDetail() {
 												name={review.user.name}
 												title={review.title}
 												desc={review.description}
+												ecommerce={review.ecommerce.name}
 												upVote='18'
 											/>
 										);
