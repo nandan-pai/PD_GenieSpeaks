@@ -26,6 +26,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 
 	const getProductList = useCallback(() => {
 		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}`).then((res) => {
+			// console.log(res.data.productList)
 			setProductList(res.data.productList);
 			showLoader(!loader);
 		});
