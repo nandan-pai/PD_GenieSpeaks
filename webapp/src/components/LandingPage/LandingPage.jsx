@@ -12,7 +12,9 @@ export default function LandingPage(props) {
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
-		navigate("/search");
+		if (props.searchQuery !== "") {
+			navigate("/search");
+		}
 	};
 
 	return (

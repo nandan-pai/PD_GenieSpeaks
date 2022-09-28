@@ -13,7 +13,7 @@ import {
 import { Box } from "@chakra-ui/react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MdMenu, MdClose } from "react-icons/md";
-import { useState } from "react";
+import { useState, useNavigate } from "react";
 
 const Logo = () => {
 	const { colorMode } = useColorMode();
@@ -26,6 +26,7 @@ const Logo = () => {
 					className='logo'
 					color={isDark ? "white" : "black"}
 					fontWeight='bold'
+					fontSize='xl'
 				>
 					GENIESPEAKS
 				</Text>
@@ -52,6 +53,12 @@ const MenuToggle = ({ toggle, isOpen }) => {
 const MenuLinks = ({ isOpen }) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 	const isDark = colorMode === "dark";
+	// const navigate = useNavigate();
+
+	// const handleSignIn = () => {
+	// 	console.log("Clicked!");
+	// 	navigate("/signin");
+	// };
 
 	return (
 		<Box
@@ -65,16 +72,19 @@ const MenuLinks = ({ isOpen }) => {
 				direction={["column", "row"]}
 				pt={[4, 4, 0]}
 			>
-				<Button
-					borderRadius='md'
-					bg='transparent'
-					display='block'
-					color={isDark ? "white" : "gray.900"}
-					px={4}
-					h={8}
-				>
-					Sign In
-				</Button>
+				<Link to='/signin'>
+					<Button
+						borderRadius='md'
+						bg='transparent'
+						display='block'
+						color={isDark ? "white" : "gray.900"}
+						px={4}
+						h={8}
+					>
+						Sign In
+					</Button>
+				</Link>
+
 				<Box
 					borderRadius='md'
 					bg={isDark ? "white" : "black"}
@@ -83,7 +93,7 @@ const MenuLinks = ({ isOpen }) => {
 					px={4}
 					h={8}
 				>
-					Create a free account
+					<Link to='/signup'>Create a free account</Link>
 				</Box>
 				<IconButton
 					icon={isDark ? <FaSun color='white' /> : <FaMoon />}
