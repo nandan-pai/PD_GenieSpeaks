@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	FormControl,
 	Input,
@@ -8,20 +8,8 @@ import {
 import { FaSearch } from "react-icons/fa";
 
 const SearchBar = (props) => {
-	// const [input, setInput] = useState("");
-
-	// const handleInputChange = (event) => setInput(event.target.value);
 
 	const isError = props.searchQuery === "";
-
-	// const [ display, setDisplay ] = useState(false);
-	// const [ options, setOptions ] = useState([]);
-	// const [ search, setSearch ] = useState("");
-
-	// useEffect(() => {
-	//     const data = [];
-	//     const promises = new Array(20).fill().map((value, index) => )
-	// })
 
 	return (
 		<FormControl isInvalid={isError}>

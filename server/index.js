@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 5000
 
 console.log('Connecting to DB...')
 
-mongoose.connect(process.env.MERN_DB_URI, {
+mongoose.connect(process.env.MONGO_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }, (err) => {
