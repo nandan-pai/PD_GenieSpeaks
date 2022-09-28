@@ -13,7 +13,7 @@ __pycache__
 
 # configs
 .idea
-.code
+.vscode
 
 # misc
 uploads
