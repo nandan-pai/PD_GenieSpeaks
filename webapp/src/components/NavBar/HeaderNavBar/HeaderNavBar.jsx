@@ -122,7 +122,9 @@ const LandingNavBar = () => {
 	return (
 		<NavBarContainer>
 			<Logo />
-            <SearchBar className="header"/>
+			<Box className="header">
+            	{/* <SearchBar /> */}
+			</Box>
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
 			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
