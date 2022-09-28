@@ -27,6 +27,7 @@ const Logo = () => {
 					className='logo'
 					color={isDark ? "white" : "black"}
 					fontWeight='bold'
+					fontSize='xl'
 				>
 					GENIESPEAKS
 				</Text>
@@ -122,9 +123,7 @@ const LandingNavBar = () => {
 	return (
 		<NavBarContainer>
 			<Logo />
-			<Box className="header">
-            	{/* <SearchBar /> */}
-			</Box>
+			<Box className='header'>{/* <SearchBar /> */}</Box>
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
 			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
