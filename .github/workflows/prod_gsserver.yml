@@ -1,13 +1,15 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Prod gsserver
+name: gsserverProd - Build and deploy container app to Azure Web App
 
 on:
   push:
     branches:
       - master
       - integration
+    paths:
+      - server/**
   workflow_dispatch:
 
 jobs:
