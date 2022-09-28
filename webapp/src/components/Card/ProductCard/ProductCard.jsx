@@ -9,7 +9,6 @@ import {
 	Image,
 	LinkBox,
 	LinkOverlay,
-	SimpleGrid,
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";

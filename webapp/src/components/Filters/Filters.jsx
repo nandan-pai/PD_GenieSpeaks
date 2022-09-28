@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-function Filters() {
+const Filters = () => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
@@ -53,6 +53,6 @@ function Filters() {
 			</Box>
 		</div>
 	);
-}
+};
 
 export default Filters;
