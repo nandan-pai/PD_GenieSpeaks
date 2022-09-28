@@ -4,6 +4,8 @@ import ProductList from "./components/ProductList/ProductList";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import { useState } from "react";
 import "./App.css";
+import SignUp from "./components/SignUp/SignUp";
+import SignIn from "./components/SignIn/SignIn";
 
 function App() {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -30,6 +32,8 @@ function App() {
 							/>
 						}
 					/>
+					<Route path='/signup' element={<SignUp />} />
+					<Route path='/signin' element={<SignIn />} />
 					<Route path='/product/:id' element={<ProductDetail />} />
 				</Routes>
 			</BrowserRouter>

@@ -1,4 +1,4 @@
-import { Button, useColorMode } from "@chakra-ui/react";
+import { Button, Flex, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,9 @@ export default function LandingPage(props) {
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
-		navigate("/search");
+		if (props.searchQuery !== "") {
+			navigate("/search");
+		}
 	};
 
 	return (

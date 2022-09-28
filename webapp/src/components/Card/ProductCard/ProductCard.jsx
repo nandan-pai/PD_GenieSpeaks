@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./ProductCard.css";
 
-const Card = ({
+const ProductCard = ({
 	productName,
 	price,
 	noOfReviews,
@@ -47,15 +47,16 @@ const Card = ({
 			p={2}
 			mt={5}
 			mr={10}
+			maxH='300px'
 			bgColor={isDark ? "" : "white"}
 		>
-			<HStack spacing={8}>
-				<Image src={productImage} w='100px' h='100px' />
+			<HStack spacing={5}>
+				<Image ml={5} src={productImage} w='150px' h='100px' />
 				<Box p={5}>
 					<Grid templateColumns='repeat(3, 1fr)' gap={10}>
 						<GridItem colSpan={2}>
 							<LinkOverlay onClick={handleClick}>
-								<Text fontSize='xl' fontWeight='semibold'>
+								<Text fontSize='xl' fontWeight='semibold' noOfLines={[1, 2, 3]}>
 									{productName}
 								</Text>
 							</LinkOverlay>
@@ -89,4 +90,4 @@ const Card = ({
 	);
 };
 
-export default Card;
+export default ProductCard;

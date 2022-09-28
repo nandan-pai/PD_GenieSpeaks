@@ -14,6 +14,7 @@ import {
 	// FaRegThumbsUp,
 	// FaRegThumbsDown,
 } from "react-icons/fa";
+import { SiFlipkart } from "react-icons/si";
 import { GoVerified } from "react-icons/go";
 
 import styles from "./ReviewCard.css";
@@ -53,7 +54,11 @@ const ReviewCard = (props) => {
 				<Spacer></Spacer>
 				<VStack>
 					<Text fontWeight='semibold'>Posted on</Text>
-					<Icon as={FaAmazon} mr='2' fontSize='20px' />
+					{props.ecommerce === "Amazon" ? (
+						<Icon as={FaAmazon} mr='2' fontSize='20px' />
+					) : (
+						<Icon as={SiFlipkart} mr='2' fontSize='20px' />
+					)}
 				</VStack>
 			</HStack>
 			{/* <HStack spacing={8}>

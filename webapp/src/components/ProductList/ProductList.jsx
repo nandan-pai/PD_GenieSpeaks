@@ -1,17 +1,34 @@
-import { Grid, GridItem, Heading, Spacer } from "@chakra-ui/react";
+import {
+	Box,
+	Grid,
+	GridItem,
+	Heading,
+	HStack,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	Button,
+	Spacer,
+} from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
-import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
+import HeaderNavBar from "../NavBar/HeaderNavBar/HeaderNavBar";
 import Filters from "../Filters/Filters";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
+import Loader from "../Loader/Loader";
+import { FaChevronDown } from "react-icons/fa";
 
 const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [productList, setProductList] = useState([]);
+	const [loader, showLoader] = useState(false);
+
 	const getProductList = useCallback(() => {
 		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}`).then((res) => {
 			// console.log(res.data.productList)
 			setProductList(res.data.productList);
+			showLoader(!loader);
 		});
 	}, [searchQuery]);
 
@@ -19,12 +36,23 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 
 	return (
 		<div className='prodList'>
-			<LandingNavBar />
+			<HeaderNavBar />
 			<Grid templateColumns='repeat(4, 1fr)' gap={6}>
 				<GridItem colSpan={3}>
-					<Heading fontSize='2xl' ml='25vw'>
-						{searchQuery}
-					</Heading>
+					<HStack>
+						<Heading fontSize='2xl' ml='25vw'>
+							"{searchQuery}"
+						</Heading>
+						<Menu>
+							<MenuButton as={Button} rightIcon={<FaChevronDown />}>
+								Sort
+							</MenuButton>
+							<MenuList>
+								<MenuItem>Price: Low to High</MenuItem>
+								<MenuItem>Price: High to Low</MenuItem>
+							</MenuList>
+						</Menu>
+					</HStack>
 				</GridItem>
 
 				<Spacer></Spacer>
@@ -33,6 +61,9 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 					<Filters />
 				</GridItem>
 				<GridItem colSpan={3}>
+					<Loader hidden={loader} />
+					<Loader hidden={loader} />
+					<Loader hidden={loader} />
 					{productList.map((product, index) => {
 						return (
 							<ProductCard
