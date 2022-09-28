@@ -23,6 +23,6 @@ jobs:
         java-version: 1.8
 
     - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app webapp --js ./webapp --package.json ./webapp/package.json branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} $(pwd)
+      run: ${GITHUB_WORKSPACE}/sl analyze --app webapp --js /webapp --package.json /webapp/package.json branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} $(pwd)
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
