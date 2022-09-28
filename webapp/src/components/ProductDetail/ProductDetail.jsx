@@ -1,21 +1,19 @@
-import styles from "./ProductDetail.css";
+import "./ProductDetail.css";
 import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import {
-	VStack,
 	Box,
-	Stack,
 	HStack,
 	Container,
 	Heading,
 	Text,
 	Icon,
 	Image,
-	Spacer,
 	Grid,
 	GridItem,
 } from "@chakra-ui/react";
 import ProgressBar from "../Views/ProgressBar";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
+import Loader from "../Loader/Loader";
 import {
 	// FaStarHalfAlt,
 	// FaRegStar,
@@ -29,20 +27,26 @@ import { ApiBaseUrl } from "../../config";
 
 function ProductDetail() {
 	const [productInfo, setProductInfo] = useState({});
-	const [isLoading, setIsLoading] = useState(true);
+	const [ loader, showLoader ] = useState(false);
+	const [ isLoading, setIsLoading ] = useState(true);
 	const { id } = useParams();
 
 	const getProductInfo = () => {
 		axios.get(`${ApiBaseUrl}/prod?id=${id}`).then((res) => {
 			setProductInfo(res.data.productData);
-			setIsLoading(false);
+			showLoader(!loader);
+			setIsLoading(false)
 		});
 	};
 
 	useEffect(getProductInfo, [id]);
-
 	if (isLoading) {
-		return <div></div>;
+		return <div>
+			<LandingNavBar />
+			<Loader hidden={loader} />
+			<Loader hidden={loader} />
+			<Loader hidden={loader} />
+		</div>;
 	} else {
 		return (
 			<>
@@ -138,5 +142,6 @@ function ProductDetail() {
 		);
 	}
 }
+
 
 export default ProductDetail;
