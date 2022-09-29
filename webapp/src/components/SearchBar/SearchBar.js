@@ -1,51 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
 	FormControl,
-	FormErrorMessage,
-	FormHelperText,
 	Input,
-	Button,
+	InputGroup,
+	InputLeftElement,
 } from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
 
-const SearchBar = () => {
-	const [input, setInput] = useState("");
+const SearchBar = (props) => {
 
-	const handleInputChange = (event) => setInput(event.target.value);
-
-	const isError = input === "";
-
-	// const [ display, setDisplay ] = useState(false);
-	// const [ options, setOptions ] = useState([]);
-	// const [ search, setSearch ] = useState("");
-
-	// useEffect(() => {
-	//     const data = [];
-	//     const promises = new Array(20).fill().map((value, index) => )
-	// })
+	const isError = props.searchQuery === "";
 
 	return (
 		<FormControl isInvalid={isError}>
-			<div>
+			<InputGroup width='50%' size='lg' m='auto' mt='15rem'>
+				<InputLeftElement pointerEvents='none' children={<FaSearch />} />
 				<Input
 					type='text'
-					value={input}
-					onChange={handleInputChange}
+					value={props.searchQuery}
+					onChange={(e) => {
+						props.setSearchQuery(e.target.value);
+					}}
 					placeholder='Search for products or organization'
-					width='50%'
-					mt='15rem'
 				/>
-				{!isError ? (
-					<FormHelperText>
-						Enter the product or organization name
-					</FormHelperText>
-				) : (
-					<FormErrorMessage></FormErrorMessage>
-				)}
-
-				<Button mt={4} colorScheme='gray' size='lg'>
-					Search
-				</Button>
-			</div>
+			</InputGroup>
 		</FormControl>
 	);
 };
