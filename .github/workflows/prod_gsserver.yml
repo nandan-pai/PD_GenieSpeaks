@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: gsserverProd - Build and deploy container app to Azure Web App
+name: GSserverProd - Build and deploy container app to Azure Web App
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
       with:
         push: true
         tags: geniespeaks.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}/server:${{ github.sha }}
-        file: ./server.dockerfile
+        file: ./server/server.dockerfile
 
   deploy:
     runs-on: ubuntu-latest
