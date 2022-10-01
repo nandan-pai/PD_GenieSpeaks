@@ -3,7 +3,7 @@ FROM ubuntu:latest
 WORKDIR /usr/src
 
 # Copy file to container
-# COPY /geniescrapes ./geniescrapes/
+# COPY / ./geniescrapes/
 # COPY requirements.txt bsh_execScraper.sh bsh_setenv.sh ./
 COPY cronjob /etc/cron.d/cronjob
 
@@ -18,7 +18,7 @@ RUN touch /var/log/cron.log
 # RUN chmod 0644 bsh_execScraper.sh
 
 # Add the cron job
-# RUN crontab -l | { cat; echo "55 14 * * * bash /bsh_execScraper.sh AmazonScraper laptop"; } | crontab -
+# RUN crontab -l | { cat; echo "0 0 * * * bash /bsh_execScraper.sh AmazonScraper laptop"; } | crontab -
 
 # Run the command on container startup
 # CMD ["bash", "bsh_execScraper.sh", "AmazonScraper", "laptop"]
