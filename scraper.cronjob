@@ -1,3 +1,3 @@
 # must be ended with a new line "LF" (Unix) and not "CRLF" (Windows)
 # An empty line is required at the end of this file for a valid cron file.
-0 0 * * * bash /bsh_execScraper.sh AmazonScraper laptop
+40 10 * * * root /bin/bash /usr/src/bsh_execScraper.sh Amazon laptop >/dev/null 2>&1

@@ -5,7 +5,7 @@ import scrapy
 
 
 class AmazonSpider(scrapy.Spider):
-    name = "AmazonScraper"
+    name = "Amazon"
     total_scraped_items = 0
     curr_prod_no = 0
     query = None
