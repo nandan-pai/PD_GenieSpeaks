@@ -7,13 +7,12 @@ import {
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 
-const SearchBar = (props) => {
-
+const NavSearchBar = (props) => {
 	const isError = props.searchQuery === "";
 
 	return (
 		<FormControl isInvalid={isError}>
-			<InputGroup width='50%' size='lg' m='auto' mt='15rem'>
+			<InputGroup size='md' w='100%'>
 				<InputLeftElement pointerEvents='none' children={<FaSearch />} />
 				<Input
 					type='text'
@@ -21,11 +20,10 @@ const SearchBar = (props) => {
 					onChange={(e) => {
 						props.setSearchQuery(e.target.value);
 					}}
-					placeholder='Search for products or organization'
 				/>
 			</InputGroup>
 		</FormControl>
 	);
 };
 
-export default SearchBar;
+export default NavSearchBar;
