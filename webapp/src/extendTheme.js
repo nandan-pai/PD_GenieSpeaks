@@ -9,6 +9,7 @@ const customTheme = extendTheme({
 		gray: {
 			100: "#252525",
 			200: "#171717",
+			500: "#373737",
 		},
 	},
 	fonts: {
