@@ -50,7 +50,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 									_id={product._id}
 									productName={product.title}
 									productImage={product.images[0]}
-									price={product.price ? product.price : "1,24,561"}
+									price={product.min_price ? product.min_price : "1,24,561"}
 									noOfReviews={
 										product.review_count ? product.review_count : "22"
 									}
