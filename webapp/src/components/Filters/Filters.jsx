@@ -17,8 +17,8 @@ import { useState } from "react";
 import "./Filters.css";
 
 const Filters = () => {
-	const [startPrice, setStartPrice] = useState(0);
-	const [endPrice, setEndPrice] = useState(100);
+	const [minPrice, setMinPrice] = useState(0);
+	const [maxPrice, setMaxPrice] = useState(100);
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
@@ -83,20 +83,16 @@ const Filters = () => {
 					</Text>
 					<RangeSlider
 						defaultValue={[0, 100]}
-						onChangeStart={(values) => {
-							setStartPrice(values[0]);
-							console.log(startPrice);
-						}}
-						onChangeEnd={(values) => {
-							setEndPrice(values[1]);
-							console.log(endPrice);
+						onChange={(val)=> {
+							setMinPrice(val[0]);
+							setMaxPrice(val[1]);
 						}}
 					>
-						<RangeSliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
-							{startPrice}
+						<RangeSliderMark value={minPrice} mt='1' ml='-2.5' fontSize='sm'>
+							{minPrice}
 						</RangeSliderMark>
-						<RangeSliderMark value={100} mt='1' ml='-2.5' fontSize='sm'>
-							{endPrice}
+						<RangeSliderMark value={maxPrice} mt='1' ml='-2.5' fontSize='sm'>
+							{maxPrice}
 						</RangeSliderMark>
 						<RangeSliderTrack bg='gray'>
 							<RangeSliderFilledTrack bg='tomato' />
