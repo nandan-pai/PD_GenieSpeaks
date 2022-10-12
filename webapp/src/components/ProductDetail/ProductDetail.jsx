@@ -1,5 +1,4 @@
 import "./ProductDetail.css";
-import LandingNavBar from "../NavBar/LandingNavBar/LandingNavBar";
 import {
 	Box,
 	HStack,
@@ -20,37 +19,45 @@ import {
 	// FaStar,
 	FaRegThumbsUp,
 } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { ApiBaseUrl } from "../../config";
+import NavBar from "../NavBar/NavBar";
 
 function ProductDetail() {
 	const [productInfo, setProductInfo] = useState({});
-	const [ loader, showLoader ] = useState(false);
-	const [ isLoading, setIsLoading ] = useState(true);
+	const [loader, showLoader] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const location = useLocation();
+
 	const { id } = useParams();
 
 	const getProductInfo = () => {
 		axios.get(`${ApiBaseUrl}/prod?id=${id}`).then((res) => {
 			setProductInfo(res.data.productData);
 			showLoader(!loader);
-			setIsLoading(false)
+			setIsLoading(false);
 		});
 	};
 
 	useEffect(getProductInfo, [id]);
+
 	if (isLoading) {
-		return <div>
-			<LandingNavBar />
-			<Loader hidden={loader} />
-			<Loader hidden={loader} />
-			<Loader hidden={loader} />
-		</div>;
+		return (
+			<div>
+				<NavBar currentPath={location.pathname} />
+
+				<Loader hidden={loader} />
+				<Loader hidden={loader} />
+				<Loader hidden={loader} />
+			</div>
+		);
 	} else {
 		return (
 			<>
-				<LandingNavBar />
+				<NavBar currentPath={location.pathname} />
+
 				<Grid templateColumns='repeat(3, 1fr)' m={10}>
 					<GridItem colSpan={1}>
 						<Image
@@ -143,6 +150,5 @@ function ProductDetail() {
 		);
 	}
 }
-
 
 export default ProductDetail;

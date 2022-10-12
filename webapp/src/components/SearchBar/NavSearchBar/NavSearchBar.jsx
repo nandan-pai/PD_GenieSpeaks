@@ -4,28 +4,33 @@ import {
 	Input,
 	InputGroup,
 	InputLeftElement,
+	useColorMode,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 
-const SearchBar = (props) => {
-
+const NavSearchBar = (props) => {
 	const isError = props.searchQuery === "";
+	const { colorMode } = useColorMode();
+	const isDark = colorMode === "dark";
 
 	return (
 		<FormControl isInvalid={isError}>
-			<InputGroup width='50%' size='lg' m='auto' mt='15rem'>
-				<InputLeftElement pointerEvents='none' children={<FaSearch />} />
+			<InputGroup size='md' w='100%'>
+				<InputLeftElement
+					pointerEvents='none'
+					children={<FaSearch color={isDark ? "white" : ""} />}
+				/>
 				<Input
 					type='text'
 					value={props.searchQuery}
 					onChange={(e) => {
 						props.setSearchQuery(e.target.value);
 					}}
-					placeholder='Search for products or organization'
+					color={isDark ? "white.100" : ""}
 				/>
 			</InputGroup>
 		</FormControl>
 	);
 };
 
-export default SearchBar;
+export default NavSearchBar;

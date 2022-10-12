@@ -1,20 +1,20 @@
-import React from "react";
-// import "./LandingNavBar.css";
-import { Link } from "react-router-dom";
 import {
+	Box,
 	Button,
 	Flex,
+	HStack,
 	Icon,
 	IconButton,
 	Stack,
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import { Box } from "@chakra-ui/react";
+import React from "react";
+import { useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MdMenu, MdClose } from "react-icons/md";
-import { useState } from "react";
-import SearchBar from "../../SearchBar/SearchBar";
+import { Link } from "react-router-dom";
+import NavSearchBar from "../SearchBar/NavSearchBar/NavSearchBar";
 
 const Logo = () => {
 	const { colorMode } = useColorMode();
@@ -25,7 +25,7 @@ const Logo = () => {
 			<Link to='/'>
 				<Text
 					className='logo'
-					color={isDark ? "white" : "black"}
+					color={isDark ? "white.100" : "gray.100"}
 					fontWeight='bold'
 					fontSize='xl'
 				>
@@ -43,9 +43,19 @@ const MenuToggle = ({ toggle, isOpen }) => {
 	return (
 		<Box display={{ base: "block", md: "none" }} onClick={toggle}>
 			{isOpen ? (
-				<Icon as={MdClose} w={5} h={5} color={isDark ? "white" : "black"} />
+				<Icon
+					as={MdClose}
+					w={5}
+					h={5}
+					color={isDark ? "white.100" : "gray.100"}
+				/>
 			) : (
-				<Icon as={MdMenu} w={5} h={5} color={isDark ? "white" : "black"} />
+				<Icon
+					as={MdMenu}
+					w={5}
+					h={5}
+					color={isDark ? "white.100" : "gray.100"}
+				/>
 			)}
 		</Box>
 	);
@@ -67,31 +77,45 @@ const MenuLinks = ({ isOpen }) => {
 				direction={["column", "row"]}
 				pt={[4, 4, 0]}
 			>
-				<Button
-					borderRadius='md'
-					bg='transparent'
-					display='block'
-					color={isDark ? "white" : "gray.900"}
-					px={4}
-					h={8}
-				>
-					Sign In
-				</Button>
-				<Box
-					borderRadius='md'
-					bg={isDark ? "white" : "black"}
-					display='block'
-					color={isDark ? "black" : "white"}
-					px={4}
-					h={8}
-				>
-					Create a free account
-				</Box>
+				<Link to='/signin'>
+					<Text
+						color={isDark ? "white.100" : "gray.100"}
+						fontWeight='semibold'
+						_hover={{
+							textDecoration: "underline",
+						}}
+					>
+						Sign In
+					</Text>
+				</Link>
+
+				<Link to='/signup'>
+					<Button
+						bg={isDark ? "white.100" : "gray.100"}
+						borderRadius='md'
+						display='block'
+						color={isDark ? "gray.100" : "white.100"}
+					>
+						Create a free account
+					</Button>
+				</Link>
+
 				<IconButton
-					icon={isDark ? <FaSun color='white' /> : <FaMoon />}
+					icon={isDark ? <FaSun /> : <FaMoon />}
 					isRound='true'
-					// display='block'
+					bg={isDark ? "white.100" : "white.100"}
 					onClick={toggleColorMode}
+					_hover={
+						isDark
+							? {
+									bg: "gray.100",
+									color: "white.100",
+							  }
+							: {
+									bg: "gray.100",
+									color: "white.100",
+							  }
+					}
 				/>
 			</Stack>
 		</Box>
@@ -108,26 +132,29 @@ const NavBarContainer = ({ children }) => {
 			width='100%'
 			padding={8}
 			bg={"transparent"}
-			color={"gray.600"}
+			color={"gray.100"}
 		>
 			{children}
 		</Flex>
 	);
 };
 
-const LandingNavBar = () => {
+const LandingNav = (props) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleOpen = () => setIsOpen(!isOpen);
 
 	return (
 		<NavBarContainer>
-			<Logo />
-			<Box className='header'>{/* <SearchBar /> */}</Box>
+			<HStack display='inline-flex' w='70%' spacing='50px'>
+				<Logo />
+				{props.currentPath === "/" ? "" : <NavSearchBar />}
+			</HStack>
+
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
 			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
 	);
 };
 
-export default LandingNavBar;
+export default LandingNav;
