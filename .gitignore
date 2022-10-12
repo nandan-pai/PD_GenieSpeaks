@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Pulumi Ignores
+*.pyc
+venv/
+
 # Environmental Variables
 bsh_setenv.sh
 cmd_setenv.cmd

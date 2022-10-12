@@ -4,7 +4,7 @@ import scrapy
 
 
 class FlipkartSpider(scrapy.Spider):
-    name = "FlipkartScraper"
+    name = "Flipkart"
     total_scraped_items = 0
     curr_prod_no = 0
     query = None
