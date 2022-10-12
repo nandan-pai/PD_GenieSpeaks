@@ -44,7 +44,7 @@ const ProductCard = ({
 			className='card-container'
 			rounded='md'
 			// borderWidth='1px'
-			p={2}
+			p={5}
 			mt={5}
 			mr={5}
 			maxH='300px'
@@ -79,27 +79,6 @@ const ProductCard = ({
 							<Heading fontSize='xl'>&#8377;{price}</Heading>
 						</GridItem>
 					</Grid>
-					{/* <Grid templateColumns='repeat(3, 1fr)' gap={2}>
-						<GridItem colSpan={3}>
-							<LinkOverlay onClick={handleClick}>
-								<Text fontSize='lg' fontWeight='semibold' noOfLines={[1, 2, 3]}>
-									{productName}
-								</Text>
-							</LinkOverlay>
-							<HStack mt='2' mb='5'>
-								<Icon as={FaRegThumbsUp} color='green' />
-								<Text fontWeight='semibold' color='green'>
-									{satisfactionRating}%
-								</Text>
-							</HStack>
-							<Text>{noOfReviews} reviews</Text>
-						</GridItem>
-						<GridItem colSpan={1} p={5}>
-							<Heading fontSize='xl' ml='20'>
-								&#8377;{price}
-							</Heading>
-						</GridItem>
-					</Grid> */}
 				</Box>
 			</HStack>
 		</LinkBox>

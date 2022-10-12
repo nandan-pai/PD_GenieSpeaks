@@ -43,37 +43,37 @@ const Filters = () => {
 						<HStack>
 							<Checkbox>Lenovo</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>152</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Honor</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>80</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>80</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Apple</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>70</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>70</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>HP</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>66</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>66</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Acer</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>12</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>12</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Dell</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>15</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>15</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Asus</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>8</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>8</Text>
 						</HStack>
 					</Stack>
 				</div>
@@ -113,37 +113,37 @@ const Filters = () => {
 						<HStack>
 							<Checkbox>AMD A-Series</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>152</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>AMD A4</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>80</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>80</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>AMD 16</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>70</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>70</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Intel Atom</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>66</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>66</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Intel Celeron</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>12</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>12</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Intel Core i5</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>15</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>15</Text>
 						</HStack>
 						<HStack>
 							<Checkbox>Intel Core i7</Checkbox>
 							<Spacer />
-							<Text color='gray.500'>8</Text>
+							<Text color={isDark ? "white.100" : "gray.500"}>8</Text>
 						</HStack>
 					</Stack>
 				</div>

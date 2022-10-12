@@ -39,7 +39,6 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			</HStack>
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
-					{/* <Filters /> */}
 					<Filters />
 				</GridItem>
 				<GridItem colSpan={3}>
