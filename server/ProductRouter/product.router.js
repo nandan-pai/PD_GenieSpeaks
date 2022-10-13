@@ -129,8 +129,8 @@ router.get('/search/category', async (req, res) => {
         }
       ]
     )
-
-    res.status(200).json({ category })
+    
+    res.status(200).json({ category: category[0] })
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })

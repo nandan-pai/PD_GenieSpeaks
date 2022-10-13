@@ -13,7 +13,7 @@ import React from "react";
 import { useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { MdMenu, MdClose } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NavSearchBar from "../SearchBar/NavSearchBar/NavSearchBar";
 
 const Logo = () => {
@@ -108,13 +108,13 @@ const MenuLinks = ({ isOpen }) => {
 					_hover={
 						isDark
 							? {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 							: {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 					}
 				/>
 			</Stack>
@@ -139,16 +139,16 @@ const NavBarContainer = ({ children }) => {
 	);
 };
 
-const LandingNav = (props) => {
+const LandingNav = () => {
+	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
-
 	const toggleOpen = () => setIsOpen(!isOpen);
 
 	return (
 		<NavBarContainer>
 			<HStack display='inline-flex' w='70%' spacing='50px'>
 				<Logo />
-				{props.currentPath === "/" ? "" : <NavSearchBar />}
+				{location.pathname === "/" ? "" : <NavSearchBar />}
 			</HStack>
 
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
