@@ -34,6 +34,7 @@ const Filters = ({ searchQuery }) => {
 	const getCategories = useCallback(() => {
 		setCategoryLoading(true);
 		axios.get(`${ApiBaseUrl}/prod/search/category?query=${searchQuery}`).then((res) => {
+			// console.log(res.data.category)
 			setInitRange([res.data.category.min_price, res.data.category.max_price])
 			setMinPrice(res.data.category.min_price)
 			setMaxPrice(res.data.category.max_price)
@@ -70,7 +71,7 @@ const Filters = ({ searchQuery }) => {
 									return <HStack key={organization._id}>
 										<Checkbox>{organization.name}</Checkbox>
 										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
+										<Text color={isDark ? "white.100" : "gray.500"}>{organization.count}</Text>
 									</HStack>
 								})
 							}
@@ -113,9 +114,9 @@ const Filters = ({ searchQuery }) => {
 							{
 								cpuList.map((cpuType, index) => {
 									return <HStack key={index}>
-										<Checkbox>{cpuType}</Checkbox>
+										<Checkbox>{cpuType.name}</Checkbox>
 										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
+										<Text color={isDark ? "white.100" : "gray.500"}>{cpuType.count}</Text>
 									</HStack>
 								})
 							}
@@ -131,7 +132,7 @@ const Filters = ({ searchQuery }) => {
 									return <HStack key={ecommerce._id}>
 										<Checkbox>{ecommerce.name}</Checkbox>
 										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
+										<Text color={isDark ? "white.100" : "gray.500"}>{ecommerce.count}</Text>
 									</HStack>
 								})
 							}

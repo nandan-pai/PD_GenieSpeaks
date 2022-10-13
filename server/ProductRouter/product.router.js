@@ -63,9 +63,9 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'Organization',
-            'localField': 'organization',
-            'foreignField': '_id',
+            'from': 'Organization', 
+            'localField': 'organization', 
+            'foreignField': '_id', 
             'as': 'organization'
           }
         }, {
@@ -82,9 +82,9 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'ECommerce',
-            'localField': 'ecommerce.ecommerceID',
-            'foreignField': '_id',
+            'from': 'ECommerce', 
+            'localField': 'ecommerce.ecommerceID', 
+            'foreignField': '_id', 
             'as': 'ecommerce.info'
           }
         }, {
@@ -101,29 +101,172 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$group': {
-            '_id': 1,
-            'ecommerce_list': {
-              '$addToSet': {
-                '_id': '$ecommerce.ecommerceID',
-                'name': '$ecommerce.name'
-              }
-            },
-            'organization_list': {
-              '$addToSet': {
-                '_id': '$organization._id',
-                'name': '$organization.name'
-              }
-            },
+            '_id': null, 
             'min_price': {
               '$min': '$ecommerce.curr_price'
-            },
+            }, 
             'max_price': {
               '$max': '$ecommerce.curr_price'
-            },
+            }, 
+            'ecommerce_list': {
+              '$push': {
+                '_id': '$ecommerce.ecommerceID', 
+                'name': '$ecommerce.name'
+              }
+            }, 
+            'organization_list': {
+              '$push': {
+                '_id': '$organization._id', 
+                'name': '$organization.name'
+              }
+            }, 
             'cpu_type': {
-              '$addToSet': {
+              '$push': {
                 '$concat': '$attributes.Processor Type'
               }
+            }
+          }
+        }, {
+          '$unwind': {
+            'path': '$ecommerce_list'
+          }
+        }, {
+          '$group': {
+            '_id': {
+              '_id': '$ecommerce_list._id', 
+              'name': '$ecommerce_list.name'
+            }, 
+            'count': {
+              '$sum': 1
+            }, 
+            'organization_list': {
+              '$first': '$organization_list'
+            }, 
+            'cpu_type': {
+              '$first': '$cpu_type'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
+            }
+          }
+        }, {
+          '$group': {
+            '_id': null, 
+            'ecommerce_list': {
+              '$push': {
+                '_id': '$_id._id', 
+                'name': '$_id.name', 
+                'count': '$count'
+              }
+            }, 
+            'organization_list': {
+              '$first': '$organization_list'
+            }, 
+            'cpu_type': {
+              '$first': '$cpu_type'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
+            }
+          }
+        }, {
+          '$unwind': {
+            'path': '$organization_list'
+          }
+        }, {
+          '$group': {
+            '_id': {
+              '_id': '$organization_list._id', 
+              'name': '$organization_list.name'
+            }, 
+            'count': {
+              '$sum': 1
+            }, 
+            'ecommerce_list': {
+              '$first': '$ecommerce_list'
+            }, 
+            'cpu_type': {
+              '$first': '$cpu_type'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
+            }
+          }
+        }, {
+          '$group': {
+            '_id': null, 
+            'organization_list': {
+              '$push': {
+                '_id': '$_id._id', 
+                'name': '$_id.name', 
+                'count': '$count'
+              }
+            }, 
+            'ecommerce_list': {
+              '$first': '$ecommerce_list'
+            }, 
+            'cpu_type': {
+              '$first': '$cpu_type'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
+            }
+          }
+        }, {
+          '$unwind': {
+            'path': '$cpu_type'
+          }
+        }, {
+          '$group': {
+            '_id': '$cpu_type', 
+            'count': {
+              '$sum': 1
+            }, 
+            'organization_list': {
+              '$first': '$organization_list'
+            }, 
+            'ecommerce_list': {
+              '$first': '$ecommerce_list'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
+            }
+          }
+        }, {
+          '$group': {
+            '_id': null, 
+            'cpu_type': {
+              '$push': {
+                'name': '$_id', 
+                'count': '$count'
+              }
+            }, 
+            'organization_list': {
+              '$first': '$organization_list'
+            }, 
+            'ecommerce_list': {
+              '$first': '$ecommerce_list'
+            }, 
+            'min_price': {
+              '$first': '$min_price'
+            }, 
+            'max_price': {
+              '$first': '$max_price'
             }
           }
         }
