@@ -6,22 +6,31 @@ import axios from "axios";
 import { ApiBaseUrl } from "../../config";
 import Loader from "../Loader/Loader";
 import NavBar from "../NavBar/NavBar";
+import { useNavigate } from "react-router-dom";
 
 import "./ProductList.css";
 import SortMenu from "../SortMenu/SortMenu";
 
 const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [productList, setProductList] = useState([]);
+	const [sort, setSort] = useState("_id")
+	const [limit, setLimit] = useState(20)
+	const [offset, setOffset] = useState(0)
 	const [loader, showLoader] = useState(true);
 
+	let navigate = useNavigate();
+
 	const getProductList = useCallback(() => {
+		if (searchQuery === "") {
+			return navigate("/");
+		}
 		showLoader(true);
-		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}`).then((res) => {
+		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}&limit=${limit}&offset=${offset}&sort=${sort}`).then((res) => {
 			// console.log(res.data.productList)
 			setProductList(res.data.productList);
 			showLoader(false);
 		});
-	}, [searchQuery]);
+	}, [searchQuery, navigate, limit, offset, sort]);
 
 	useEffect(getProductList, [searchQuery, getProductList, setProductList]);
 
@@ -34,7 +43,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 					<span className='query'>"{searchQuery}"</span>
 				</Text>
 				{/* <Spacer /> */}
-				<SortMenu />
+				<SortMenu sort={sort} setSort={setSort} />
 			</HStack>
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
@@ -49,9 +58,9 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 									_id={product._id}
 									productName={product.title}
 									productImage={product.images[0]}
-									price={product.min_price ? product.min_price : "1,24,561"}
+									price={product.min_price}
 									noOfReviews={
-										product.review_count ? product.review_count : "22"
+										product.review_count
 									}
 									satisfactionRating='98.5'
 								/>

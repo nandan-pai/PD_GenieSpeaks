@@ -1,17 +1,12 @@
 import React from "react";
 import {
 	HStack,
-	Menu,
-	MenuButton,
 	Text,
-	Button,
-	MenuList,
-	MenuItem,
 	useColorMode,
+	Select
 } from "@chakra-ui/react";
-import { FaChevronDown } from "react-icons/fa";
 
-const SortMenu = () => {
+const SortMenu = ({sort, setSort}) => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
@@ -19,16 +14,17 @@ const SortMenu = () => {
 		<div>
 			<HStack>
 				<Text>Sort</Text>
-				<Menu>
-					<MenuButton as={Button} rightIcon={<FaChevronDown />}>
-						Default
-					</MenuButton>
-					<MenuList>
-						<MenuItem>Price: Low to High</MenuItem>
-						<MenuItem>Price: High to Low</MenuItem>
-						<MenuItem>Review Count</MenuItem>
-					</MenuList>
-				</Menu>
+				<Select
+					defaultValue={sort}
+					onChange={(e) => {
+						setSort(e.target.value)}}
+					>
+						<option value={"_id"}>Default</option>
+						<option value={"ecommerce.curr_price"}>Price: Low to High</option>
+						<option value={"-ecommerce.curr_price"}>Price: High to Low</option>
+						<option value={"review_count"}>Low Review Count</option>
+						<option value={"-review_count"}>High Review Count</option>
+				</Select>
 			</HStack>
 		</div>
 	);

@@ -63,9 +63,9 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'Organization', 
-            'localField': 'organization', 
-            'foreignField': '_id', 
+            'from': 'Organization',
+            'localField': 'organization',
+            'foreignField': '_id',
             'as': 'organization'
           }
         }, {
@@ -82,9 +82,9 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$lookup': {
-            'from': 'ECommerce', 
-            'localField': 'ecommerce.ecommerceID', 
-            'foreignField': '_id', 
+            'from': 'ECommerce',
+            'localField': 'ecommerce.ecommerceID',
+            'foreignField': '_id',
             'as': 'ecommerce.info'
           }
         }, {
@@ -101,25 +101,25 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$group': {
-            '_id': null, 
+            '_id': null,
             'min_price': {
               '$min': '$ecommerce.curr_price'
-            }, 
+            },
             'max_price': {
               '$max': '$ecommerce.curr_price'
-            }, 
+            },
             'ecommerce_list': {
               '$push': {
-                '_id': '$ecommerce.ecommerceID', 
+                '_id': '$ecommerce.ecommerceID',
                 'name': '$ecommerce.name'
               }
-            }, 
+            },
             'organization_list': {
               '$push': {
-                '_id': '$organization._id', 
+                '_id': '$organization._id',
                 'name': '$organization.name'
               }
-            }, 
+            },
             'cpu_type': {
               '$push': {
                 '$concat': '$attributes.Processor Type'
@@ -133,44 +133,44 @@ router.get('/search/category', async (req, res) => {
         }, {
           '$group': {
             '_id': {
-              '_id': '$ecommerce_list._id', 
+              '_id': '$ecommerce_list._id',
               'name': '$ecommerce_list.name'
-            }, 
+            },
             'count': {
               '$sum': 1
-            }, 
+            },
             'organization_list': {
               '$first': '$organization_list'
-            }, 
+            },
             'cpu_type': {
               '$first': '$cpu_type'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
           }
         }, {
           '$group': {
-            '_id': null, 
+            '_id': null,
             'ecommerce_list': {
               '$push': {
-                '_id': '$_id._id', 
-                'name': '$_id.name', 
+                '_id': '$_id._id',
+                'name': '$_id.name',
                 'count': '$count'
               }
-            }, 
+            },
             'organization_list': {
               '$first': '$organization_list'
-            }, 
+            },
             'cpu_type': {
               '$first': '$cpu_type'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
@@ -182,44 +182,44 @@ router.get('/search/category', async (req, res) => {
         }, {
           '$group': {
             '_id': {
-              '_id': '$organization_list._id', 
+              '_id': '$organization_list._id',
               'name': '$organization_list.name'
-            }, 
+            },
             'count': {
               '$sum': 1
-            }, 
+            },
             'ecommerce_list': {
               '$first': '$ecommerce_list'
-            }, 
+            },
             'cpu_type': {
               '$first': '$cpu_type'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
           }
         }, {
           '$group': {
-            '_id': null, 
+            '_id': null,
             'organization_list': {
               '$push': {
-                '_id': '$_id._id', 
-                'name': '$_id.name', 
+                '_id': '$_id._id',
+                'name': '$_id.name',
                 'count': '$count'
               }
-            }, 
+            },
             'ecommerce_list': {
               '$first': '$ecommerce_list'
-            }, 
+            },
             'cpu_type': {
               '$first': '$cpu_type'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
@@ -230,41 +230,41 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$group': {
-            '_id': '$cpu_type', 
+            '_id': '$cpu_type',
             'count': {
               '$sum': 1
-            }, 
+            },
             'organization_list': {
               '$first': '$organization_list'
-            }, 
+            },
             'ecommerce_list': {
               '$first': '$ecommerce_list'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
           }
         }, {
           '$group': {
-            '_id': null, 
+            '_id': null,
             'cpu_type': {
               '$push': {
-                'name': '$_id', 
+                'name': '$_id',
                 'count': '$count'
               }
-            }, 
+            },
             'organization_list': {
               '$first': '$organization_list'
-            }, 
+            },
             'ecommerce_list': {
               '$first': '$ecommerce_list'
-            }, 
+            },
             'min_price': {
               '$first': '$min_price'
-            }, 
+            },
             'max_price': {
               '$first': '$max_price'
             }
@@ -272,7 +272,7 @@ router.get('/search/category', async (req, res) => {
         }
       ]
     )
-    
+
     res.status(200).json({ category: category[0] })
   } catch (e) {
     console.error(e)
@@ -286,7 +286,8 @@ router.get('/search', async (req, res) => {
     let offset = req.query.offset
     let limit = req.query.limit
     const filter = req.query.filter
-
+    let sort = req.query.sort
+    let sort_form = 1;
     if (!query) {
       return res.status(400).json({ message: 'Requires Query' })
     }
@@ -295,6 +296,14 @@ router.get('/search', async (req, res) => {
     }
     if (!offset) {
       offset = 0
+    }
+    if (!sort) {
+      sort = "_id"
+    } else {
+      if (sort[0] === "-") {
+        sort_form = -1
+        sort = sort.substr(1)
+      }
     }
 
     let productList = await Product.aggregate(
@@ -318,9 +327,19 @@ router.get('/search', async (req, res) => {
             ]
           }
         }, {
-          '$limit': parseInt(limit, 10)
+          '$addFields': {
+            'review_count': {
+              '$size': '$reviews'
+            }
+          }
+        }, {
+          '$sort': {
+            [sort] : sort_form
+          }
         }, {
           '$skip': parseInt(offset, 10)
+        }, {
+          '$limit': parseInt(limit, 10)
         }, {
           '$lookup': {
             'from': 'Organization',
@@ -338,9 +357,6 @@ router.get('/search', async (req, res) => {
           }
         }, {
           '$addFields': {
-            'review_count': {
-              '$size': '$reviews'
-            },
             'min_price': {
               '$min': '$ecommerce.curr_price'
             }
