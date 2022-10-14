@@ -17,6 +17,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [limit, setLimit] = useState(20)
 	const [offset, setOffset] = useState(0)
 	const [loader, showLoader] = useState(true);
+	const [filter, setFilter] = useState({});
 
 	let navigate = useNavigate();
 
@@ -25,12 +26,19 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			return navigate("/");
 		}
 		showLoader(true);
-		axios.get(`${ApiBaseUrl}/prod/search?query=${searchQuery}&limit=${limit}&offset=${offset}&sort=${sort}`).then((res) => {
+		const payload = {
+			query: searchQuery,
+			limit,
+			offset,
+			sort,
+			filter
+		}
+		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
 			// console.log(res.data.productList)
 			setProductList(res.data.productList);
 			showLoader(false);
 		});
-	}, [searchQuery, navigate, limit, offset, sort]);
+	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
 	useEffect(getProductList, [searchQuery, getProductList, setProductList]);
 
@@ -47,7 +55,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			</HStack>
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
-					<Filters searchQuery={searchQuery} />
+					<Filters searchQuery={searchQuery} setFilter={setFilter}/>
 				</GridItem>
 				<GridItem colSpan={3}>
 					{loader ? <Spinner /> : <SimpleGrid minChildWidth='420px' spacing='10px'>

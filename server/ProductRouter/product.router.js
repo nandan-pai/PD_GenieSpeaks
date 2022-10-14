@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const mongoose = require('mongoose')
 
 const Product = require('../models/product.model.js')
 const User = require('../models/user.model.js')
@@ -97,7 +98,8 @@ router.get('/search/category', async (req, res) => {
           }
         }, {
           '$addFields': {
-            'ecommerce.name': '$ecommerce.info.name'
+            'ecommerce.name': '$ecommerce.info.name',
+            'category_list': []
           }
         }, {
           '$group': {
@@ -127,6 +129,30 @@ router.get('/search/category', async (req, res) => {
             }
           }
         }, {
+          '$group': {
+            '_id': null,
+            'category_list': {
+              '$push': {
+                'name': 'Price',
+                'type': 'range',
+                'identifier': 'ecommerce.curr_price',
+                'return': 'range',
+                'value': [
+                  '$min_price', '$max_price'
+                ]
+              }
+            },
+            'organization_list': {
+              '$first': '$organization_list'
+            },
+            'cpu_type': {
+              '$first': '$cpu_type'
+            },
+            'ecommerce_list': {
+              '$first': '$ecommerce_list'
+            }
+          }
+        }, {
           '$unwind': {
             'path': '$ecommerce_list'
           }
@@ -145,11 +171,8 @@ router.get('/search/category', async (req, res) => {
             'cpu_type': {
               '$first': '$cpu_type'
             },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
             }
           }
         }, {
@@ -168,12 +191,27 @@ router.get('/search/category', async (req, res) => {
             'cpu_type': {
               '$first': '$cpu_type'
             },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
             }
+          }
+        }, {
+          '$project': {
+            'category_list': {
+              '$concatArrays': [
+                '$category_list', [
+                  {
+                    'name': 'Ecommerce',
+                    'type': 'checklist',
+                    'identifier': 'ecommerce.ecommerceID',
+                    'return': 'ObjectId',
+                    'value': '$ecommerce_list'
+                  }
+                ]
+              ]
+            },
+            'organization_list': 1,
+            'cpu_type': 1
           }
         }, {
           '$unwind': {
@@ -188,17 +226,11 @@ router.get('/search/category', async (req, res) => {
             'count': {
               '$sum': 1
             },
-            'ecommerce_list': {
-              '$first': '$ecommerce_list'
-            },
             'cpu_type': {
               '$first': '$cpu_type'
             },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
             }
           }
         }, {
@@ -211,18 +243,29 @@ router.get('/search/category', async (req, res) => {
                 'count': '$count'
               }
             },
-            'ecommerce_list': {
-              '$first': '$ecommerce_list'
-            },
             'cpu_type': {
               '$first': '$cpu_type'
             },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
             }
+          }
+        }, {
+          '$project': {
+            'category_list': {
+              '$concatArrays': [
+                '$category_list', [
+                  {
+                    'name': 'Organization',
+                    'type': 'checklist',
+                    'identifier': 'organization',
+                    'return': 'ObjectId',
+                    'value': '$organization_list'
+                  }
+                ]
+              ]
+            },
+            'cpu_type': 1
           }
         }, {
           '$unwind': {
@@ -234,17 +277,8 @@ router.get('/search/category', async (req, res) => {
             'count': {
               '$sum': 1
             },
-            'organization_list': {
-              '$first': '$organization_list'
-            },
-            'ecommerce_list': {
-              '$first': '$ecommerce_list'
-            },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
             }
           }
         }, {
@@ -252,42 +286,55 @@ router.get('/search/category', async (req, res) => {
             '_id': null,
             'cpu_type': {
               '$push': {
+                _id: '$_id',
                 'name': '$_id',
                 'count': '$count'
               }
             },
-            'organization_list': {
-              '$first': '$organization_list'
-            },
-            'ecommerce_list': {
-              '$first': '$ecommerce_list'
-            },
-            'min_price': {
-              '$first': '$min_price'
-            },
-            'max_price': {
-              '$first': '$max_price'
+            'category_list': {
+              '$first': '$category_list'
+            }
+          }
+        }, {
+          '$project': {
+            'category_list': {
+              '$concatArrays': [
+                '$category_list', [
+                  {
+                    'name': 'CPU Types',
+                    'type': 'checklist',
+                    'identifier': 'attributes.Processor Type',
+                    'return': 'name',
+                    'value': '$cpu_type'
+                  }
+                ]
+              ]
             }
           }
         }
       ]
     )
 
-    res.status(200).json({ category: category[0] })
+    res.status(200).json({ category: category[0].category_list })
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
-router.get('/search', async (req, res) => {
+router.post('/search', async (req, res) => {
   try {
-    const query = req.query.query
-    let offset = req.query.offset
-    let limit = req.query.limit
-    const filter = req.query.filter
-    let sort = req.query.sort
+    const query = req.body.query
+    let offset = req.body.offset
+    let limit = req.body.limit
+    let sort = req.body.sort
+    const filter = req.body.filter
     let sort_form = 1;
+    // console.log(query)
+    // console.log(offset)
+    // console.log(limit)
+    // console.log(sort)
+    // console.log(filter)
     if (!query) {
       return res.status(400).json({ message: 'Requires Query' })
     }
@@ -305,25 +352,56 @@ router.get('/search', async (req, res) => {
         sort = sort.substr(1)
       }
     }
+    let filter_query = {}
+    if (filter !== {}) {
+      for (var key in filter) {
+        if (filter.hasOwnProperty(key) && filter[key].value.length) {
+          if (filter[key].type === 'range') {
+            filter_query[filter[key].identifier] = {
+              '$gt': filter[key].value[0], '$lt': filter[key].value[1]
+            }
+          } else {
+            let temp = []
+            if (filter[key].type === 'ObjectId') {
+              filter[key].value.forEach((value, index, array) => {
+                temp.push(mongoose.Types.ObjectId(value))
+              })
+            } else {
+              temp = filter[key].value
+            }
+            filter_query[filter[key].identifier] = {
+              '$in': temp
+            }
+          }
+        }
+      }
+    }
+
+    // console.log(filter_query)
 
     let productList = await Product.aggregate(
       [
         {
           '$match': {
-            '$or': [
+            '$and': [
               {
-                'title': {
-                  '$regex': query,
-                  '$options': 'i'
-                }
-              }, {
-                'tags': {
-                  '$elemMatch': {
-                    '$regex': query,
-                    '$options': 'i'
+                '$or': [
+                  {
+                    'title': {
+                      '$regex': query,
+                      '$options': 'i'
+                    }
+                  }, {
+                    'tags': {
+                      '$elemMatch': {
+                        '$regex': query,
+                        '$options': 'i'
+                      }
+                    }
                   }
-                }
-              }
+                ]
+              },
+              filter_query
             ]
           }
         }, {
@@ -334,7 +412,7 @@ router.get('/search', async (req, res) => {
           }
         }, {
           '$sort': {
-            [sort] : sort_form
+            [sort]: sort_form
           }
         }, {
           '$skip': parseInt(offset, 10)
