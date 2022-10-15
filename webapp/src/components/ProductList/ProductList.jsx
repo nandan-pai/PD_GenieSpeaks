@@ -63,7 +63,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			</HStack>
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
-					<Filters searchQuery={searchQuery} setFilter={setFilter} />
+					<Filters searchQuery={searchQuery} setFilter={setFilter} filter={filter}/>
 				</GridItem>
 				<GridItem colSpan={3}>
 					{loader ? (

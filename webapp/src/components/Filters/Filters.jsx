@@ -12,7 +12,6 @@ import {
 	Text,
 	useColorMode,
 	Spinner,
-	Button,
 	CheckboxGroup,
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
@@ -21,11 +20,9 @@ import { ApiBaseUrl } from "../../config";
 
 import "./Filters.css";
 
-const Filters = ({ searchQuery, setFilter }) => {
+const Filters = ({ searchQuery, setFilter, filter }) => {
 	const [categoryList, setCategoryList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
-
-	const [buFilter, setBuFilter] = useState({});
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
@@ -40,11 +37,6 @@ const Filters = ({ searchQuery, setFilter }) => {
 			});
 	}, [searchQuery]);
 
-	const handleNewFilter = (e) => {
-		// console.log(buFilter)
-		setFilter(buFilter);
-	};
-
 	useEffect(getCategories, [searchQuery, getCategories]);
 
 	const generate_checklist = (obj, index) => {
@@ -56,8 +48,8 @@ const Filters = ({ searchQuery, setFilter }) => {
 				</Text>
 				<CheckboxGroup
 					onChange={(e) =>
-						setBuFilter({
-							...buFilter,
+						setFilter({
+							...filter,
 							[obj.name.toString()]: {
 								identifier: obj.identifier,
 								type: obj.return,
@@ -72,7 +64,6 @@ const Filters = ({ searchQuery, setFilter }) => {
 								<HStack key={objval._id}>
 									<Checkbox
 										value={objval._id ? objval._id : "null"}
-										onChange={handleNewFilter}
 									>
 										{objval.name ? objval.name : "null"}
 									</Checkbox>
@@ -102,8 +93,8 @@ const Filters = ({ searchQuery, setFilter }) => {
 					max={obj.value[1]}
 					step={10000}
 					onChange={(val) =>
-						setBuFilter({
-							...buFilter,
+						setFilter({
+							...filter,
 							[obj.name.toString()]: {
 								identifier: obj.identifier,
 								type: obj.return,
@@ -154,16 +145,6 @@ const Filters = ({ searchQuery, setFilter }) => {
 								return <></>;
 							}
 						})}
-						<Button
-							bg={isDark ? "white.100" : "gray.100"}
-							ml='10px'
-							mt='10px'
-							type='submit'
-							className='submitBtn'
-							onClick={handleNewFilter}
-						>
-							<Text color={isDark ? "gray.100" : "white.100"}>Apply</Text>
-						</Button>
 					</>
 				)}
 			</Box>
