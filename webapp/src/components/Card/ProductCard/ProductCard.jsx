@@ -76,7 +76,7 @@ const ProductCard = ({
 							<Text>{noOfReviews} reviews</Text>
 						</GridItem>
 						<GridItem colSpan={1}>
-							<Heading fontSize='xl'>&#8377;{price}</Heading>
+							<Heading fontSize='xl'>{price? <>&#8377;{price}</>:"Unavailable"}</Heading>
 						</GridItem>
 					</Grid>
 				</Box>

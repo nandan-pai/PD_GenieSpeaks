@@ -161,6 +161,9 @@ class AmazonSpider(scrapy.Spider):
          attributes,
          identifiers) = self.parse_product_org_attributes_identifiers(response=response)
 
+        if not organization:
+            return
+
         self.logger.info(
             f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{asin}")
         yield {
