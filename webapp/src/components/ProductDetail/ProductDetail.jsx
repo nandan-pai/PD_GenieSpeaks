@@ -25,7 +25,7 @@ import { useState, useEffect } from "react";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 
-function ProductDetail() {
+const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
 	const [loader, showLoader] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +46,10 @@ function ProductDetail() {
 	if (isLoading) {
 		return (
 			<div>
-				<NavBar currentPath={location.pathname} />
+				<NavBar
+					searchQuery={props.searchQuery}
+					setSearchQuery={props.setSearchQuery}
+				/>
 
 				<Loader hidden={loader} />
 				<Loader hidden={loader} />
@@ -56,7 +59,10 @@ function ProductDetail() {
 	} else {
 		return (
 			<>
-				<NavBar currentPath={location.pathname} />
+				<NavBar
+					searchQuery={props.searchQuery}
+					setSearchQuery={props.setSearchQuery}
+				/>
 
 				<Grid templateColumns='repeat(3, 1fr)' m={10}>
 					<GridItem colSpan={1}>
@@ -149,6 +155,6 @@ function ProductDetail() {
 			</>
 		);
 	}
-}
+};
 
 export default ProductDetail;

@@ -108,13 +108,13 @@ const MenuLinks = ({ isOpen }) => {
 					_hover={
 						isDark
 							? {
-								bg: "gray.100",
-								color: "white.100",
-							}
+									bg: "gray.100",
+									color: "white.100",
+							  }
 							: {
-								bg: "gray.100",
-								color: "white.100",
-							}
+									bg: "gray.100",
+									color: "white.100",
+							  }
 					}
 				/>
 			</Stack>
@@ -139,7 +139,7 @@ const NavBarContainer = ({ children }) => {
 	);
 };
 
-const LandingNav = () => {
+const NavBar = (props) => {
 	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleOpen = () => setIsOpen(!isOpen);
@@ -148,7 +148,14 @@ const LandingNav = () => {
 		<NavBarContainer>
 			<HStack display='inline-flex' w='70%' spacing='50px'>
 				<Logo />
-				{location.pathname === "/" ? "" : <NavSearchBar />}
+				{location.pathname === "/" ? (
+					""
+				) : (
+					<NavSearchBar
+						searchQuery={props.searchQuery}
+						setSearchQuery={props.setSearchQuery}
+					/>
+				)}
 			</HStack>
 
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
@@ -157,4 +164,4 @@ const LandingNav = () => {
 	);
 };
 
-export default LandingNav;
+export default NavBar;
