@@ -315,7 +315,7 @@ router.get('/search/category', async (req, res) => {
       ]
     )
 
-    res.status(200).json({ category: category[0].category_list })
+    res.status(200).json({ category: category.length? category[0].category_list: category })
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })
@@ -358,7 +358,7 @@ router.post('/search', async (req, res) => {
         if (filter.hasOwnProperty(key) && filter[key].value.length) {
           if (filter[key].type === 'range') {
             filter_query[filter[key].identifier] = {
-              '$gt': filter[key].value[0], '$lt': filter[key].value[1]
+              '$gte': filter[key].value[0], '$lte': filter[key].value[1]
             }
           } else {
             let temp = []

@@ -19,7 +19,7 @@ import {
 	// FaStar,
 	FaRegThumbsUp,
 } from "react-icons/fa";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { ApiBaseUrl } from "../../config";
@@ -27,16 +27,14 @@ import NavBar from "../NavBar/NavBar";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
-	const [loader, showLoader] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const location = useLocation();
 
 	const { id } = useParams();
 
 	const getProductInfo = () => {
+		setIsLoading(true);
 		axios.get(`${ApiBaseUrl}/prod?id=${id}`).then((res) => {
 			setProductInfo(res.data.productData);
-			showLoader(!loader);
 			setIsLoading(false);
 		});
 	};
@@ -51,9 +49,9 @@ const ProductDetail = (props) => {
 					setSearchQuery={props.setSearchQuery}
 				/>
 
-				<Loader hidden={loader} />
-				<Loader hidden={loader} />
-				<Loader hidden={loader} />
+				<Loader hidden={isLoading} />
+				<Loader hidden={isLoading} />
+				<Loader hidden={isLoading} />
 			</div>
 		);
 	} else {
