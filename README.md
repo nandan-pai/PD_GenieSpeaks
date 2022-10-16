@@ -24,7 +24,7 @@ This is where all the reviews and ratings for your selected products are display
 
 ![Product Details](./images/ProductDetails.png)
 
-<hr />
+---
 
 # Developer
 

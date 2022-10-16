@@ -6,6 +6,7 @@ import { useState } from "react";
 import "./App.css";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
+import NavSearchBar from "./components/SearchBar/NavSearchBar/NavSearchBar";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -34,9 +35,18 @@ const App = () => {
 					/>
 					<Route path='/signup' element={<SignUp />} />
 					<Route path='/signin' element={<SignIn />} />
-					<Route path='/product/:id' element={<ProductDetail />} />
+					<Route
+						path='/product/:id'
+						element={
+							<ProductDetail
+								searchQuery={searchQuery}
+								setSearchQuery={setSearchQuery}
+							/>
+						}
+					/>
 				</Routes>
 			</BrowserRouter>
+			{/* <NavSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
 		</div>
 	);
 };
