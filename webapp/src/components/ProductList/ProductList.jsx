@@ -6,6 +6,7 @@ import {
 	Text,
 	Spinner,
 	Spacer,
+	VStack,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -15,7 +16,7 @@ import { ApiBaseUrl } from "../../config";
 import Loader from "../Loader/Loader";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
-
+import { BiError } from "react-icons/bi";
 import "./ProductList.css";
 import SortMenu from "../SortMenu/SortMenu";
 
@@ -53,40 +54,58 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 	return (
 		<div className='prodList' mr='10px'>
 			<NavBar />
-			<HStack mr='20px'>
-				<Text ml='25%'>
-					Showing 1 - 15 of over 400 results for{" "}
-					<span className='query'>"{searchQuery}"</span>
-				</Text>
-				<Spacer />
-				<SortMenu sort={sort} setSort={setSort} />
-			</HStack>
-			<Grid templateColumns='repeat(4, 1fr)'>
-				<GridItem colSpan={1}>
-					<Filters searchQuery={searchQuery} setFilter={setFilter} filter={filter}/>
-				</GridItem>
-				<GridItem colSpan={3}>
-					{loader ? (
-						<Spinner />
-					) : (
-						<SimpleGrid minChildWidth='420px' spacing='10px'>
-							{productList.map((product, index) => {
-								return (
-									<ProductCard
-										key={product._id}
-										_id={product._id}
-										productName={product.title}
-										productImage={product.images[0]}
-										price={product.min_price}
-										noOfReviews={product.review_count}
-										satisfactionRating='98.5'
-									/>
-								);
-							})}
-						</SimpleGrid>
-					)}
-				</GridItem>
-			</Grid>
+			{loader ? (
+				""
+			) : productList.length > 0 ? (
+				<div>
+					<HStack mr='20px'>
+						<Text ml='25%'>
+							Showing 1 - 20 of {productList.length} results for{" "}
+							<span className='query'>"{searchQuery}"</span>
+						</Text>
+						<Spacer />
+						<SortMenu sort={sort} setSort={setSort} />
+					</HStack>
+					<Grid templateColumns='repeat(4, 1fr)'>
+						<GridItem colSpan={1}>
+							<Filters
+								searchQuery={searchQuery}
+								setFilter={setFilter}
+								filter={filter}
+							/>
+						</GridItem>
+						<GridItem colSpan={3}>
+							{loader ? (
+								<Spinner />
+							) : (
+								<SimpleGrid minChildWidth='420px' spacing='10px'>
+									{productList.map((product, index) => {
+										return (
+											<ProductCard
+												key={product._id}
+												_id={product._id}
+												productName={product.title}
+												productImage={product.images[0]}
+												price={product.min_price}
+												noOfReviews={product.review_count}
+												satisfactionRating='98.5'
+											/>
+										);
+									})}
+								</SimpleGrid>
+							)}
+						</GridItem>
+					</Grid>
+				</div>
+			) : (
+				<VStack mt='10%'>
+					<BiError color='tomato' ml='50%' size='50px' />
+					<Text fontSize='2xl'>
+						No products available for{" "}
+						<span className='query'>"{searchQuery}"</span>
+					</Text>
+				</VStack>
+			)}
 		</div>
 	);
 };
