@@ -7,7 +7,6 @@ import {
 	InputGroup,
 	InputLeftElement,
 	InputRightElement,
-	Text,
 	useColorMode,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
@@ -56,11 +55,11 @@ const NavSearchBar = (props) => {
 						/>
 						<InputRightElement mr='5px' w='80px'>
 							<Button
-								bg='transparent'
 								type='submit'
 								size='md'
 								h='1.75rem'
 								color={isDark ? "white.100" : ""}
+								className="navbarbtn"
 							>
 								Search
 							</Button>
