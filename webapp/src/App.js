@@ -6,7 +6,6 @@ import { useState } from "react";
 import "./App.css";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
-import NavSearchBar from "./components/SearchBar/NavSearchBar/NavSearchBar";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState("");

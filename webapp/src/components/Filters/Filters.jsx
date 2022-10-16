@@ -13,12 +13,14 @@ import {
 	useColorMode,
 	Spinner,
 	CheckboxGroup,
+	VStack,
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
 
 import "./Filters.css";
+import { BiError } from "react-icons/bi";
 
 const Filters = ({ searchQuery, setFilter, filter }) => {
 	const [categoryList, setCategoryList] = useState([]);
@@ -134,7 +136,7 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 				<Text fontSize='lg'>Filter</Text>
 				{isCategoryLoading ? (
 					<Spinner />
-				) : (
+				) : categoryList.length ? (
 					<>
 						{categoryList.map((category, index) => {
 							if (category.type === "checklist") {
@@ -146,6 +148,13 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 							}
 						})}
 					</>
+				) : (
+					<VStack mt='10%'>
+						<BiError color='orange' ml='50%' size='50px' />
+						<Text fontSize='2xl'>
+							No Filters
+						</Text>
+					</VStack>
 				)}
 			</Box>
 		</div>

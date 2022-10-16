@@ -13,7 +13,6 @@ import { useState, useEffect, useCallback } from "react";
 import Filters from "../Filters/Filters";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
-import Loader from "../Loader/Loader";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
@@ -73,15 +72,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 				<GridItem colSpan={3}>
 					{loader ? (
 						<Spinner />
-					) : productList.length === 0 ? (
-						<VStack mt='10%'>
-							<BiError color='orange' ml='50%' size='50px' />
-							<Text fontSize='2xl'>
-								No products available for{" "}
-								<span className='warning'>"{searchQuery}"</span>
-							</Text>
-						</VStack>
-					) : (
+					) : productList.length ? (
 						<SimpleGrid minChildWidth='420px' spacing='10px'>
 							{productList.map((product, index) => {
 								return (
@@ -97,6 +88,14 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 								);
 							})}
 						</SimpleGrid>
+					) : (
+						<VStack mt='10%'>
+							<BiError color='orange' ml='50%' size='50px' />
+							<Text fontSize='2xl'>
+								No products available for{" "}
+								<span className='warning'>"{searchQuery}"</span>
+							</Text>
+						</VStack>
 					)}
 				</GridItem>
 			</Grid>
