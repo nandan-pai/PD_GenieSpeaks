@@ -32,6 +32,7 @@ const NavSearchBar = (props) => {
 		}
 
 		if (buSearchQuery !== "") {
+			props.setFilter({});
 			props.setSearchQuery(buSearchQuery);
 		}
 	};

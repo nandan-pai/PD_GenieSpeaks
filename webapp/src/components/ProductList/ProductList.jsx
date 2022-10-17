@@ -21,6 +21,7 @@ import SortMenu from "../SortMenu/SortMenu";
 
 const ProductList = ({ searchQuery, setSearchQuery }) => {
 	const [productList, setProductList] = useState([]);
+	const [productCount, setProductCount] = useState(0);
 	const [sort, setSort] = useState("_id");
 	const [limit, setLimit] = useState(20);
 	const [offset, setOffset] = useState(0);
@@ -42,25 +43,40 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			filter,
 		};
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
-			// console.log(res.data.productList)
-			setProductList(res.data.productList);
+			console.log(res.data)
+			setProductList(res.data.product_list);
+			setProductCount(res.data.product_count)
 			showLoader(false);
 		});
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
-	useEffect(getProductList, [searchQuery, getProductList, setProductList]);
+	useEffect(getProductList, [searchQuery, getProductList]);
 
 	return (
 		<div className='prodList' mr='10px'>
-			<NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-			<HStack mr='20px'>
-				<Text ml='25%'>
-					Showing 1 - 20 of {productList.length} results for{" "}
-					<span className='query'>"{searchQuery}"</span>
-				</Text>
-				<Spacer />
-				<SortMenu sort={sort} setSort={setSort} />
-			</HStack>
+			<NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} setFilter={setFilter} />
+			{
+				productCount ? (
+					<HStack mr='20px'>
+						{
+							productCount === 1 ? (
+								<Text ml='25%'>
+									Showing {productCount} of {productCount} result for&nbsp;<span className='query'>"{searchQuery}"</span>
+								</Text>
+							) : (
+
+								<Text ml='25%'>
+									Showing {offset + 1} - {(offset + limit) < productList.length ? (offset + limit) : productList.length} of {productCount} results for&nbsp;<span className='query'>"{searchQuery}"</span>
+								</Text>
+							)
+						}
+						<Spacer />
+						<SortMenu sort={sort} setSort={setSort} />
+					</HStack>
+				) : (
+					<></>
+				)
+			}
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
 					<Filters

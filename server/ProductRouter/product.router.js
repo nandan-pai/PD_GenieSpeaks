@@ -42,26 +42,28 @@ router.get('/search/category', async (req, res) => {
       return res.status(400).json({ message: 'Requires Query' })
     }
 
+    const search_query = {
+      '$or': [
+        {
+          'title': {
+            '$regex': query,
+            '$options': 'i'
+          }
+        }, {
+          'tags': {
+            '$elemMatch': {
+              '$regex': query,
+              '$options': 'i'
+            }
+          }
+        }
+      ]
+    }
+
     let category = await Product.aggregate(
       [
         {
-          '$match': {
-            '$or': [
-              {
-                'title': {
-                  '$regex': query,
-                  '$options': 'i'
-                }
-              }, {
-                'tags': {
-                  '$elemMatch': {
-                    '$regex': query,
-                    '$options': 'i'
-                  }
-                }
-              }
-            ]
-          }
+          '$match': search_query
         }, {
           '$lookup': {
             'from': 'Organization',
@@ -97,11 +99,6 @@ router.get('/search/category', async (req, res) => {
             }
           }
         }, {
-          '$addFields': {
-            'ecommerce.name': '$ecommerce.info.name',
-            'category_list': []
-          }
-        }, {
           '$group': {
             '_id': null,
             'min_price': {
@@ -113,7 +110,7 @@ router.get('/search/category', async (req, res) => {
             'ecommerce_list': {
               '$push': {
                 '_id': '$ecommerce.ecommerceID',
-                'name': '$ecommerce.name'
+                'name': '$ecommerce.info.name'
               }
             },
             'organization_list': {
@@ -286,7 +283,7 @@ router.get('/search/category', async (req, res) => {
             '_id': null,
             'cpu_type': {
               '$push': {
-                _id: '$_id',
+                '_id': '$_id',
                 'name': '$_id',
                 'count': '$count'
               }
@@ -315,7 +312,9 @@ router.get('/search/category', async (req, res) => {
       ]
     )
 
-    res.status(200).json({ category: category.length? category[0].category_list: category })
+    res.status(200).json({
+      category: category.length ? category[0].category_list : category
+    })
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })
@@ -330,11 +329,7 @@ router.post('/search', async (req, res) => {
     let sort = req.body.sort
     const filter = req.body.filter
     let sort_form = 1;
-    // console.log(query)
-    // console.log(offset)
-    // console.log(limit)
-    // console.log(sort)
-    // console.log(filter)
+
     if (!query) {
       return res.status(400).json({ message: 'Requires Query' })
     }
@@ -378,82 +373,108 @@ router.post('/search', async (req, res) => {
     }
 
     // console.log(filter_query)
+    const search_query = {
+      '$or': [
+        {
+          'title': {
+            '$regex': query,
+            '$options': 'i'
+          }
+        }, {
+          'tags': {
+            '$elemMatch': {
+              '$regex': query,
+              '$options': 'i'
+            }
+          }
+        }
+      ]
+    }
 
-    let productList = await Product.aggregate(
+    //For Future me
+    //Remove the querys from the facet. simple
+    //it contains a list of documents, this document itself, like other documents in mongodb, is limited to 16MB.
+    //The $limit can be used to limit its size, though a single document in the response may violate it.
+    //Therefore, if you suspect the result may exceed 16MB, the best way is to query twice.
+
+    let product_details = await Product.aggregate(
       [
         {
           '$match': {
             '$and': [
-              {
-                '$or': [
-                  {
-                    'title': {
-                      '$regex': query,
-                      '$options': 'i'
-                    }
-                  }, {
-                    'tags': {
-                      '$elemMatch': {
-                        '$regex': query,
-                        '$options': 'i'
-                      }
-                    }
-                  }
-                ]
-              },
+              search_query,
               filter_query
             ]
           }
         }, {
-          '$addFields': {
-            'review_count': {
-              '$size': '$reviews'
-            }
-          }
-        }, {
-          '$sort': {
-            [sort]: sort_form
-          }
-        }, {
-          '$skip': parseInt(offset, 10)
-        }, {
-          '$limit': parseInt(limit, 10)
-        }, {
-          '$lookup': {
-            'from': 'Organization',
-            'localField': 'organization',
-            'foreignField': '_id',
-            'as': 'organization'
-          }
-        }, {
-          '$set': {
-            'organization': {
-              '$arrayElemAt': [
-                '$organization', 0
-              ]
-            }
-          }
-        }, {
-          '$addFields': {
-            'min_price': {
-              '$min': '$ecommerce.curr_price'
-            }
-          }
-        }, {
-          '$project': {
-            '_id': 1,
-            'title': 1,
-            'images': 1,
-            'organization._id': 1,
-            'organization.name': 1,
-            'review_count': 1,
-            'min_price': 1
+          '$facet': {
+            'product_count': [
+              {
+                '$count': 'count'
+              }
+            ],
+            'product_list': [
+              {
+                '$addFields': {
+                  'review_count': {
+                    '$size': '$reviews'
+                  }
+                }
+              }, {
+                '$sort': {
+                  [sort]: sort_form
+                }
+              }, {
+                '$skip': parseInt(offset, 10)
+              }, {
+                '$limit': parseInt(limit, 10)
+              }, {
+                '$lookup': {
+                  'from': 'Organization',
+                  'localField': 'organization',
+                  'foreignField': '_id',
+                  'as': 'organization'
+                }
+              }, {
+                '$set': {
+                  'organization': {
+                    '$arrayElemAt': [
+                      '$organization', 0
+                    ]
+                  }
+                }
+              }, {
+                '$addFields': {
+                  'min_price': {
+                    '$min': '$ecommerce.curr_price'
+                  }
+                }
+              }, {
+                '$project': {
+                  '_id': 1,
+                  'title': 1,
+                  'images': 1,
+                  'organization._id': 1,
+                  'organization.name': 1,
+                  'review_count': 1,
+                  'min_price': 1
+                }
+              }
+            ]
           }
         }
       ]
     )
+    let product_list = product_details[0].product_list
+    let product_count = 0
+    if (product_details[0].product_count.length) {
+      product_count = product_details[0].product_count[0].count
+    }
 
-    res.status(200).json({ productList })
+    res.status(200).json({
+      product_count,
+      product_list
+    })
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })
