@@ -66,7 +66,7 @@ PS: We also have a dark mode!
 
 You can search for the product of your choice and filter according to various parameters like Brand, Price Range, etc.
 
-![Search Results](./images/SearchResults.png)
+![Search Results](./images/search%20results.png)
 
 ## Product Details
 
