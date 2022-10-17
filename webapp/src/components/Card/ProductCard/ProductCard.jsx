@@ -51,8 +51,8 @@ const ProductCard = ({
 			bgColor={isDark ? "" : "white"}
 		>
 			<HStack spacing={5}>
-				<Box w='500px' h='100px' maxW='550px'>
-					<Image src={productImage} />
+				<Box w='500px' maxH='200px'>
+					<Image src={productImage} maxH='200px' />
 				</Box>
 				<Box>
 					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(3, 1fr)'>
@@ -76,7 +76,9 @@ const ProductCard = ({
 							<Text>{noOfReviews} reviews</Text>
 						</GridItem>
 						<GridItem colSpan={1}>
-							<Heading fontSize='xl'>{price? <>&#8377;{price}</>:"Unavailable"}</Heading>
+							<Heading fontSize='xl'>
+								{price ? <>&#8377;{price}</> : "Unavailable"}
+							</Heading>
 						</GridItem>
 					</Grid>
 				</Box>
