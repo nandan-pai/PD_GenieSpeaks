@@ -154,6 +154,7 @@ const NavBar = (props) => {
 					<NavSearchBar
 						searchQuery={props.searchQuery}
 						setSearchQuery={props.setSearchQuery}
+						setFilter={props.setFilter}
 					/>
 				)}
 			</HStack>

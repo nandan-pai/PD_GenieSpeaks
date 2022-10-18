@@ -1,31 +1,3 @@
-# Consumer
-
-## About Us
-
-GenieSpeaks is a one-stop shop for reviews for all varities of products aggregated from websites like Amazon and Flipkart. You can search for the product you need to know about and get reviews about them from various website at a single location as well as provide you with the best deal out of all these E-commerce websites.
-
-## Landing Page
-
-In the landing page you can either directly search for the product of your want or sign in.
-
-PS: We also have a dark mode!
-
-![Landing Page](./images/LandingPage.png)
-
-## Search Page
-
-You can search for the product of your choice and filter according to various parameters like Brand, Price Range, etc.
-
-![Search Results](./images/SearchResults.png)
-
-## Product Details
-
-This is where all the reviews and ratings for your selected products are displayed. All the reviews are collected from Amazon and Flipkart (More websites joining soon).
-
-![Product Details](./images/ProductDetails.png)
-
----
-
 # Developer
 
 ## Problem Statement / EPIC
@@ -70,4 +42,34 @@ We plan to achieve this goal by scraping reviews from various authentic websites
 
 ## DevSecOps Architecture
 
-![DevSecOps architecture](./images/DevSecOps-architectures.png)
+![DevSecOps architecture](./images/DevSecOps%20architecture.png)
+
+---
+
+# Consumer
+
+https://user-images.githubusercontent.com/62395925/196083102-30000a68-d94a-47ce-b19e-e3179eeeeee8.mp4
+
+## About Us
+
+GenieSpeaks is a one-stop shop for reviews for all varities of products aggregated from websites like Amazon and Flipkart. You can search for the product you need to know about and get reviews about them from various website at a single location as well as provide you with the best deal out of all these E-commerce websites.
+
+## Landing Page
+
+In the landing page you can either directly search for the product of your want or sign in.
+
+PS: We also have a dark mode!
+
+![Landing Page](./images/LandingPage.png)
+
+## Search Page
+
+You can search for the product of your choice and filter according to various parameters like Brand, Price Range, etc.
+
+![Search Results](./images/search%20results.png)
+
+## Product Details
+
+This is where all the reviews and ratings for your selected products are displayed. All the reviews are collected from Amazon and Flipkart (More websites joining soon).
+
+![Product Details](./images/ProductDetails.png)
