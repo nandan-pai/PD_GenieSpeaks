@@ -42,7 +42,7 @@ We plan to achieve this goal by scraping reviews from various authentic websites
 
 ## DevSecOps Architecture
 
-![DevSecOps architecture](./images/DevSecOps-architectures.png)
+![DevSecOps architecture](./images/DevSecOps%20architecture.png)
 
 ---
 
