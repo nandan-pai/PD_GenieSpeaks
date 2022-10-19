@@ -12,20 +12,18 @@ import {
 	Text,
 	useColorMode,
 	Spinner,
+	CheckboxGroup,
+	VStack,
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
 
 import "./Filters.css";
+import { BiError } from "react-icons/bi";
 
-const Filters = ({ searchQuery }) => {
-	const [initRange, setInitRange] = useState([0, 1000]);
-	const [minPrice, setMinPrice] = useState(0);
-	const [maxPrice, setMaxPrice] = useState(1000);
-	const [organizationList, setOrganizationList] = useState([]);
-	const [ecommerceList, setEcommerceList] = useState([]);
-	const [cpuList, setCPUList] = useState([]);
+const Filters = ({ searchQuery, setFilter, filter }) => {
+	const [categoryList, setCategoryList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
 
 	const { colorMode } = useColorMode();
@@ -33,114 +31,134 @@ const Filters = ({ searchQuery }) => {
 
 	const getCategories = useCallback(() => {
 		setCategoryLoading(true);
-		axios.get(`${ApiBaseUrl}/prod/search/category?query=${searchQuery}`).then((res) => {
-			setInitRange([res.data.category.min_price, res.data.category.max_price])
-			setMinPrice(res.data.category.min_price)
-			setMaxPrice(res.data.category.max_price)
-			setOrganizationList(res.data.category.organization_list)
-			setEcommerceList(res.data.category.ecommerce_list)
-			setCPUList(res.data.category.cpu_type)
-			setCategoryLoading(false);
-		});
+		axios
+			.get(`${ApiBaseUrl}/prod/search/category?query=${searchQuery}`)
+			.then((res) => {
+				setCategoryList(res.data.category);
+				setCategoryLoading(false);
+			});
 	}, [searchQuery]);
 
 	useEffect(getCategories, [searchQuery, getCategories]);
 
+	const generate_checklist = (obj, index) => {
+		// console.log(obj.identifier)
+		return (
+			<div className='filter-category' key={index}>
+				<Text fontSize='md' fontWeight='semibold' mt='5'>
+					{obj.name}
+				</Text>
+				<CheckboxGroup
+					onChange={(e) =>
+						setFilter({
+							...filter,
+							[obj.name.toString()]: {
+								identifier: obj.identifier,
+								type: obj.return,
+								value: e,
+							},
+						})
+					}
+				>
+					<Stack mt='2' ml='2' pr={5} className='scrollable'>
+						{obj.value.map((objval, index) => {
+							return (
+								<HStack key={objval._id}>
+									<Checkbox
+										value={objval._id ? objval._id : "null"}
+									>
+										{objval.name ? objval.name : "null"}
+									</Checkbox>
+									<Spacer />
+									<Text color={isDark ? "white.100" : "gray.500"}>
+										{objval.count}
+									</Text>
+								</HStack>
+							);
+						})}
+					</Stack>
+				</CheckboxGroup>
+			</div>
+		);
+	};
 
-	return <div>
-		<Box
-			h='100vh'
-			w='300px'
-			ml={5}
-			bg={isDark ? "" : "white"}
-			p={5}
-			border='1px'
-			borderRadius='10px'
-		>
-			<Text fontSize='lg'>Filter</Text>
-			{
-				isCategoryLoading ? <Spinner /> : <>
-					<div className='filter-category brand'>
-						<Text fontSize='md' fontWeight='semibold' mt='5'>
-							Brand
-						</Text>
-						<Stack mt='2' ml='2' pr={5} className='scrollable'>
-							{
-								organizationList.map((organization, index) => {
-									return <HStack key={organization._id}>
-										<Checkbox>{organization.name}</Checkbox>
-										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
-									</HStack>
-								})
-							}
+	const generate_range = (obj, index) => {
+		// console.log(obj)
+		return (
+			<div className='filter-category price' key={index}>
+				<Text fontSize='md' fontWeight='semibold' mt='5'>
+					{obj.name}
+				</Text>
+				<RangeSlider
+					defaultValue={[obj.value[0], obj.value[1]]}
+					min={obj.value[0]}
+					max={obj.value[1]}
+					step={10000}
+					onChange={(val) =>
+						setFilter({
+							...filter,
+							[obj.name.toString()]: {
+								identifier: obj.identifier,
+								type: obj.return,
+								value: val,
+							},
+						})
+					}
+				>
+					<RangeSliderTrack bg='gray'>
+						<RangeSliderFilledTrack bg='tomato' />
+					</RangeSliderTrack>
+					<RangeSliderMark value={obj.value[0]} mt='1' ml='-2.5' fontSize='sm'>
+						{obj.value[0]}
+					</RangeSliderMark>
+					<RangeSliderMark value={obj.value[1]} mt='1' ml='-35' fontSize='sm'>
+						{obj.value[1]}
+					</RangeSliderMark>
 
-						</Stack>
-					</div>
-					<div className='filter-category price'>
-						<Text fontSize='md' fontWeight='semibold' mt='5'>
-							Price
-						</Text>
-						<RangeSlider
-							defaultValue={[minPrice, maxPrice]}
-							min={initRange[0]}
-							max={initRange[1]}
-							step={10000}
-							onChange={(val) => {
-								setMinPrice(val[0]);
-								setMaxPrice(val[1]);
-							}}
-						>
-							<RangeSliderTrack bg='gray'>
-								<RangeSliderFilledTrack bg='tomato' />
-							</RangeSliderTrack>
-							<RangeSliderMark value={minPrice} mt='1' ml='-2.5' fontSize='sm'>
-								{minPrice}
-							</RangeSliderMark>
-							<RangeSliderMark value={maxPrice} mt='1' ml='-2.5' fontSize='sm'>
-								{maxPrice}
-							</RangeSliderMark>
+					<RangeSliderThumb index={0} />
+					<RangeSliderThumb index={1} />
+				</RangeSlider>
+			</div>
+		);
+	};
 
-							<RangeSliderThumb index={0} />
-							<RangeSliderThumb index={1} />
-						</RangeSlider>
-					</div>
-					<div className='filter-category cpu-type'>
-						<Text fontSize='md' fontWeight='semibold' mt='5'>
-							CPU Type
-						</Text>
-						<Stack mt='2' ml='2' pr={5} className='scrollable'>
-							{
-								cpuList.map((cpuType, index) => {
-									return <HStack key={index}>
-										<Checkbox>{cpuType}</Checkbox>
-										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
-									</HStack>
-								})
+	return (
+		<div>
+			<Box
+				h='100vh'
+				w='300px'
+				ml={5}
+				bg={isDark ? "" : "white"}
+				p={5}
+				border='1px'
+				borderRadius='10px'
+			>
+				<Text fontSize='lg'>Filter</Text>
+				{isCategoryLoading ? (
+					<Spinner />
+				) : categoryList.length ? (
+					<>
+						{categoryList.map((category, index) => {
+							if (category.type === "checklist") {
+								return generate_checklist(category, index);
+							} else if (category.type === "range") {
+								return generate_range(category, index);
+							} else {
+								return <></>;
 							}
-						</Stack>
-					</div>
-					<div className='filter-category cpu-type'>
-						<Text fontSize='md' fontWeight='semibold' mt='5'>
-							Ecommerce Sites
+						})}
+					</>
+				) : (
+					<VStack mt='10%'>
+						<BiError color='orange' ml='50%' size='50px' />
+						<Text fontSize='2xl'>
+							No Filters
 						</Text>
-						<Stack mt='2' ml='2' pr={5} className='scrollable'>
-							{
-								ecommerceList.map((ecommerce, index) => {
-									return <HStack key={ecommerce._id}>
-										<Checkbox>{ecommerce.name}</Checkbox>
-										<Spacer />
-										<Text color={isDark ? "white.100" : "gray.500"}>152</Text>
-									</HStack>
-								})
-							}
-						</Stack>
-					</div>
-				</>
-			}
-		</Box>
-	</div>
+					</VStack>
+				)}
+			</Box>
+		</div>
+	);
 };
 
 export default Filters;

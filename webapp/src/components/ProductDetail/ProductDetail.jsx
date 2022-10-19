@@ -19,24 +19,22 @@ import {
 	// FaStar,
 	FaRegThumbsUp,
 } from "react-icons/fa";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 
-function ProductDetail() {
+const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
-	const [loader, showLoader] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const location = useLocation();
 
 	const { id } = useParams();
 
 	const getProductInfo = () => {
+		setIsLoading(true);
 		axios.get(`${ApiBaseUrl}/prod?id=${id}`).then((res) => {
 			setProductInfo(res.data.productData);
-			showLoader(!loader);
 			setIsLoading(false);
 		});
 	};
@@ -46,17 +44,23 @@ function ProductDetail() {
 	if (isLoading) {
 		return (
 			<div>
-				<NavBar currentPath={location.pathname} />
+				<NavBar
+					searchQuery={props.searchQuery}
+					setSearchQuery={props.setSearchQuery}
+				/>
 
-				<Loader hidden={loader} />
-				<Loader hidden={loader} />
-				<Loader hidden={loader} />
+				<Loader hidden={isLoading} />
+				<Loader hidden={isLoading} />
+				<Loader hidden={isLoading} />
 			</div>
 		);
 	} else {
 		return (
 			<>
-				<NavBar currentPath={location.pathname} />
+				<NavBar
+					searchQuery={props.searchQuery}
+					setSearchQuery={props.setSearchQuery}
+				/>
 
 				<Grid templateColumns='repeat(3, 1fr)' m={10}>
 					<GridItem colSpan={1}>
@@ -149,6 +153,6 @@ function ProductDetail() {
 			</>
 		);
 	}
-}
+};
 
 export default ProductDetail;

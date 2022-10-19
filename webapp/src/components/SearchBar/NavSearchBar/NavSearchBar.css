@@ -1,0 +1,13 @@
+.navSearch {
+    display: flex;
+    width: 100%
+}
+
+.navbarbtn {
+    background-color: transparent !important;
+    
+}
+
+.navbarbtn:hover {
+    background-color: lightgray !important;
+}

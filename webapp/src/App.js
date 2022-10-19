@@ -34,9 +34,18 @@ const App = () => {
 					/>
 					<Route path='/signup' element={<SignUp />} />
 					<Route path='/signin' element={<SignIn />} />
-					<Route path='/product/:id' element={<ProductDetail />} />
+					<Route
+						path='/product/:id'
+						element={
+							<ProductDetail
+								searchQuery={searchQuery}
+								setSearchQuery={setSearchQuery}
+							/>
+						}
+					/>
 				</Routes>
 			</BrowserRouter>
+			{/* <NavSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
 		</div>
 	);
 };
