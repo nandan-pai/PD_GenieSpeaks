@@ -23,17 +23,17 @@ jobs:
             webapp:
               - 'webapp/**'
 
-      # - name: geniescrapes tests
-      #   if: steps.filter.outputs.geniescrapes != 'true'
-      #   run: echo "geniescrapes file"
+      - name: Check geniescrapes folder changes
+        if: steps.filter.outputs.geniescrapes == 'true'
+        run: echo "geniescrapes folder changes"
 
-      # - name: not server tests
-      #   if: steps.filter.outputs.server != 'true'
-      #   run: echo "NOT server file"
+      - name: Check server folder changes
+        if: steps.filter.outputs.server == 'true'
+        run: echo "server folder changes"
       
-      # - name: not webapp tests
-      #   if: steps.filter.outputs.webapp != 'true'
-      #   run: echo "NOT webapp file"
+      - name: Check webapp folder changes
+        if: steps.filter.outputs.webapp == 'true'
+        run: echo "webapp folder changes"
 
 
   # dast:
