@@ -9,7 +9,9 @@ jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.filter.outputs }}
+      geniescrapes: ${{ steps.filter.outputs.geniescrapes }}
+      server: ${{ steps.filter.outputs.server }}
+      webapp: ${{ steps.filter.outputs.webapp }}
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -47,7 +49,7 @@ jobs:
       # - dast
       - paths-filter
     uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
-    if: needs.path-filters.outputs.output1.geniescrapes == 'true'
+    if: needs.path-filter.outputs.geniescrapes == 'true'
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
@@ -73,7 +75,7 @@ jobs:
     needs:
       # - dast
       - paths-filter
-    if: needs.path-filters.outputs.output1.server == 'true'
+    if: needs.path-filter.outputs.server == 'true'
     uses: ./.github/workflows/server_shiftleft_ng_sast.yml
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
@@ -100,7 +102,7 @@ jobs:
     needs:
       # - dast
       - paths-filter
-    if: needs.path-filters.outputs.output1.webapp == 'true'
+    if: needs.path-filter.outputs.webapp == 'true'
     uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
