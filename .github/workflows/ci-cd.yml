@@ -19,9 +19,9 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
-        filters: |
-          geniescrapes:
-            - 'geniescrapes/**'
+          filters: |
+            geniescrapes:
+              - 'geniescrapes/**'
       - if: steps.changes.outputs.geniescrapes == 'true'
         uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
     secrets: 
@@ -50,9 +50,9 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
-        filters: |
-          server:
-            - 'server/**'
+          filters: |
+            server:
+              - 'server/**'
       - if: steps.changes.outputs.server == 'true'
         uses: ./.github/workflows/server_shiftleft_ng_sast.yml
     # uses: ./.github/workflows/server_shiftleft_ng_sast.yml
