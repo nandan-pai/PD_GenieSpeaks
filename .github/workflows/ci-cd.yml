@@ -47,21 +47,21 @@ jobs:
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
-  # scraper_dev_deploy:
-  #   name: Scraper Dev Container Deploy
-  #   environment: development
-  #   needs:
-  #   - scraper_shiftleft_ng_sast
-  #   uses: ./.github/workflows/scraper_deploy.yml
-  #   with:
-  #     app_name: geniescraper
-  #     registry: geniespeaks.azurecr.io/
-  #     registry_uri: https://geniespeaks.azurecr.io/
-  #     environment: deployment
-  #   secrets:
-  #     azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
-  #     azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
-  #     azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
+  scraper_dev_deploy:
+    name: Scraper Dev Container Deploy
+    environment: development
+    needs:
+    - scraper_shiftleft_ng_sast
+    uses: ./.github/workflows/scraper_deploy.yml
+    with:
+      app_name: geniescraper
+      registry: geniespeaks.azurecr.io/
+      registry_uri: https://geniespeaks.azurecr.io/
+      environment: deployment
+    secrets:
+      azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
+      azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
+      azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
 
 
   server_shiftleft_ng_sast:
