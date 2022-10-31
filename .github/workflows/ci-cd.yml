@@ -24,8 +24,8 @@ jobs:
               - 'geniescrapes/**'
       - if: steps.changes.outputs.geniescrapes == 'true'
         uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
-    secrets: 
-      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+        secrets: 
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   # scraper_dev_deploy:
   #   needs:
@@ -55,9 +55,9 @@ jobs:
               - 'server/**'
       - if: steps.changes.outputs.server == 'true'
         uses: ./.github/workflows/server_shiftleft_ng_sast.yml
-    # uses: ./.github/workflows/server_shiftleft_ng_sast.yml
-    secrets: 
-      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+        # uses: ./.github/workflows/server_shiftleft_ng_sast.yml
+        secrets: 
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   server_dev_deploy:
     name: Server Dev Container Deploy
@@ -88,9 +88,9 @@ jobs:
               - 'webapp/**'
       - if: steps.changes.outputs.webapp == 'true'
         uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
-    # uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
-    secrets: 
-      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+        # uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
+        secrets: 
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   webapp_dev_deploy:
     name: Webapp Dev Container Deploy
