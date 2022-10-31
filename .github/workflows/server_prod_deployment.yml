@@ -4,14 +4,30 @@
 name: Server Prod Deployment
 
 on:
-  push:
-    branches:
-      - master
-      - integration
-    paths:
-      - server/**
-  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - master
+  #     - integration
+  #   paths:
+  #     - server/**
   workflow_call:
+    inputs:
+      registry:
+        description: Container Registry URI
+        required: true
+    secrets:
+      azure_username:
+        description: azure_username to deploy in ACR
+        required: true
+      
+      azure_password:
+        description: azure_password to deploy in ACR
+        required: true
+
+      azure_publish_profile:
+        description: azure_publish_profile to deploy in ACR
+        required: true
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,15 +42,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: https://geniespeaks.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
+        registry: ${{ inputs.registry }}
+        username: ${{ secrets.azure_username }}
+        password: ${{ secrets.azure_password }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: geniespeaks.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}/server:${{ github.sha }}
+        tags: geniespeaks.azurecr.io/${{ secrets.azure_username }}/server:${{ github.sha }}
         file: ./server/server.dockerfile
 
   deploy:
@@ -51,5 +67,5 @@ jobs:
       with:
         app-name: 'gsserver'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
-        images: 'geniespeaks.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}/server:${{ github.sha }}'
+        publish-profile: ${{ secrets.azure_publish_profile }}
+        images: 'geniespeaks.azurecr.io/${{ secrets.azure_username }}/server:${{ github.sha }}'
