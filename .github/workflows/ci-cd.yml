@@ -109,7 +109,7 @@ jobs:
     - webapp_shiftleft_ng_sast
     runs-on: ubuntu-latest
     environment: development
-    setps:
+    steps:
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -144,5 +144,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check annotations
-      uses: OpenTTD/actions/annotation-check@v3
+    - name: Testing
+      run: |
+        echo "check_annotations Testing"
