@@ -83,9 +83,9 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
-        filters: |
-          webapp:
-            - 'webapp/**'
+          filters: |
+            webapp:
+              - 'webapp/**'
       - if: steps.changes.outputs.webapp == 'true'
         uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
     # uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
