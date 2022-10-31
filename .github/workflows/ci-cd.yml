@@ -6,23 +6,36 @@ on:
   workflow_dispatch:
 
 jobs:
-  dast:
-    uses: ./.github/workflows/dast_baseline_zap.yaml
+  # dast:
+  #   name: DAST Baseline Scan
+  #   uses: ./.github/workflows/dast_baseline_zap.yaml
 
 
   scraper_shiftleft_ng_sast:
+    name: Scraper Shiftleft NG SAST
     needs:
-    - dast
-    uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
+      - dast
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+        filters: |
+          geniescrapes:
+            - 'geniescrapes/**'
+      - if: steps.changes.outputs.geniescrapes == 'true'
+        uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
-  # scraper_dev_deployment:
+  # scraper_dev_deploy:
   #   needs:
   #   - scraper_shiftleft_ng_sast
-  #   uses: ./.github/workflows/scraper_dev_deployment.yml
+  #   uses: ./.github/workflows/scraper_deploy.yml
   #   with:
-  #     registry: https://geniespeaks.azurecr.io/
+  #     app_name: geniescraper
+  #     registry: geniespeaks.azurecr.io/
+  #     registry_uri: https://geniespeaks.azurecr.io/
+  #     environment: deployment
   #   secrets:
   #     azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
   #     azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
@@ -30,18 +43,32 @@ jobs:
 
 
   server_shiftleft_ng_sast:
+    name: Server Shiftleft NG SAST
     needs:
     - dast
-    uses: ./.github/workflows/server_shiftleft_ng_sast.yml
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+        filters: |
+          server:
+            - 'server/**'
+      - if: steps.changes.outputs.server == 'true'
+        uses: ./.github/workflows/server_shiftleft_ng_sast.yml
+    # uses: ./.github/workflows/server_shiftleft_ng_sast.yml
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
-  server_dev_deployment:
+  server_dev_deploy:
+    name: Server Dev Container Deploy
     needs:
     - server_shiftleft_ng_sast
-    uses: ./.github/workflows/server_prod_deployment.yml
+    uses: ./.github/workflows/server_deploy.yml
     with:
-      registry: https://geniespeaks.azurecr.io/
+      app_name: gsfrontend
+      registry: geniespeaks.azurecr.io/
+      registry_uri: https://geniespeaks.azurecr.io/
+      environment: deployment
     secrets:
       azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
       azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
@@ -49,40 +76,44 @@ jobs:
 
 
   webapp_shiftleft_ng_sast:
+    name: Webapp Shiftleft NG SAST
     needs:
     - dast
-    uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+        filters: |
+          webapp:
+            - 'webapp/**'
+      - if: steps.changes.outputs.webapp == 'true'
+        uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
+    # uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
     secrets: 
       SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
-  webapp_dev_deployment:
+  webapp_dev_deploy:
+    name: Webapp Dev Container Deploy
     needs:
     - webapp_shiftleft_ng_sast
-    uses: ./.github/workflows/webapp_prod_deployment.yml
+    uses: ./.github/workflows/webapp_deploy.yml
     with:
-      registry: https://geniespeaks.azurecr.io/
+      app_name: gsserver
+      registry: geniespeaks.azurecr.io/
+      registry_uri: https://geniespeaks.azurecr.io/
+      environment: deployment
     secrets:
       azure_username: ${{ secrets.AzureAppService_ContainerUsername_9c7f19f74ce342df802412d2ef81331f }}
       azure_password: ${{ secrets.AzureAppService_ContainerPassword_37b38bd9483a459fb307d1f1be00b486 }}
       azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_999508607968491592d3d4cdb87b9568 }}
 
-
-
-  # development:
-  #   name: Development Deployment
-  #   needs:
-  #   - scraper_shiftleft_ng_sast
-  #   - server_shiftleft_ng_sast
-  #   - webapp_shiftleft_ng_sast
-  #   runs-on: ubuntu-latest
-  #   environment: development
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
-
-  #   - name: Testing
-  #     run: |
-  #       echo "Development Testing"
+  webapp_dev_static_app_deploy:
+    name: Webapp Dev Static App Deploy
+    needs:
+    - webapp_shiftleft_ng_sast
+    uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
+    secrets:
+      mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
 
   # production:
   #   name: Production Deployment
@@ -99,17 +130,3 @@ jobs:
   #   - name: Testing
   #     run: |
   #       echo "Production Testing"
-    
-  # check_annotations:
-  #   name: Check Annotations
-  #   needs:
-  #   - development
-
-  #   # if: always() && github.event_name == 'pull_request'
-
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Testing
-  #     run: |
-  #       echo "check_annotations Testing"
