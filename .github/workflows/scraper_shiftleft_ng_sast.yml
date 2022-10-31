@@ -17,22 +17,22 @@ jobs:
   ngsast-build:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Download the ShiftLeft CLI and set permissions
-      run: |
-        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
+      - name: Download the ShiftLeft CLI and set permissions
+        run: |
+          curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
 
-    # ShiftLeft requires Java 1.8
-    - name: Set up Java
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 1.8
+      # ShiftLeft requires Java 1.8
+      - name: Set up Java
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 1.8
 
-    - name: Download requirements.txt
-      run: pip3 install -r ./requirements.txt
-  
-    - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app geniescrapes --python './geniescrapes' 
-      env:
-        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+      - name: Download requirements.txt
+        run: pip3 install -r ./requirements.txt
+    
+      - name: Analyze application with ShiftLeft
+        run: ${GITHUB_WORKSPACE}/sl analyze --app geniescrapes --python './geniescrapes' 
+        env:
+          SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
