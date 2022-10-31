@@ -11,6 +11,7 @@ on:
     paths:
       - webapp/**
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:

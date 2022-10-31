@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - master
+  workflow_call:
+
 jobs:
   ngsast-build:
     runs-on: ubuntu-20.04
