@@ -74,7 +74,7 @@ const MenuLinks = ({ isOpen }) => {
 				spacing={8}
 				align='center'
 				justify={["center", "space-between", "flex-end"]}
-				direction={["column", "row"]}
+				direction='row'
 				pt={[4, 4, 0]}
 			>
 				<Link to='/signin'>
@@ -146,7 +146,11 @@ const NavBar = (props) => {
 
 	return (
 		<NavBarContainer>
-			<HStack display='inline-flex' w='70%' spacing='50px'>
+			<HStack
+				display='inline-flex'
+				w={{ base: "50%", lg: "60%", md: "50%", sm: "70%" }}
+				spacing='50px'
+			>
 				<Logo />
 				{location.pathname === "/" ? (
 					""
