@@ -84,7 +84,7 @@ jobs:
     name: Server Dev Container Deploy
     needs:
       - server_shiftleft_ng_sast
-    environment: development
+    # environment: development
     uses: ./.github/workflows/server_deploy.yml
     with:
       app_name: gsfrontend
@@ -111,7 +111,7 @@ jobs:
     name: Webapp Dev Container Deploy
     needs:
       - webapp_shiftleft_ng_sast
-    environment: development
+    # environment: development
     uses: ./.github/workflows/webapp_deploy.yml
     with:
       app_name: gsserver
@@ -127,7 +127,7 @@ jobs:
     name: Webapp Dev Static App Deploy
     needs:
       - webapp_shiftleft_ng_sast
-    environment: development
+    # environment: development
     uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
     secrets:
       mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
