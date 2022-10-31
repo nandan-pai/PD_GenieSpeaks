@@ -93,7 +93,7 @@ jobs:
     name: DAST ZAP API Scan
     needs:
       - server_dev_deploy
-    uses: ./.github/workflows/dast_zap_api.yaml
+    uses: ./.github/workflows/dast_zap_api.yml
 
 
   webapp_shiftleft_ng_sast:
@@ -135,7 +135,7 @@ jobs:
     needs:
       - webapp_dev_deploy
       - webapp_dev_static_app_deploy
-    uses: ./.github/workflows/dast_zap_baseline.yaml
+    uses: ./.github/workflows/dast_zap_baseline.yml
 
   # production:
   #   name: Production Deployment
