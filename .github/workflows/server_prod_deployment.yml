@@ -20,17 +20,14 @@ on:
       azure_username:
         description: azure_username to deploy in ACR
         required: true
-        type: string
       
       azure_password:
         description: azure_password to deploy in ACR
         required: true
-        type: string
 
       azure_publish_profile:
         description: azure_publish_profile to deploy in ACR
         required: true
-        type: string
   workflow_dispatch:
 
 jobs:
