@@ -8,10 +8,6 @@ on:
   #   branches:
   #     - master
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        description: GITHUB_TOKEN to run zap-scan
-        required: true
 
 jobs:
   zap_scan:

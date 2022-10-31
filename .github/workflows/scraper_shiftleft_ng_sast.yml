@@ -8,7 +8,7 @@ on:
   #     - master
   workflow_call:
     secrets:
-      shiftleft-access-token:
+      SHIFTLEFT_ACCESS_TOKEN:
         description: SHIFTLEFT_ACCESS_TOKEN to run ngsast-build
         required: true
 
@@ -35,4 +35,4 @@ jobs:
     - name: Analyze application with ShiftLeft
       run: ${GITHUB_WORKSPACE}/sl analyze --app geniescrapes --python './geniescrapes' 
       env:
-        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.shiftleft-access-token }}
+        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}

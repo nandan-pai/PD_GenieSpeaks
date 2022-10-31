@@ -11,18 +11,18 @@ jobs:
 
   scraper_shiftleft_ng_sast:
     uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
-    with: 
-      shiftleft-access-token: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    secrets: 
+      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   server_shiftleft_ng_sast:
     uses: ./.github/workflows/server_shiftleft_ng_sast.yml
-    with: 
-      shiftleft-access-token: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    secrets: 
+      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   webapp_shiftleft_ng_sast:
     uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
-    with: 
-      shiftleft-access-token: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    secrets: 
+      SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   development:
     name: Development Deployment
