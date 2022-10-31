@@ -22,7 +22,8 @@ jobs:
           filters: |
             geniescrapes:
               - 'geniescrapes/**'
-      - if: steps.changes.outputs.geniescrapes == 'true'
+      - name: Scraper Shiftleft NG SAST
+        if: steps.changes.outputs.geniescrapes == 'true'
         uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
         secrets: 
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
@@ -45,7 +46,7 @@ jobs:
   server_shiftleft_ng_sast:
     name: Server Shiftleft NG SAST
     needs:
-    - dast
+      - dast
     steps:
       - uses: dorny/paths-filter@v2
         id: changes
@@ -53,16 +54,16 @@ jobs:
           filters: |
             server:
               - 'server/**'
-      - if: steps.changes.outputs.server == 'true'
+      - name: Server Shiftleft NG SAST
+        if: steps.changes.outputs.server == 'true'
         uses: ./.github/workflows/server_shiftleft_ng_sast.yml
-        # uses: ./.github/workflows/server_shiftleft_ng_sast.yml
         secrets: 
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   server_dev_deploy:
     name: Server Dev Container Deploy
     needs:
-    - server_shiftleft_ng_sast
+      - server_shiftleft_ng_sast
     uses: ./.github/workflows/server_deploy.yml
     with:
       app_name: gsfrontend
@@ -78,7 +79,7 @@ jobs:
   webapp_shiftleft_ng_sast:
     name: Webapp Shiftleft NG SAST
     needs:
-    - dast
+      - dast
     steps:
       - uses: dorny/paths-filter@v2
         id: changes
@@ -86,16 +87,16 @@ jobs:
           filters: |
             webapp:
               - 'webapp/**'
-      - if: steps.changes.outputs.webapp == 'true'
+      - name: Webapp Shiftleft NG SAST
+        if: steps.changes.outputs.webapp == 'true'
         uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
-        # uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
         secrets: 
           SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
 
   webapp_dev_deploy:
     name: Webapp Dev Container Deploy
     needs:
-    - webapp_shiftleft_ng_sast
+      - webapp_shiftleft_ng_sast
     uses: ./.github/workflows/webapp_deploy.yml
     with:
       app_name: gsserver
@@ -110,7 +111,7 @@ jobs:
   webapp_dev_static_app_deploy:
     name: Webapp Dev Static App Deploy
     needs:
-    - webapp_shiftleft_ng_sast
+      - webapp_shiftleft_ng_sast
     uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
     secrets:
       mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
