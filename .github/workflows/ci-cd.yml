@@ -5,105 +5,21 @@ on:
   push:
 
 jobs:
-  dast:
-    name: DAST Baseline and API Scan
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: DAST-ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.7.0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        docker_name: 'owasp/zap2docker-stable'
-        target: 'https://www.zaproxy.org'
-        rules_file_name: '.zap/rules.tsv'
-        cmd_options: '-a'
-
-    - name: DAST-ZAP API Scan
-      uses: zaproxy/action-api-scan@v0.1.1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        docker_name: 'owasp/zap2docker-stable'
-        format: openapi
-        target: 'https://www.zaproxy.org/'
-        rules_file_name: '.zap/rules.tsv'
-        cmd_options: '-a'
+  # dast:
+  #   uses: ./.github/workflows/dast_baseline_zap.yaml
 
   scraper_shiftleft_ng_sast:
-    name: Scraper Shiftleft NG SAST
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Download the ShiftLeft CLI and set permissions
-      run: |
-        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
-
-    # ShiftLeft requires Java 1.8
-    - name: Set up Java
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 1.8
-
-    - name: Download requirements.txt
-      run: pip3 install -r ./requirements.txt
-
-    - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app geniescrapes --python './geniescrapes' 
-      env:
-        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
 
   server_shiftleft_ng_sast:
-    name: Server Shiftleft NG SAST
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Download the ShiftLeft CLI and set permissions
-      run: |
-        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
-
-    # ShiftLeft requires Java 1.8
-    - name: Set up Java
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 1.8
-
-    - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app server --js './server' -- --package-json './server/package.json'
-      env:
-        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    uses: ./.github/workflows/server_shiftleft_ng_sast.yml
 
   webapp_shiftleft_ng_sast:
-    name: Webapp Shiftleft NG SAST
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Download the ShiftLeft CLI and set permissions
-      run: |
-        curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
-
-    # ShiftLeft requires Java 1.8
-    - name: Set up Java
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 1.8
-
-    - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app webapp --js './webapp' -- --package-json './webapp/package.json'
-      env:
-        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+    uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
 
   development:
     name: Development Deployment
     needs:
-    - dast
     - scraper_shiftleft_ng_sast
     - server_shiftleft_ng_sast
     - webapp_shiftleft_ng_sast
@@ -120,7 +36,6 @@ jobs:
   production:
     name: Production Deployment
     needs:
-    - dast
     - scraper_shiftleft_ng_sast
     - server_shiftleft_ng_sast
     - webapp_shiftleft_ng_sast

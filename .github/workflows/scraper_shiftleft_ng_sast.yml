@@ -1,6 +1,6 @@
 # This workflow integrates ShiftLeft NG SAST with GitHub
 # Visit https://docs.shiftleft.io for help
-name: Shiftleft NG SAST server
+name: Scraper Shiftleft NG SAST
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ jobs:
   ngsast-build:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Download the ShiftLeft CLI and set permissions
       run: |
@@ -22,7 +22,10 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Download requirements.txt
+      run: pip3 install -r ./requirements.txt
+  
     - name: Analyze application with ShiftLeft
-      run: ${GITHUB_WORKSPACE}/sl analyze --app server --js './server' -- --package-json './server/package.json'
+      run: ${GITHUB_WORKSPACE}/sl analyze --app geniescrapes --python './geniescrapes' 
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
