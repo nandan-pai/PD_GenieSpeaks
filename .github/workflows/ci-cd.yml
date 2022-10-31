@@ -31,7 +31,7 @@ jobs:
         rules_file_name: '.zap/rules.tsv'
         cmd_options: '-a'
 
-  production:
-    runs-on:
-    environment: production
-    steps:
+  # production:
+  #   runs-on:
+  #   environment: production
+  #   steps:
