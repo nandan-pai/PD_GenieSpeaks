@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  # dast:
-  #   name: DAST Baseline Scan
-  #   uses: ./.github/workflows/dast_baseline_zap.yaml
+  dast:
+    name: DAST Baseline Scan
+    uses: ./.github/workflows/dast_baseline_zap.yaml
 
 
   scraper_shiftleft_ng_sast:
