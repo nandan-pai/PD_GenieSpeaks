@@ -3,6 +3,7 @@ name: CI-CD
 on:
   pull_request:
   push:
+    - GEN-35-github-workflow-matrix-sync
 
 jobs:
   development:
