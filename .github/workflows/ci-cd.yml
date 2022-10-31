@@ -38,15 +38,9 @@ jobs:
         run: echo "webapp folder changes"
 
 
-  # dast:
-  #   name: DAST Baseline Scan
-  #   uses: ./.github/workflows/dast_baseline_zap.yaml
-
-
   scraper_shiftleft_ng_sast:
     name: Scraper Shiftleft NG SAST
     needs:
-      # - dast
       - paths-filter
     uses: ./.github/workflows/scraper_shiftleft_ng_sast.yml
     if: needs.path-filter.outputs.geniescrapes == 'true'
@@ -73,7 +67,6 @@ jobs:
   server_shiftleft_ng_sast:
     name: Server Shiftleft NG SAST
     needs:
-      # - dast
       - paths-filter
     if: needs.path-filter.outputs.server == 'true'
     uses: ./.github/workflows/server_shiftleft_ng_sast.yml
@@ -96,11 +89,16 @@ jobs:
       azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
       azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
 
+  server_dast_zap_api:
+    name: DAST ZAP API Scan
+    needs:
+      - server_dev_deploy
+    uses: ./.github/workflows/dast_zap_api.yaml
+
 
   webapp_shiftleft_ng_sast:
     name: Webapp Shiftleft NG SAST
     needs:
-      # - dast
       - paths-filter
     if: needs.path-filter.outputs.webapp == 'true'
     uses: ./.github/workflows/webapp_shiftleft_ng_sast.yml
@@ -131,6 +129,13 @@ jobs:
     uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
     secrets:
       mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
+
+  webapp_dast_zap_baseline:
+    name: DAST ZAP Baseline Scan
+    needs:
+      - webapp_dev_deploy
+      - webapp_dev_static_app_deploy
+    uses: ./.github/workflows/dast_zap_baseline.yaml
 
   # production:
   #   name: Production Deployment
