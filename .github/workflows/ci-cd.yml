@@ -49,7 +49,6 @@ jobs:
 
   scraper_dev_deploy:
     name: Scraper Dev Container Deploy
-    environment: development
     needs:
     - scraper_shiftleft_ng_sast
     uses: ./.github/workflows/scraper_deploy.yml
