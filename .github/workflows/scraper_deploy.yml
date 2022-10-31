@@ -46,7 +46,8 @@ on:
 jobs:
   pretend:
     name: Scraper Deployment
-    run: echo "scraper Deploys here"
+    steps:
+      - run: echo "scraper Deploys here"
   # build:
   #   runs-on: 'ubuntu-latest'
 
