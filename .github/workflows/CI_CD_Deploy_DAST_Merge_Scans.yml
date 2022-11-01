@@ -63,6 +63,7 @@ jobs:
     needs:
       - paths-filter
     if: needs.paths-filter.outputs.server == 'true'
+    uses: ./.github/workflows/server_deploy.yml
     with:
       app_name: gsfrontend
       registry: geniespeaks.azurecr.io
