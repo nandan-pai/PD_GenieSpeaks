@@ -5,7 +5,7 @@ import { useState } from "react";
 import "./App.css";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
-import ProductDetailRevamp from "./components/ProductDetail/ProductDetailRevamp";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +37,7 @@ const App = () => {
 					<Route
 						path='/product/:id'
 						element={
-							<ProductDetailRevamp
+							<ProductDetail
 								searchQuery={searchQuery}
 								setSearchQuery={setSearchQuery}
 							/>
