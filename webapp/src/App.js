@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./components/LandingPage/LandingPage";
 import ProductList from "./components/ProductList/ProductList";
-import ProductDetail from "./components/ProductDetail/ProductDetail";
 import { useState } from "react";
 import "./App.css";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState("");
