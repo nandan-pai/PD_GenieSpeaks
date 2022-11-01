@@ -1,0 +1,27 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: DAST Baseline Scan
+
+on:
+  # pull_request:
+  #   branches:
+  #     - master
+  workflow_call:
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the webapplication
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'https://mango-bush-0d243c810.1.azurestaticapps.net/'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
