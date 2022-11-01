@@ -43,9 +43,9 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			filter,
 		};
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
-			console.log(res.data)
+			console.log(res.data);
 			setProductList(res.data.product_list);
-			setProductCount(res.data.product_count)
+			setProductCount(res.data.product_count);
 			showLoader(false);
 		});
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
@@ -54,29 +54,40 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 
 	return (
 		<div className='prodList' mr='10px'>
-			<NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} setFilter={setFilter} />
-			{
-				productCount ? (
-					<HStack mr='20px'>
-						{
-							productCount === 1 ? (
-								<Text ml='25%'>
-									Showing {productCount} of {productCount} result for&nbsp;<span className='query'>"{searchQuery}"</span>
-								</Text>
-							) : (
-
-								<Text ml='25%'>
-									Showing {offset + 1} - {(offset + limit) < productList.length ? (offset + limit) : productList.length} of {productCount} results for&nbsp;<span className='query'>"{searchQuery}"</span>
-								</Text>
-							)
-						}
-						<Spacer />
-						<SortMenu sort={sort} setSort={setSort} />
-					</HStack>
-				) : (
-					<></>
-				)
-			}
+			<NavBar
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+				setFilter={setFilter}
+			/>
+			{productCount ? (
+				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
+					{productCount === 1 ? (
+						<Text
+							ml='25%'
+							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
+						>
+							Showing {productCount} of {productCount} result for&nbsp;
+							<span className='query'>"{searchQuery}"</span>
+						</Text>
+					) : (
+						<Text
+							ml='25%'
+							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
+						>
+							Showing {offset + 1} -{" "}
+							{offset + limit < productList.length
+								? offset + limit
+								: productList.length}{" "}
+							of {productCount} results for&nbsp;
+							<span className='query'>"{searchQuery}"</span>
+						</Text>
+					)}
+					<Spacer />
+					<SortMenu sort={sort} setSort={setSort} />
+				</HStack>
+			) : (
+				<></>
+			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={1}>
 					<Filters
