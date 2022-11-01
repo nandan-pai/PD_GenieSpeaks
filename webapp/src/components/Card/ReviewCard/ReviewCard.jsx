@@ -7,6 +7,7 @@ import {
 	Text,
 	Image,
 	Spacer,
+	Link,
 } from "@chakra-ui/react";
 import {
 	FaStar,
@@ -16,19 +17,11 @@ import {
 } from "react-icons/fa";
 import { SiFlipkart } from "react-icons/si";
 import { GoVerified } from "react-icons/go";
-
-import styles from "./ReviewCard.css";
+import { FiExternalLink } from "react-icons/fi";
 
 const ReviewCard = (props) => {
 	return (
-		<Box
-			className={styles["card-container"]}
-			rounded='md'
-			borderWidth='1px'
-			p={5}
-			mt={5}
-			mr={10}
-		>
+		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2}>
 			<HStack spacing={8}>
 				<Image
 					borderRadius='full'
@@ -38,63 +31,47 @@ const ReviewCard = (props) => {
 				/>
 				<VStack>
 					<HStack>
-						<Text fontSize='lg' fontWeight='semibold'>
+						<Text fontSize='lg' fontWeight='semibold' alignSelf='start'>
 							{props.name}
 						</Text>
-						{props.verified && <GoVerified />}
+						<Link href='https://www.amazon.in' isExternal>
+							<Icon as={FiExternalLink} color='gray.100' mt='5px' />
+						</Link>
+						{props.verified && (
+							<HStack>
+								<Text color='blue'>Verified</Text>
+								<GoVerified color='blue' />
+							</HStack>
+						)}
 					</HStack>
-					<HStack mb='2'>
+					<HStack mb='2' alignSelf='start'>
 						<Icon as={FaStar} color='yellow' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
 						<Icon as={FaStar} color='yellow' fontSize='20px' />
-					</HStack>
-				</VStack>
-				<Spacer></Spacer>
-				<VStack>
-					<Text fontWeight='semibold'>Posted on</Text>
-					{props.ecommerce === "Amazon" ? (
-						<Icon as={FaAmazon} mr='2' fontSize='20px' />
-					) : (
-						<Icon as={SiFlipkart} mr='2' fontSize='20px' />
-					)}
-				</VStack>
-			</HStack>
-			{/* <HStack spacing={8}>
-				<VStack>
-					<HStack p={4}>
-						<Image
-							borderRadius='full'
-							boxSize='50px'
-							src='https://bit.ly/dan-abramov'
-							alt='Dan Abramov'
-						/>
-						<Text fontSize='lg' fontWeight='semibold'>
-							{props.name}
-						</Text>
-						{props.verified && <GoVerified />}
-					</HStack>
-					<HStack mb='2'>
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
 					</HStack>
 				</VStack>
 				<Spacer />
-				<VStack display='flex' alignSelf='flex-end'>
-					<Text>Posted On</Text>
-					<Icon as={FaAmazon} mr='2' fontSize='20px' />
+				<VStack>
+					<Text fontWeight='semibold'>Posted on</Text>
+					{props.ecommerce === "Amazon" ? (
+						<Link href='https://www.amazon.com' isExternal>
+							<Icon as={FaAmazon} mr='2' fontSize='20px' />
+						</Link>
+					) : (
+						<Link href='https://www.flipkart.com' isExternal>
+							<Icon as={SiFlipkart} mr='2' fontSize='20px' />
+						</Link>
+					)}
 				</VStack>
-			</HStack> */}
-			<Box alignContent='left'>
-				<VStack mt='15px' mb='15px'>
-					<Text fontSize='md' fontWeight='semibold'>
+			</HStack>
+			<Box>
+				<VStack mt='15px' mb='15px' textAlign='left' width='100%'>
+					<Text fontSize='md' fontWeight='semibold' alignSelf='start'>
 						{props.title}
 					</Text>
-					<Text textAlign='left' noOfLines={[1, 2, 3]} mt={5}>
+					<Text alignSelf='start' noOfLines={[1, 2, 3]} mt={5}>
 						{props.desc}
 					</Text>
 					{/* <HStack>
