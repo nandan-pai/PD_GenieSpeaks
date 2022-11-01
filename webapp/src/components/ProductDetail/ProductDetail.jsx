@@ -1,29 +1,29 @@
-import "./ProductDetail.css";
-import {
-	Box,
-	HStack,
-	Container,
-	Heading,
-	Text,
-	Icon,
-	Image,
-	Grid,
-	GridItem,
-} from "@chakra-ui/react";
-import ProgressBar from "../Views/ProgressBar";
-import ReviewCard from "../Card/ReviewCard/ReviewCard";
-import Loader from "../Loader/Loader";
-import {
-	// FaStarHalfAlt,
-	// FaRegStar,
-	// FaStar,
-	FaRegThumbsUp,
-} from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
+import Loader from "../Loader/Loader";
+import {
+	Box,
+	Container,
+	Grid,
+	GridItem,
+	Heading,
+	HStack,
+	Icon,
+	Image,
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
+	Text,
+} from "@chakra-ui/react";
+import { FaRegThumbsUp } from "react-icons/fa";
+import { BsDot } from "react-icons/bs";
+import ReviewCard from "../Card/ReviewCard/ReviewCard";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
@@ -37,6 +37,8 @@ const ProductDetail = (props) => {
 			setProductInfo(res.data.productData);
 			setIsLoading(false);
 		});
+
+		// console.log(productInfo);
 	};
 
 	useEffect(getProductInfo, [id]);
@@ -62,93 +64,113 @@ const ProductDetail = (props) => {
 					setSearchQuery={props.setSearchQuery}
 				/>
 
-				<Grid templateColumns='repeat(3, 1fr)' m={10}>
+				<Grid templateColumns='repeat(4, 1fr)' mt={10} ml={20}>
 					<GridItem colSpan={1}>
 						<Image
 							src={productInfo.images[0]}
 							w='300px'
 							h='300px'
-							// className={styles.box3}
+							ml='35px'
+							justifyContent='center'
+							alignItems='center'
+							alignSelf='center'
+							justifySelf='center'
 						/>
+						<HStack spacing={5} justifyContent='center' mt='10px'>
+							<Box h='50px' w='50px' bg='yellow.200' />
+							<Box h='50px' w='50px' bg='tomato' />
+							<Box h='50px' w='50px' bg='blue.200' />
+							<Box h='50px' w='50px' bg='pink.200' />
+						</HStack>
 					</GridItem>
-					<GridItem colSpan={2}>
+
+					<GridItem colSpan={2} ml='10px'>
 						<Box textAlign={["left", "left"]}>
-							<Box mt='130px'>
-								<Heading mb='10px' fontSize='xl' textAlign={["left", "left"]}>
-									{productInfo.title}
-								</Heading>
-								<HStack mb='50px' alignSelf={["left", "left"]}>
-									<Icon as={FaRegThumbsUp} color='green' />
-									<Text fontWeight='semibold' color='green'>
-										95.6%
-									</Text>
-								</HStack>
-							</Box>
-							<HStack>
-								<Text mr={7}>Usability</Text>
-								<Container>
-									<ProgressBar clr='green' val='80' />
-								</Container>
-								<Text ml={5} color='green'>
-									4 / 5
+							<Heading mb='10px' fontSize='xl' textAlign={["left, left"]}>
+								{productInfo.title}
+							</Heading>
+							<HStack mb='50px' alignSelf={["left", "left"]}>
+								<Icon as={FaRegThumbsUp} color='green' />
+								<Text fontWeight='semibold' color='green'>
+									95.6%
 								</Text>
+								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
+								<Text>{productInfo.reviews.length} reviews</Text>
 							</HStack>
-							<HStack>
-								<Text mr={10}>Design</Text>
-								<Container>
-									<ProgressBar clr='red' val='30' />
-								</Container>
-								<Text ml={5} color='red'>
-									2 / 5
-								</Text>
-							</HStack>
-							<HStack>
-								<Text>Build Quality</Text>
-								<Container>
-									<ProgressBar clr='orange' val='60' />
-								</Container>
-								<Text ml={5} color='orange'>
-									3 / 5
-								</Text>
-							</HStack>
-							<Box>
-								<Heading fontSize='lg' mt='50px' textAlign={["left", "left"]}>
-									Customer Reviews
-								</Heading>
-							</Box>
-							<Container size='2xl' maxW='800px' maxH='200px'>
-								{isLoading ? (
-									<div></div>
-								) : (
-									productInfo.reviews.map((review, index) => {
-										return (
-											<ReviewCard
-												key={review._id}
-												name={review.user.name}
-												title={review.title}
-												desc={review.description}
-												ecommerce={review.ecommerce.name}
-												upVote='18'
-											/>
-										);
-									})
-								)}
-							</Container>
 						</Box>
+
+						<Tabs>
+							<TabList>
+								<Tab>About Product</Tab>
+								<Tab>Reviews</Tab>
+							</TabList>
+
+							<TabPanels>
+								<TabPanel>
+									<Grid templateColumns='repeat(2, 1fr)' w='500px' gap='5px'>
+										{/* {productInfo.identifiers.map((iden, index) => {
+											return (
+												<>
+													<GridItem>
+														<Text>{iden[0]}</Text>
+													</GridItem>
+													<GridItem>
+														<Text>{iden[1]}</Text>
+													</GridItem>
+												</>
+											);
+										})} */}
+										<GridItem>
+											<Text color='gray'>Brand</Text>
+										</GridItem>
+										<GridItem>
+											<Text fontWeight='semibold'>
+												{productInfo.identifiers["Brand"]}
+											</Text>
+										</GridItem>
+
+										<GridItem>
+											<Text color='gray'>Series</Text>
+										</GridItem>
+										<GridItem>
+											<Text fontWeight='semibold' textTransform='uppercase'>
+												{productInfo.identifiers["Series"]}
+											</Text>
+										</GridItem>
+
+										<GridItem>
+											<Text color='gray'>Item Model Number</Text>
+										</GridItem>
+										<GridItem>
+											<Text fontWeight='semibold' textTransform='uppercase'>
+												{productInfo.identifiers["Item model number"]}
+											</Text>
+										</GridItem>
+									</Grid>
+								</TabPanel>
+								<TabPanel>
+									<Container size='2xl' maxW='800px' maxH='200px'>
+										{isLoading ? (
+											<div></div>
+										) : (
+											productInfo.reviews.map((review, index) => {
+												return (
+													<ReviewCard
+														key={review._id}
+														name={review.user.name}
+														title={review.title}
+														desc={review.description}
+														ecommerce={review.ecommerce.name}
+														upVote='18'
+													/>
+												);
+											})
+										)}
+									</Container>
+								</TabPanel>
+							</TabPanels>
+						</Tabs>
 					</GridItem>
-					{/* <VStack spacing={4}>
-					<Box h='50px' w='50px' bg='yellow.200' className={styles.box1} />
-					<Box h='50px' w='50px' bg='tomato' className={styles.box2} />
-					<Box h='50px' w='50px' bg='pink.100' className={styles.box3} />
-				</VStack> */}
-					{/* <Stack>
-						<Image
-							src={productInfo.images[0]}
-							w='300px'
-							h='300px'
-							className={styles.box3}
-						/>
-					</Stack> */}
 				</Grid>
 			</>
 		);

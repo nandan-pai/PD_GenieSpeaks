@@ -20,7 +20,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-// import "./ProductCard.css";
+import "./ProductCard.css";
 
 const ProductCard = ({
 	productName,
