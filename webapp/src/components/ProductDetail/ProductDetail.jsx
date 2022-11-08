@@ -24,6 +24,7 @@ import {
 import { FaRegThumbsUp } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
+import AvailableMenu from "../AvailableMenu/AvailableMenu";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
@@ -170,6 +171,10 @@ const ProductDetail = (props) => {
 								</TabPanel>
 							</TabPanels>
 						</Tabs>
+					</GridItem>
+
+					<GridItem colSpan={1}>
+						<AvailableMenu />
 					</GridItem>
 				</Grid>
 			</>
