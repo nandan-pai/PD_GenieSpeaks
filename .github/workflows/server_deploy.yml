@@ -17,25 +17,17 @@ on:
         required: true
         type: string
       registry:
-        description: Container Registry without https
-        required: true
-        type: string
-      registry_uri:
-        description: Container Registry with https
-        required: true
-        type: string
-      environment:
-        description: Environment for deployment
+        description: Container Registry
         required: true
         type: string
 
     secrets:
-      azure_username:
-        description: azure_username to deploy in ACR
+      dockerhub_username:
+        description: Dockerhub Username
         required: true
       
-      azure_password:
-        description: azure_password to deploy in ACR
+      dockerhub_password_token:
+        description: Dockerhub Password Token
         required: true
 
       azure_publish_profile:
@@ -56,22 +48,21 @@ jobs:
       - name: Log in to registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ inputs.registry_uri }}
-          username: ${{ secrets.azure_username }}
-          password: ${{ secrets.azure_password }}
+          username: ${{ secrets.dockerhub_username }}
+          password: ${{ secrets.dockerhub_password_token }}
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ inputs.registry }}/${{ secrets.azure_username }}/server:${{ github.sha }}
+          tags: ${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ inputs.app_name }}:${{ github.sha }}
           file: ./server/server.dockerfile
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: ${{ inputs.environment }}
+      name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -80,6 +71,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ inputs.app_name }}
-          slot-name: ${{ inputs.environment }}
+          slot-name: 'production'
           publish-profile: ${{ secrets.azure_publish_profile }}
-          images: '${{ inputs.registry }}/${{ secrets.azure_username }}/server:${{ github.sha }}'
+          images: '${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ inputs.app_name }}:${{ github.sha }}'
