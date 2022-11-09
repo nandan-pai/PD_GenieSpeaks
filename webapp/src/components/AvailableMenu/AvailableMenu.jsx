@@ -4,10 +4,10 @@ import PriceCard from "../Card/PriceCard/PriceCard";
 import { FiExternalLink } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const AvailableMenu = () => {
+const AvailableMenu = ({ productData }) => {
 	return (
-		<Box height='50%' mr={5} ml={5} borderWidth='1px' borderRadius='md'>
-			<PriceCard />
+		<Box height='60%' mr={5} ml={5} borderWidth='1px' borderRadius='md'>
+			<PriceCard product={productData} />
 			<Text ml={5}>Also available on</Text>
 			<HStack mx={5} mt={2}>
 				<Link>

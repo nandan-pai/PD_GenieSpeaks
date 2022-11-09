@@ -1,14 +1,22 @@
-import { Box, Heading, HStack, Icon, Spacer, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Heading,
+	HStack,
+	Icon,
+	Spacer,
+	Text,
+	Link,
+} from "@chakra-ui/react";
 import React from "react";
-import { Link } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
+import "./PriceCard.css";
 
-const PriceCard = () => {
+const PriceCard = ({ product }) => {
 	return (
 		<Box p={5}>
 			<Text>Amazon</Text>
 			<HStack>
-				<Heading>&#8377;83880</Heading>
+				<Heading>&#8377;{product.ecommerce[0].curr_price}</Heading>
 				<Spacer />
 				<Box
 					w='110px'
@@ -20,10 +28,14 @@ const PriceCard = () => {
 					display='inline-flex'
 					padding='5px'
 				>
-					<Link href='#' isExternal>
+					<Link
+						className='ecommerce-product'
+						href={product.ecommerce[0].product_url}
+						isExternal
+					>
 						<HStack>
-							<Text>Visit site</Text>
-							<Icon as={FiExternalLink} />
+							<Text color='gray.100'>Visit site</Text>
+							<Icon as={FiExternalLink} color='gray.100' />
 						</HStack>
 					</Link>
 				</Box>

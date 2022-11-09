@@ -77,12 +77,6 @@ const ProductDetail = (props) => {
 							alignSelf='center'
 							justifySelf='center'
 						/>
-						<HStack spacing={5} justifyContent='center' mt='10px'>
-							<Box h='50px' w='50px' bg='yellow.200' />
-							<Box h='50px' w='50px' bg='tomato' />
-							<Box h='50px' w='50px' bg='blue.200' />
-							<Box h='50px' w='50px' bg='pink.200' />
-						</HStack>
 					</GridItem>
 
 					<GridItem colSpan={2} ml='10px'>
@@ -174,7 +168,7 @@ const ProductDetail = (props) => {
 					</GridItem>
 
 					<GridItem colSpan={1}>
-						<AvailableMenu />
+						<AvailableMenu productData={productInfo} />
 					</GridItem>
 				</Grid>
 			</>
