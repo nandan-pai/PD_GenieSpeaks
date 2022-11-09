@@ -17,25 +17,17 @@ on:
         required: true
         type: string
       registry:
-        description: Container Registry without https
-        required: true
-        type: string
-      registry_uri:
-        description: Container Registry with https
-        required: true
-        type: string
-      environment:
-        description: Environment for deployment
+        description: Container Registry
         required: true
         type: string
 
     secrets:
-      azure_username:
-        description: azure_username to deploy in ACR
+      dockerhub_username:
+        description: Dockerhub Username
         required: true
       
-      azure_password:
-        description: azure_password to deploy in ACR
+      dockerhub_password_token:
+        description: Dockerhub Password Token
         required: true
 
       azure_publish_profile:
