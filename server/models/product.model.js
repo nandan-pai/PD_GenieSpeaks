@@ -9,6 +9,22 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  attributes: {
+    type: Map,
+    default: {}
+  },
+  identifiers: {
+    type: Map,
+    default: {}
+  },
+  tags: {
+    type: [String],
+    default: []
+  },
+  satisfactory_rating: {
+    type: Number,
+    default: 0
+  },
   organization: {
     type: mongoose.Types.ObjectId,
     ref: 'Organization',
@@ -22,18 +38,6 @@ const ProductSchema = new mongoose.Schema({
   reviews: {
     type: [mongoose.Types.ObjectId],
     ref: 'Review',
-    default: []
-  },
-  attributes: {
-    type: Map,
-    default: {}
-  },
-  identifiers: {
-    type: Map,
-    default: {}
-  },
-  tags: {
-    type: [String],
     default: []
   }
 })

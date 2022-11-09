@@ -18,7 +18,8 @@ router.get('/', async (req, res) => {
         select: 'name'
       })
       .populate({
-        path: 'ecommerce.$*.ecommerceID',
+        path: 'ecommerce.ecommerceID',
+        model: ECommerce,
         select: 'name'
       })
       .populate({
