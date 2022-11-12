@@ -458,6 +458,7 @@ router.post('/search', async (req, res) => {
                   'organization._id': 1,
                   'organization.name': 1,
                   'review_count': 1,
+                  'satisfactory_rating': 1,
                   'min_price': 1
                 }
               }
