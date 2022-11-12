@@ -20,6 +20,8 @@ import { GoVerified } from "react-icons/go";
 import { FiExternalLink } from "react-icons/fi";
 
 const ReviewCard = (props) => {
+	// console.log(props.stars);
+
 	return (
 		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2}>
 			<HStack spacing={8}>
@@ -34,7 +36,7 @@ const ReviewCard = (props) => {
 						<Text fontSize='lg' fontWeight='semibold' alignSelf='start'>
 							{props.name}
 						</Text>
-						<Link href='https://www.amazon.in' isExternal>
+						<Link href={props.reviewURL} isExternal>
 							<Icon as={FiExternalLink} color='gray.100' mt='5px' />
 						</Link>
 						{props.verified && (
@@ -45,11 +47,11 @@ const ReviewCard = (props) => {
 						)}
 					</HStack>
 					<HStack mb='2' alignSelf='start'>
-						<Icon as={FaStar} color='yellow' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' mr='2' fontSize='20px' />
-						<Icon as={FaStar} color='yellow' fontSize='20px' />
+						{[...Array(props.stars)].map((e, i) => {
+							return (
+								<Icon as={FaStar} color='yellow' mr='2px' fontSize='20px' />
+							);
+						})}
 					</HStack>
 				</VStack>
 				<Spacer />

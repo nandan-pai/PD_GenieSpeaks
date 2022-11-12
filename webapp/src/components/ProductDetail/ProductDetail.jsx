@@ -154,6 +154,8 @@ const ProductDetail = (props) => {
 														key={review._id}
 														name={review.user.name}
 														title={review.title}
+														stars={review.stars}
+														reviewURL={review.url}
 														desc={review.description}
 														ecommerce={review.ecommerce.name}
 														upVote='18'

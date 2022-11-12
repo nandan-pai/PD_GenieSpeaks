@@ -124,7 +124,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 										productImage={product.images[0]}
 										price={product.min_price}
 										noOfReviews={product.review_count}
-										satisfactionRating='98.5'
+										satisfactionRating={product.satisfactory_rating}
 									/>
 								);
 							})}

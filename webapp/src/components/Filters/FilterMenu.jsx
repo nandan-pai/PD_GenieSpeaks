@@ -155,14 +155,14 @@ const FilterMenu = ({ searchQuery, setFilter, filter }) => {
 
 			<Drawer
 				isOpen={isOpen}
-				placement='right'
+				placement='left'
 				onClose={onClose}
 				finalFocusRef={btnRef}
 			>
 				<DrawerOverlay />
 				<DrawerContent>
 					<DrawerHeader>Filters</DrawerHeader>
-					<DrawerBody>
+					<DrawerBody px={7}>
 						{isCategoryLoading ? (
 							<Spinner />
 						) : categoryList.length ? (
