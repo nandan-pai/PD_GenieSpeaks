@@ -87,7 +87,7 @@ const ProductDetail = (props) => {
 							<HStack mb='50px' alignSelf={["left", "left"]}>
 								<Icon as={FaRegThumbsUp} color='green' />
 								<Text fontWeight='semibold' color='green'>
-									95.6%
+									{productInfo.satisfactory_rating}
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
 								<Text>{productInfo.reviews.length} reviews</Text>
