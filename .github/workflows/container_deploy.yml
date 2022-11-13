@@ -1,23 +1,21 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Server Deployment
+name: Container image build and deploy
 
 on:
-  # push:
-  #   branches:
-  #     - master
-  #     - integration
-  #   paths:
-  #     - server/**
   workflow_call:
     inputs:
       app_name:
-        description: App Name
+        description: App Name of the container in Azure
         required: true
         type: string
       registry:
-        description: Container Registry
+        description: Container Registry to upload image
+        required: true
+        type: string
+      dockerfile:
+        description: Dockfile to build the image
         required: true
         type: string
 
@@ -56,7 +54,7 @@ jobs:
         with:
           push: true
           tags: ${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ inputs.app_name }}:${{ github.sha }}
-          file: ./server/server.dockerfile
+          file: ${{ inputs.dockerfile }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -66,7 +64,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Deploy to Azure Web App
+      - name: Deploy to Azure App Service
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:

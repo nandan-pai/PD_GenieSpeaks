@@ -1,6 +1,8 @@
 import re
 import time
+from datetime import datetime
 from urllib.parse import urlencode
+
 import scrapy
 
 
@@ -89,7 +91,9 @@ class AmazonSpider(scrapy.Spider):
         '''parse_product_review_list'''
         reviews = []
         try:
-            for (review_title, description, review, date) in zip(
+            for (review_id, review_title, description, review_star, date) in zip(
+                response.xpath(
+                    '//div[@data-hook="review"]/@id').extract(),
                 response.xpath(
                     '//a[@data-hook="review-title"]/span/text()').extract(),
                 response.xpath(
@@ -99,16 +103,23 @@ class AmazonSpider(scrapy.Spider):
                 response.xpath(
                     '//span[@data-hook="review-date"]/text()').extract()
             ):
+                review_url = f"https://www.amazon.in/gp/customer-reviews/{review_id}"
+                stars = int(review_star[0])
+                try:
+                    review_data = datetime.strptime(" ".join(date.split()[-3:]), '%d %B %Y')
+                except Exception:
+                    review_data = datetime.today()
                 reviews.append({
                     'title': review_title,
                     'description': description,
-                    'review_star': review,
+                    'stars': stars,
+                    'url': review_url,
                     'images': [],
                     'product': '',
                     'user': 'Amazon Reviewer',
-                    'scrapped_from': 'Amazon',
-                    'reviewed_on': date,
-                    'scrapped_on': int(time.time())*1000,
+                    'ecommerce': 'Amazon',
+                    'reviewed_on': review_data,
+                    'scrapped_on': datetime.today(),
                     'verified': False
                 })
 
@@ -129,9 +140,10 @@ class AmazonSpider(scrapy.Spider):
                 key = row.xpath('th//text()').extract_first().strip()
                 value = row.xpath(
                     'td//text()').extract_first().strip().encode('ascii', 'ignore').decode()
-                if key in ['Brand', 'Series', 'Item model number', 'Model Name']:
-                    if key == 'Brand':
-                        organization = value
+                if key.lower() == 'brand':
+                    organization = value
+                if key.lower() in ['series', 'item model number', 'model name', 'model']:
+                    
                     identifiers[key] = value
                 else:
                     attributes[key] = value
@@ -147,19 +159,22 @@ class AmazonSpider(scrapy.Spider):
         ecommerce = {
             'ecommerceSite': 'Amazon',
             'rating': 0,
-            'last_scrapped': int(time.time())*1000,
+            'last_scrapped': datetime.today(),
             'scrapped_times': 1,
             'init_price': 0,
             'curr_price': self.parse_product_curr_price(response=response),
             'identifiers': {"asin": asin},
             'product_url': product_url
         }
+
         images = self.parse_product_image_list(response=response)
         reviews = self.parse_product_review_list(response=response)
 
         (organization,
          attributes,
          identifiers) = self.parse_product_org_attributes_identifiers(response=response)
+
+        tags = list(set(identifiers.values()))
 
         if not organization:
             return
@@ -173,6 +188,7 @@ class AmazonSpider(scrapy.Spider):
             'ecommerce': ecommerce,
             'reviews': reviews,
             'attributes': attributes,
-            'identifiers': identifiers
+            'identifiers': identifiers,
+            'tags': tags
         }
         self.total_scraped_items += 1

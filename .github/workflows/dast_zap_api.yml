@@ -1,12 +1,6 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: DAST API Scan
 
 on:
-  # pull_request:
-  #   branches:
-  #     - master
   workflow_call:
 
 jobs:
@@ -23,6 +17,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'owasp/zap2docker-stable'
           format: openapi
-          target: 'https://gsserver.azurewebsites.net/apis'
+          target: 'https://genieserves.azurewebsites.net/'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'

@@ -1,5 +1,7 @@
 import time
+from datetime import datetime
 from urllib.parse import urlencode
+
 import scrapy
 
 
@@ -101,13 +103,14 @@ class FlipkartSpider(scrapy.Spider):
         review = {
             'title': '',
             'description': '',
-            'review_star': '',
+            'stars': 0,
+            'url': '',
             'images': [],
             'product': '',
             'user': 'Flipkart Reviewer',
             'ecommerce': 'Flipkart',
             'reviewed_on': '',
-            'scrapped_on': int(time.time())*1000,
+            'scrapped_on': datetime.today(),
             'verified': False
         }
         reviews = []
@@ -127,7 +130,7 @@ class FlipkartSpider(scrapy.Spider):
             for row in tables:
                 key = row.xpath('td[1]//text()').extract_first()
                 value = row.xpath('td[2]//ul//li//text()').extract_first()
-                if key in ['Model Number', 'Part Number', 'Model Name', 'Series']:
+                if key.lower() in ['model number', 'part number', 'model name', 'series']:
                     identifiers[key] = value
                 else:
                     attributes[key] = value
@@ -143,11 +146,11 @@ class FlipkartSpider(scrapy.Spider):
         ecommerce = {
             'ecommerceSite': 'Flipkart',
             'rating': 0,
-            'last_scrapped': int(time.time())*1000,
+            'last_scrapped': datetime.today(),
             'scrapped_times': 1,
             'init_price': self.parse_product_init_price(response=response),
             'curr_price': self.parse_product_curr_price(response=response),
-            'identifiers': [],
+            'identifiers': {},
             'product_url': product_url
         }
 
@@ -156,6 +159,11 @@ class FlipkartSpider(scrapy.Spider):
 
         (attributes,
          identifiers) = self.parse_product_attributes_identifiers(response=response)
+
+        tags = list(set(identifiers.values()))
+
+        if not organization:
+            return
 
         self.logger.info(
             f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
@@ -166,6 +174,7 @@ class FlipkartSpider(scrapy.Spider):
             'ecommerce': ecommerce,
             'reviews': reviews,
             'attributes': attributes,
-            'identifiers': identifiers
+            'identifiers': identifiers,
+            'tags': tags
         }
         self.total_scraped_items += 1
