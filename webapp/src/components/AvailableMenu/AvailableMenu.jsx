@@ -5,8 +5,16 @@ import { FiExternalLink } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const AvailableMenu = ({ productData }) => {
+	console.log(productData);
 	return (
-		<Box height='60%' mr={5} ml={5} borderWidth='1px' borderRadius='md'>
+		<Box
+			height='60%'
+			maxH='180px'
+			mr={5}
+			ml={5}
+			borderWidth='1px'
+			borderRadius='md'
+		>
 			<PriceCard product={productData} />
 			<Text ml={5}>Also available on</Text>
 			<HStack mx={5} mt={2}>

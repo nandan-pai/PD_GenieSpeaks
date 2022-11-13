@@ -24,7 +24,7 @@ const ReviewCard = (props) => {
 
 	return (
 		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2}>
-			<HStack spacing={8}>
+			<HStack spacing={{ base: 8, xl: 8, lg: 6, md: 4, sm: 2 }}>
 				<Image
 					borderRadius='full'
 					boxSize='50px'

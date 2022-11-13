@@ -14,6 +14,8 @@ import {
 	HStack,
 	Icon,
 	Image,
+	Show,
+	SimpleGrid,
 	Tab,
 	TabList,
 	TabPanel,
@@ -65,7 +67,19 @@ const ProductDetail = (props) => {
 					setSearchQuery={props.setSearchQuery}
 				/>
 
-				<Grid templateColumns='repeat(4, 1fr)' mt={10} ml={20}>
+				<SimpleGrid
+					templateColumns={{
+						base: "repeat(4, 1fr)",
+						xl: "repeat(5, 1fr)",
+						lg: "repeat(3, 1fr)",
+						md: "repeat(3, 1fr)",
+						sm: "repeat(1, 1fr)",
+					}}
+					minChildWidth='500px'
+					spacing={5}
+					mt={10}
+					ml={20}
+				>
 					<GridItem colSpan={1}>
 						<Image
 							src={productInfo.images[0]}
@@ -79,20 +93,39 @@ const ProductDetail = (props) => {
 						/>
 					</GridItem>
 
-					<GridItem colSpan={2} ml='10px'>
+					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
 						<Box textAlign={["left", "left"]}>
-							<Heading mb='10px' fontSize='xl' textAlign={["left, left"]}>
+							<Heading
+								mb='10px'
+								fontSize={{
+									base: "xl",
+									xl: "xl",
+									lg: "lg",
+									md: "md",
+									sm: "md",
+								}}
+								textAlign={["left, left"]}
+							>
 								{productInfo.title}
 							</Heading>
 							<HStack mb='50px' alignSelf={["left", "left"]}>
 								<Icon as={FaRegThumbsUp} color='green' />
 								<Text fontWeight='semibold' color='green'>
-									{productInfo.satisfactory_rating}
+									{productInfo.satisfactory_rating}%
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
 								<Text>{productInfo.reviews.length} reviews</Text>
 							</HStack>
 						</Box>
+
+						<Show below='xl'>
+							<GridItem
+								colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}
+								mb={5}
+							>
+								<AvailableMenu productData={productInfo} />
+							</GridItem>
+						</Show>
 
 						<Tabs>
 							<TabList>
@@ -102,7 +135,24 @@ const ProductDetail = (props) => {
 
 							<TabPanels>
 								<TabPanel>
-									<Grid templateColumns='repeat(2, 1fr)' w='500px' gap='5px'>
+									<Grid
+										templateColumns='repeat(2, 1fr)'
+										w={{
+											base: "700px",
+											xl: "700px",
+											lg: "500px",
+											md: "300px",
+											sm: "100px",
+										}}
+										minW='400px'
+										gap={{
+											base: "5px",
+											xl: "5px",
+											lg: "3px",
+											md: "1px",
+											sm: "0px",
+										}}
+									>
 										{/* {productInfo.identifiers.map((iden, index) => {
 											return (
 												<>
@@ -169,10 +219,12 @@ const ProductDetail = (props) => {
 						</Tabs>
 					</GridItem>
 
-					<GridItem colSpan={1}>
-						<AvailableMenu productData={productInfo} />
-					</GridItem>
-				</Grid>
+					<Show above='xl'>
+						<GridItem colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}>
+							<AvailableMenu productData={productInfo} />
+						</GridItem>
+					</Show>
+				</SimpleGrid>
 			</>
 		);
 	}
