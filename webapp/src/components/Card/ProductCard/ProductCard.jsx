@@ -33,6 +33,8 @@ const ProductCard = ({
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
+	console.log(satisfactionRating);
+
 	const navigate = useNavigate();
 
 	const handleClick = () => {
@@ -47,6 +49,7 @@ const ProductCard = ({
 			p={5}
 			mt={5}
 			mr={5}
+			ml={{ sm: 5 }}
 			maxH='300px'
 			bgColor={isDark ? "" : "white"}
 		>
