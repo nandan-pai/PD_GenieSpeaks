@@ -42,6 +42,9 @@ const FilterMenu = ({ searchQuery, setFilter, filter }) => {
 	const isDark = colorMode === "dark";
 
 	const getCategories = useCallback(() => {
+		if (searchQuery === "") {
+			return
+		}
 		setCategoryLoading(true);
 		axios
 			.get(`${ApiBaseUrl}/prod/search/category?query=${searchQuery}`)

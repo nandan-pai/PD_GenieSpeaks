@@ -28,7 +28,7 @@ const requestLogger = (req, res, next) => {
 app.use(requestLogger)
 
 // Links
-app.use('/static', express.static('public'))
+app.use('/api/static', express.static('public'))
 
 app.use('/api/user', require('./UserRouter/user.router.js'))
 app.use('/api/prod', require('./ProductRouter/product.router.js'))

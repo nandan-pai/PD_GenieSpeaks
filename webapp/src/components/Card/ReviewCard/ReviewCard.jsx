@@ -23,13 +23,14 @@ const ReviewCard = (props) => {
 	// console.log(props.stars);
 
 	return (
-		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2}>
+		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2} key={props._id}>
 			<HStack spacing={{ base: 8, xl: 8, lg: 6, md: 4, sm: 2 }}>
 				<Image
 					borderRadius='full'
 					boxSize='50px'
 					src='https://bit.ly/dan-abramov'
-					alt='Dan Abramov'
+					// src={ApiBaseUrl+ "/static/" + props.user.profilepic}
+					alt={props.user.name}
 				/>
 				<VStack>
 					<HStack>
@@ -49,7 +50,7 @@ const ReviewCard = (props) => {
 					<HStack mb='2' alignSelf='start'>
 						{[...Array(props.stars)].map((e, i) => {
 							return (
-								<Icon as={FaStar} color='yellow' mr='2px' fontSize='20px' />
+								<Icon as={FaStar} color='yellow' mr='2px' fontSize='20px' key={i}/>
 							);
 						})}
 					</HStack>

@@ -21,14 +21,13 @@ import "./ProductList.css";
 import SortMenu from "../SortMenu/SortMenu";
 import FilterMenu from "../Filters/FilterMenu";
 
-const ProductList = ({ searchQuery, setSearchQuery }) => {
+const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
 	const [sort, setSort] = useState("_id");
 	const [limit, setLimit] = useState(20);
 	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
-	const [filter, setFilter] = useState({});
 
 	let navigate = useNavigate();
 
@@ -45,7 +44,6 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			filter,
 		};
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
-			console.log(res.data);
 			setProductList(res.data.product_list);
 			setProductCount(res.data.product_count);
 			showLoader(false);

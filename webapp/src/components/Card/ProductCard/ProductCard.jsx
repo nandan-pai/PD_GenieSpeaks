@@ -33,8 +33,6 @@ const ProductCard = ({
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
-	console.log(satisfactionRating);
-
 	const navigate = useNavigate();
 
 	const handleClick = () => {

@@ -19,6 +19,7 @@ const LandingSearchBar = (props) => {
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
+		props.setFilter({})
 		if (props.searchQuery !== "") {
 			navigate("/search");
 		}

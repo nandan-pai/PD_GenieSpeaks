@@ -11,12 +11,12 @@ import React from "react";
 import { FiExternalLink } from "react-icons/fi";
 import "./PriceCard.css";
 
-const PriceCard = ({ product }) => {
+const PriceCard = (props) => {
 	return (
 		<Box p={5}>
-			<Text>Amazon</Text>
+			<Text>{props.ecommerce.name}</Text>
 			<HStack>
-				<Heading>&#8377;{product.ecommerce[0].curr_price}</Heading>
+				<Heading>&#8377;{props.ecommerce.curr_price}</Heading>
 				<Spacer />
 				<Box
 					w='110px'
@@ -30,7 +30,7 @@ const PriceCard = ({ product }) => {
 				>
 					<Link
 						className='ecommerce-product'
-						href={product.ecommerce[0].product_url}
+						href={props.ecommerce.product_url}
 						isExternal
 					>
 						<HStack>

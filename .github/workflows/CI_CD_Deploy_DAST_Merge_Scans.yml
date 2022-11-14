@@ -47,7 +47,7 @@ jobs:
     if: needs.paths-filter.outputs.geniescrapes == 'true'
     needs:
     - paths-filter
-    uses: ./.github/workflows/container_deploy.yml
+    uses: ./.github/workflows/build_image.yml
     with:
       app_name: geniescrapes
       registry: docker.io
@@ -55,7 +55,6 @@ jobs:
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
-      azure_publish_profile: ${{ secrets.AZURE_GENIESCRAPES_PUBLISHPROFILE }}
 
 
   server_dev_deploy:

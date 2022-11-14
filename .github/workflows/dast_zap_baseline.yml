@@ -16,6 +16,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'owasp/zap2docker-stable'
-          target: 'https://mango-bush-0d243c810.1.azurestaticapps.net/'
+          target: 'https://geniespeaks.azurewebsites.net/'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'

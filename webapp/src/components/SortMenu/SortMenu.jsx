@@ -20,6 +20,8 @@ const SortMenu = ({ sort, setSort }) => {
 					<option value={"-ecommerce.curr_price"}>Price: High to Low</option>
 					<option value={"review_count"}>Review Count: Low to High</option>
 					<option value={"-review_count"}>Review Count: High to Low</option>
+					<option value={"satisfactory_rating"}>Satis Rating: Low to High</option>
+					<option value={"-satisfactory_rating"}>Satis Rating: High to Low</option>
 				</Select>
 			</HStack>
 		</div>

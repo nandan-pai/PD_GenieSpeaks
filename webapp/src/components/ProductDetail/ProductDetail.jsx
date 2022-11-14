@@ -41,7 +41,6 @@ const ProductDetail = (props) => {
 			setIsLoading(false);
 		});
 
-		// console.log(productInfo);
 	};
 
 	useEffect(getProductInfo, [id]);
@@ -52,11 +51,12 @@ const ProductDetail = (props) => {
 				<NavBar
 					searchQuery={props.searchQuery}
 					setSearchQuery={props.setSearchQuery}
+					setFilter={props.setFilter}
 				/>
 
-				<Loader hidden={isLoading} />
-				<Loader hidden={isLoading} />
-				<Loader hidden={isLoading} />
+				<Loader hidden={! isLoading} />
+				<Loader hidden={! isLoading} />
+				<Loader hidden={! isLoading} />
 			</div>
 		);
 	} else {
@@ -65,6 +65,7 @@ const ProductDetail = (props) => {
 				<NavBar
 					searchQuery={props.searchQuery}
 					setSearchQuery={props.setSearchQuery}
+					setFilter={props.setFilter}
 				/>
 
 				<SimpleGrid
@@ -123,7 +124,7 @@ const ProductDetail = (props) => {
 								colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}
 								mb={5}
 							>
-								<AvailableMenu productData={productInfo} />
+								<AvailableMenu ecommerce={productInfo.ecommerce} />
 							</GridItem>
 						</Show>
 
@@ -153,44 +154,31 @@ const ProductDetail = (props) => {
 											sm: "0px",
 										}}
 									>
-										{/* {productInfo.identifiers.map((iden, index) => {
-											return (
-												<>
-													<GridItem>
-														<Text>{iden[0]}</Text>
+										{
+											Object.keys(productInfo.identifiers).map((identifier, index) => {
+												return <>
+													<GridItem key={identifier}>
+														<Text color='gray'>{identifier}</Text>
 													</GridItem>
-													<GridItem>
-														<Text>{iden[1]}</Text>
+													<GridItem key={index}>
+														<Text fontWeight='semibold'>{productInfo.identifiers[identifier]}</Text>
 													</GridItem>
 												</>
-											);
-										})} */}
-										<GridItem>
-											<Text color='gray'>Brand</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold'>
-												{productInfo.identifiers["Brand"]}
-											</Text>
-										</GridItem>
+											})
+										}
 
-										<GridItem>
-											<Text color='gray'>Series</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold' textTransform='uppercase'>
-												{productInfo.identifiers["Series"]}
-											</Text>
-										</GridItem>
-
-										<GridItem>
-											<Text color='gray'>Item Model Number</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold' textTransform='uppercase'>
-												{productInfo.identifiers["Item model number"]}
-											</Text>
-										</GridItem>
+										{
+											Object.keys(productInfo.attributes).map((attribute, index) => {
+												return <>
+													<GridItem key={attribute}>
+														<Text color='gray'>{attribute}</Text>
+													</GridItem>
+													<GridItem key={index*-1}>
+														<Text fontWeight='semibold'>{productInfo.attributes[attribute]}</Text>
+													</GridItem>
+												</>
+											})
+										}
 									</Grid>
 								</TabPanel>
 								<TabPanel>
@@ -207,6 +195,7 @@ const ProductDetail = (props) => {
 														stars={review.stars}
 														reviewURL={review.url}
 														desc={review.description}
+														user={review.user}
 														ecommerce={review.ecommerce.name}
 														upVote='18'
 													/>
@@ -221,7 +210,7 @@ const ProductDetail = (props) => {
 
 					<Show above='xl'>
 						<GridItem colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}>
-							<AvailableMenu productData={productInfo} />
+							<AvailableMenu ecommerce={productInfo.ecommerce} />
 						</GridItem>
 					</Show>
 				</SimpleGrid>

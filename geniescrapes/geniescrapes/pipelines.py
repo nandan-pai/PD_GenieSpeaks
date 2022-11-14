@@ -118,7 +118,7 @@ class GeniescrapesPipeline:
             new_prod['attributes'] = product['attributes']
             new_prod['identifiers'] = product['identifiers']
             new_prod['tags'] = product['tags']
-            new_prod['satisfactory_rating'] = 0
+            new_prod['rating_sum'] = product['rating_sum']
 
             new_prod['organization'] = organization
             new_prod['ecommerce'] = ecommerce
@@ -130,13 +130,13 @@ class GeniescrapesPipeline:
             print("Failed to create the product", error)
             return None
 
-    def update_product(self, product_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
+    def update_product(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
         '''updates product details to existing product and
         stores it in database and returns the productID'''
         try:
             updated_prod = self.product.find_one_and_update(
                 {
-                    '_id': product_to_update
+                    '_id': prod_to_update
                 },
                 {
                     '$push': {
@@ -145,15 +145,18 @@ class GeniescrapesPipeline:
                             '$each': new_review_id_list
                         }
                     },
+                    '$inc': {
+                        'rating_sum': new_prod_detail['rating_sum']
+                    }
                 }
             )
 
-            return product_to_update
+            return prod_to_update
         except Exception as error:
             print("Failed to create the product", error)
             return None
 
-    def getOrganizationID(self, name):
+    def get_organization_id(self, name):
         try:
             org_data = self.organization.find_one({"name": name})
             if org_data is None:
@@ -163,7 +166,7 @@ class GeniescrapesPipeline:
             print("Error Getting Organization id", error)
             return None
 
-    def getECommerceID(self, name):
+    def get_ecommerce_id(self, name):
         try:
             ecom_data = self.ecommerce.find_one({"name": name})
             if ecom_data is None:
@@ -173,7 +176,7 @@ class GeniescrapesPipeline:
             print("Error Getting ECommerce id", error)
             return None
 
-    def getUserID(self, name):
+    def get_user_id(self, name):
         try:
             user_data = self.user.find_one({"name": name})
             if user_data is None:
@@ -207,18 +210,20 @@ class GeniescrapesPipeline:
         #         print(similar_finds)
         #         break
 
-        org_id = self.getOrganizationID(name=item['organization'])
-        ecom_id = self.getECommerceID(
+        org_id = self.get_organization_id(name=item['organization'])
+        ecom_id = self.get_ecommerce_id(
             name=item['ecommerce']['ecommerceSite'])
         review_ids = []
+        rating_sum = 0
         for review in item['reviews']:
-            user_id = self.getUserID(name=review['user'])
+            user_id = self.get_user_id(name=review['user'])
             review_id = self.create_review(
                 review=review,
                 product="",
                 user=user_id,
                 ecommerce=ecom_id,
             )
+            rating_sum += review['stars']
 
             review_ids.append(
                 review_id
@@ -227,6 +232,8 @@ class GeniescrapesPipeline:
             self.user.update_one(
                 {"_id": user_id}, {"$push": {"reviews": review_id}}
             )
+
+        item['rating_sum'] = rating_sum
 
         ecommerce = {
             'ecommerceID': ecom_id,
@@ -241,7 +248,7 @@ class GeniescrapesPipeline:
 
         if similar_finds:
             prod_id = self.update_product(
-                product_to_update=similar_finds,
+                prod_to_update=similar_finds,
                 new_prod_detail=item,
                 ecommerce_detail=ecommerce,
                 new_review_id_list=review_ids)

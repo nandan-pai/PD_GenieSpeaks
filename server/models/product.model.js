@@ -21,10 +21,6 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
-  satisfactory_rating: {
-    type: Number,
-    default: 0
-  },
   organization: {
     type: mongoose.Types.ObjectId,
     ref: 'Organization',
@@ -34,6 +30,10 @@ const ProductSchema = new mongoose.Schema({
     type: [Map],
     ref: 'ECommerce',
     default: []
+  },
+  rating_count: {
+    type: Number,
+    default: 0
   },
   reviews: {
     type: [mongoose.Types.ObjectId],

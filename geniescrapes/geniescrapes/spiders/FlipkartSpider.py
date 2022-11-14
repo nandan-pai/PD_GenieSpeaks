@@ -69,7 +69,9 @@ class FlipkartSpider(scrapy.Spider):
         '''parse_product_image_list'''
         images = []
         try:
-            pass
+            img = response.xpath(
+                '//*[@class="CXW8mj _3nMexc"]/img/@src').extract_first()
+            images.append(img)
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch images || {str(error)}")
@@ -80,11 +82,10 @@ class FlipkartSpider(scrapy.Spider):
         curr_price = 0
         try:
             curr_price = int(response.xpath(
-                '//*[@class="_30jeq3"]/text()').extract_first()[1:].replace(',', ''))
+                '//*[@class="_30jeq3 _16Jk6d"]/text()').extract_first()[1:].replace(',', ''))
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch curr price || {str(error)}")
-
         return curr_price
 
     def parse_product_init_price(self, response):
@@ -92,7 +93,7 @@ class FlipkartSpider(scrapy.Spider):
         init_price = 0
         try:
             init_price = int(response.xpath(
-                '//*[@class="_3I9_wc"]/text()').extract()[1].replace(',', ''))
+                '//*[@class="_3I9_wc _2p6lqe"]/text()').extract()[1].replace(',', ''))
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch init price || {str(error)}")
@@ -148,8 +149,8 @@ class FlipkartSpider(scrapy.Spider):
             'rating': 0,
             'last_scrapped': datetime.today(),
             'scrapped_times': 1,
-            'init_price': self.parse_product_init_price(response=response),
             'curr_price': self.parse_product_curr_price(response=response),
+            'init_price': self.parse_product_init_price(response=response),
             'identifiers': {},
             'product_url': product_url
         }
