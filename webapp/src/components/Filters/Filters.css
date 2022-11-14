@@ -1,0 +1,9 @@
+.scrollable {
+    height: 150px;
+    overflow: auto;
+    text-align: justify;
+}
+
+.filter-category {
+    margin-top: 15px;
+}

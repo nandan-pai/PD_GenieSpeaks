@@ -1,0 +1,12 @@
+#envs
+.env
+
+# dependencies
+node_modules
+npm-debug.log
+
+# Scraping Logs
+logs
+
+# caches
+__pycache__

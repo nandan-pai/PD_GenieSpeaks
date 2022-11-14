@@ -1,0 +1,114 @@
+name: CI CD Deploy and DAST Merge Scans
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - test
+  workflow_dispatch:
+
+jobs:
+  paths-filter:
+    name: Trigger Folder Tests
+    runs-on: ubuntu-latest
+    outputs:
+      geniescrapes: ${{ steps.filter.outputs.geniescrapes }}
+      server: ${{ steps.filter.outputs.server }}
+      webapp: ${{ steps.filter.outputs.webapp }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            geniescrapes:
+              - 'geniescrapes/**'
+            server:
+              - 'server/**'
+            webapp:
+              - 'webapp/**'
+
+      - name: Check geniescrapes folder changes
+        if: steps.filter.outputs.geniescrapes == 'true'
+        run: echo "geniescrapes folder changes"
+
+      - name: Check server folder changes
+        if: steps.filter.outputs.server == 'true'
+        run: echo "server folder changes"
+      
+      - name: Check webapp folder changes
+        if: steps.filter.outputs.webapp == 'true'
+        run: echo "webapp folder changes"
+
+
+  scraper_dev_deploy:
+    name: Scraper Dev Container Deploy
+    if: needs.paths-filter.outputs.geniescrapes == 'true'
+    needs:
+    - paths-filter
+    uses: ./.github/workflows/build_image.yml
+    with:
+      app_name: geniescrapes
+      registry: docker.io
+      dockerfile: ./geniescrapes/geniescrapes.dockerfile
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+
+  server_dev_deploy:
+    name: Server Dev Container Deploy
+    # environment: development
+    needs:
+      - paths-filter
+    if: needs.paths-filter.outputs.server == 'true'
+    uses: ./.github/workflows/container_deploy.yml
+    with:
+      app_name: genieserves
+      registry: docker.io
+      dockerfile: ./server/server.dockerfile
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
+      azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
+
+  server_dast_zap_api:
+    name: DAST ZAP API Scan
+    needs:
+      - server_dev_deploy
+    uses: ./.github/workflows/dast_zap_api.yml
+
+
+  webapp_dev_deploy:
+    name: Webapp Dev Container Deploy
+    needs:
+      - paths-filter
+    if: needs.paths-filter.outputs.webapp == 'true'
+    # environment: development
+    uses: ./.github/workflows/container_deploy.yml
+    with:
+      app_name: geniespeaks
+      registry: docker.io
+      dockerfile: ./webapp/webapp.dockerfile
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
+      azure_publish_profile: ${{ secrets.AZURE_GENIESPEAKS_PUBLISHPROFILE }}
+
+  # webapp_dev_static_app_deploy:
+  #   name: Webapp Dev Static App Deploy
+  #   needs:
+  #     - paths-filter
+  #   if: needs.paths-filter.outputs.webapp == 'true'
+  #   # environment: development
+  #   uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
+  #   secrets:
+  #     mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
+
+  webapp_dast_zap_baseline:
+    name: DAST ZAP Baseline Scan
+    needs:
+      - webapp_dev_deploy
+      # - webapp_dev_static_app_deploy
+    uses: ./.github/workflows/dast_zap_baseline.yml
