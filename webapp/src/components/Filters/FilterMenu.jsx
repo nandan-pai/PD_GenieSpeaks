@@ -43,7 +43,7 @@ const FilterMenu = ({ searchQuery, setFilter, filter }) => {
 
 	const getCategories = useCallback(() => {
 		if (searchQuery === "") {
-			return
+			return;
 		}
 		setCategoryLoading(true);
 		axios
@@ -161,6 +161,7 @@ const FilterMenu = ({ searchQuery, setFilter, filter }) => {
 				placement='left'
 				onClose={onClose}
 				finalFocusRef={btnRef}
+				backgroundColor={isDark ? "#2d3748" : "white"}
 			>
 				<DrawerOverlay />
 				<DrawerContent>
