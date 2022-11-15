@@ -24,25 +24,25 @@ We plan to achieve this goal by scraping reviews from various authentic websites
 
 ## WebApp Architecture
 
-![Webapp architecture](./images/webapp%20architecture.png)
+![Webapp architecture](https://user-images.githubusercontent.com/53964874/199673933-2171a006-f115-423d-8950-c55aab3c95ac.png)
 
 ## Product Architecture (C3 Model)
 
 ### Level 1: System Context Diagram
 
-![Level 1: System Context Diagram](./images/System%20Context.png)
+![Level 1: System Context Diagram](https://user-images.githubusercontent.com/53964874/199673933-2171a006-f115-423d-8950-c55aab3c95ac.png)
 
 ### Level 2: Container Diagram
 
-![Level 2: Container Diagram](./images/Container.png)
+![Level 2: Container Diagram](https://user-images.githubusercontent.com/53964874/199674142-d03847d8-0ad6-4315-90a3-e2e201d4c4c9.png)
 
 ### Level 3: Component Diagram
 
-![Level 3: Component Diagram](./images/Component.png)
+![Level 3: Component Diagram](https://user-images.githubusercontent.com/53964874/199674138-4405fff9-a008-49e9-920f-bd5c17de0878.png)
 
 ## DevSecOps Architecture
 
-![DevSecOps architecture](./images/DevSecOps%20architecture.png)
+![DevSecOps architecture](https://user-images.githubusercontent.com/53964874/199674531-cb16dd67-befb-4848-984a-495317630b7b.png)
 
 ---
 
@@ -60,16 +60,16 @@ In the landing page you can either directly search for the product of your want 
 
 PS: We also have a dark mode!
 
-![Landing Page](./images/LandingPage.png)
+![Landing Page](https://user-images.githubusercontent.com/53964874/199674538-e1eb87a6-4b2d-4cc2-aae8-070efe2026a2.png)
 
 ## Search Page
 
 You can search for the product of your choice and filter according to various parameters like Brand, Price Range, etc.
 
-![Search Results](./images/search%20results.png)
+![Search Results](https://user-images.githubusercontent.com/53964874/199674554-718e4b52-b538-476e-a02b-fdc10b0a97d6.png)
 
 ## Product Details
 
 This is where all the reviews and ratings for your selected products are displayed. All the reviews are collected from Amazon and Flipkart (More websites joining soon).
 
-![Product Details](./images/ProductDetails.png)
+![Product Details](https://user-images.githubusercontent.com/53964874/199674550-0a124e78-20a1-406e-b737-e63537baddaa.png)
