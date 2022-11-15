@@ -9,21 +9,6 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
-  organization: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Organization',
-    required: true
-  },
-  ecommerce: {
-    type: [Map],
-    ref: 'ECommerce',
-    default: []
-  },
-  reviews: {
-    type: [mongoose.Types.ObjectId],
-    ref: 'Review',
-    default: []
-  },
   attributes: {
     type: Map,
     default: {}
@@ -34,6 +19,25 @@ const ProductSchema = new mongoose.Schema({
   },
   tags: {
     type: [String],
+    default: []
+  },
+  organization: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Organization',
+    required: true
+  },
+  ecommerce: {
+    type: [Map],
+    ref: 'ECommerce',
+    default: []
+  },
+  rating_count: {
+    type: Number,
+    default: 0
+  },
+  reviews: {
+    type: [mongoose.Types.ObjectId],
+    ref: 'Review',
     default: []
   }
 })

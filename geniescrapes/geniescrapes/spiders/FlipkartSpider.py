@@ -1,5 +1,7 @@
 import time
+from datetime import datetime
 from urllib.parse import urlencode
+
 import scrapy
 
 
@@ -67,7 +69,9 @@ class FlipkartSpider(scrapy.Spider):
         '''parse_product_image_list'''
         images = []
         try:
-            pass
+            img = response.xpath(
+                '//*[@class="CXW8mj _3nMexc"]/img/@src').extract_first()
+            images.append(img)
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch images || {str(error)}")
@@ -78,11 +82,10 @@ class FlipkartSpider(scrapy.Spider):
         curr_price = 0
         try:
             curr_price = int(response.xpath(
-                '//*[@class="_30jeq3"]/text()').extract_first()[1:].replace(',', ''))
+                '//*[@class="_30jeq3 _16Jk6d"]/text()').extract_first()[1:].replace(',', ''))
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch curr price || {str(error)}")
-
         return curr_price
 
     def parse_product_init_price(self, response):
@@ -90,7 +93,7 @@ class FlipkartSpider(scrapy.Spider):
         init_price = 0
         try:
             init_price = int(response.xpath(
-                '//*[@class="_3I9_wc"]/text()').extract()[1].replace(',', ''))
+                '//*[@class="_3I9_wc _2p6lqe"]/text()').extract()[1].replace(',', ''))
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch init price || {str(error)}")
@@ -101,13 +104,14 @@ class FlipkartSpider(scrapy.Spider):
         review = {
             'title': '',
             'description': '',
-            'review_star': '',
+            'stars': 0,
+            'url': '',
             'images': [],
             'product': '',
             'user': 'Flipkart Reviewer',
             'ecommerce': 'Flipkart',
             'reviewed_on': '',
-            'scrapped_on': int(time.time())*1000,
+            'scrapped_on': datetime.today(),
             'verified': False
         }
         reviews = []
@@ -127,7 +131,7 @@ class FlipkartSpider(scrapy.Spider):
             for row in tables:
                 key = row.xpath('td[1]//text()').extract_first()
                 value = row.xpath('td[2]//ul//li//text()').extract_first()
-                if key in ['Model Number', 'Part Number', 'Model Name', 'Series']:
+                if key.lower() in ['model number', 'part number', 'model name', 'series']:
                     identifiers[key] = value
                 else:
                     attributes[key] = value
@@ -143,11 +147,11 @@ class FlipkartSpider(scrapy.Spider):
         ecommerce = {
             'ecommerceSite': 'Flipkart',
             'rating': 0,
-            'last_scrapped': int(time.time())*1000,
+            'last_scrapped': datetime.today(),
             'scrapped_times': 1,
-            'init_price': self.parse_product_init_price(response=response),
             'curr_price': self.parse_product_curr_price(response=response),
-            'identifiers': [],
+            'init_price': self.parse_product_init_price(response=response),
+            'identifiers': {},
             'product_url': product_url
         }
 
@@ -156,6 +160,11 @@ class FlipkartSpider(scrapy.Spider):
 
         (attributes,
          identifiers) = self.parse_product_attributes_identifiers(response=response)
+
+        tags = list(set(identifiers.values()))
+
+        if not organization:
+            return
 
         self.logger.info(
             f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
@@ -166,6 +175,7 @@ class FlipkartSpider(scrapy.Spider):
             'ecommerce': ecommerce,
             'reviews': reviews,
             'attributes': attributes,
-            'identifiers': identifiers
+            'identifiers': identifiers,
+            'tags': tags
         }
         self.total_scraped_items += 1

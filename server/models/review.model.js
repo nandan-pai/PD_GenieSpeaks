@@ -9,13 +9,29 @@ const ReviewSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  review_star: {
+  stars: {
     type: Number,
     default: 0
+  },
+  url: {
+    type: String,
+    default: ''
   },
   images: {
     type: [String],
     default: []
+  },
+  scrapped_on: {
+    type: Date,
+    default: Date.now()
+  },
+  reviewed_on: {
+    type: Date,
+    default: Date.now()
+  },
+  verified: {
+    type: Boolean,
+    default: false
   },
   product: {
     type: mongoose.Types.ObjectId,
@@ -31,18 +47,6 @@ const ReviewSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'ECommerce',
     required: true
-  },
-  reviewed_on: {
-    type: String,
-    default: Date.now()
-  },
-  scrapped_on: {
-    type: Number,
-    default: Date.now()
-  },
-  verified: {
-    type: Boolean,
-    default: false
   }
 })
 

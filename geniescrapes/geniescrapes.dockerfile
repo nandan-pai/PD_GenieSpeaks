@@ -1,29 +1,18 @@
 # FROM ubuntu:latest
-FROM python:3.9.9
-WORKDIR /usr/src
+FROM python:3.9-slim
 
 # Update System
 RUN apt-get update
-RUN apt-get -y install cron
 
-# Copy file to container
-COPY /geniescrapes ./geniescrapes
+# Set the working directory
+WORKDIR /usr/src/app
 
-COPY requirements.txt bsh_execScraper.sh ./
-RUN chmod 0644 bsh_execScraper.sh
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# COPY scraper.cronjob /etc/cron.d/scraper
-# RUN chmod 0644 /etc/cron.d/scraper
+# Copy the source code to container
+COPY /geniescrapes/ .
 
-# RUN touch /var/log/cron.log
-
-# Download requirements
-RUN pip install -r requirements.txt
-
-# Add the cron job
-RUN { cat; echo "39 11 * * * root /bin/bash /usr/src/bsh_execScraper.sh Amazon laptop"; } | crontab -
-
-# Run the command on container startup
-# CMD cron && tail -f /var/log/cron.log
-# CMD ["bash", "bsh_execScraper.sh", "Amazon", "laptop"]
-CMD ["cron", "-f"]
+ENTRYPOINT ["scrapy"]
+CMD []

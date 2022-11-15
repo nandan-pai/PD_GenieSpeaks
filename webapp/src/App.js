@@ -9,6 +9,7 @@ import ProductDetail from "./components/ProductDetail/ProductDetail";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState("");
+	const [filter, setFilter] = useState({});
 
 	return (
 		<div className='App'>
@@ -20,6 +21,7 @@ const App = () => {
 							<LandingPage
 								searchQuery={searchQuery}
 								setSearchQuery={setSearchQuery}
+								setFilter={setFilter}
 							/>
 						}
 					/>
@@ -29,6 +31,8 @@ const App = () => {
 							<ProductList
 								searchQuery={searchQuery}
 								setSearchQuery={setSearchQuery}
+								filter={filter}
+								setFilter={setFilter}
 							/>
 						}
 					/>
@@ -40,6 +44,8 @@ const App = () => {
 							<ProductDetail
 								searchQuery={searchQuery}
 								setSearchQuery={setSearchQuery}
+								filter={filter}
+								setFilter={setFilter}
 							/>
 						}
 					/>

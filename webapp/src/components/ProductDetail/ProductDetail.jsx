@@ -14,6 +14,8 @@ import {
 	HStack,
 	Icon,
 	Image,
+	Show,
+	SimpleGrid,
 	Tab,
 	TabList,
 	TabPanel,
@@ -24,6 +26,7 @@ import {
 import { FaRegThumbsUp } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
+import AvailableMenu from "../AvailableMenu/AvailableMenu";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
@@ -38,7 +41,6 @@ const ProductDetail = (props) => {
 			setIsLoading(false);
 		});
 
-		// console.log(productInfo);
 	};
 
 	useEffect(getProductInfo, [id]);
@@ -49,11 +51,12 @@ const ProductDetail = (props) => {
 				<NavBar
 					searchQuery={props.searchQuery}
 					setSearchQuery={props.setSearchQuery}
+					setFilter={props.setFilter}
 				/>
 
-				<Loader hidden={isLoading} />
-				<Loader hidden={isLoading} />
-				<Loader hidden={isLoading} />
+				<Loader hidden={! isLoading} />
+				<Loader hidden={! isLoading} />
+				<Loader hidden={! isLoading} />
 			</div>
 		);
 	} else {
@@ -62,9 +65,22 @@ const ProductDetail = (props) => {
 				<NavBar
 					searchQuery={props.searchQuery}
 					setSearchQuery={props.setSearchQuery}
+					setFilter={props.setFilter}
 				/>
 
-				<Grid templateColumns='repeat(4, 1fr)' mt={10} ml={20}>
+				<SimpleGrid
+					templateColumns={{
+						base: "repeat(4, 1fr)",
+						xl: "repeat(5, 1fr)",
+						lg: "repeat(3, 1fr)",
+						md: "repeat(3, 1fr)",
+						sm: "repeat(1, 1fr)",
+					}}
+					minChildWidth='500px'
+					spacing={5}
+					mt={10}
+					ml={20}
+				>
 					<GridItem colSpan={1}>
 						<Image
 							src={productInfo.images[0]}
@@ -76,28 +92,41 @@ const ProductDetail = (props) => {
 							alignSelf='center'
 							justifySelf='center'
 						/>
-						<HStack spacing={5} justifyContent='center' mt='10px'>
-							<Box h='50px' w='50px' bg='yellow.200' />
-							<Box h='50px' w='50px' bg='tomato' />
-							<Box h='50px' w='50px' bg='blue.200' />
-							<Box h='50px' w='50px' bg='pink.200' />
-						</HStack>
 					</GridItem>
 
-					<GridItem colSpan={2} ml='10px'>
+					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
 						<Box textAlign={["left", "left"]}>
-							<Heading mb='10px' fontSize='xl' textAlign={["left, left"]}>
+							<Heading
+								mb='10px'
+								fontSize={{
+									base: "xl",
+									xl: "xl",
+									lg: "lg",
+									md: "md",
+									sm: "md",
+								}}
+								textAlign={["left, left"]}
+							>
 								{productInfo.title}
 							</Heading>
 							<HStack mb='50px' alignSelf={["left", "left"]}>
 								<Icon as={FaRegThumbsUp} color='green' />
 								<Text fontWeight='semibold' color='green'>
-									95.6%
+									{productInfo.satisfactory_rating}%
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
 								<Text>{productInfo.reviews.length} reviews</Text>
 							</HStack>
 						</Box>
+
+						<Show below='xl'>
+							<GridItem
+								colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}
+								mb={5}
+							>
+								<AvailableMenu ecommerce={productInfo.ecommerce} />
+							</GridItem>
+						</Show>
 
 						<Tabs>
 							<TabList>
@@ -107,45 +136,49 @@ const ProductDetail = (props) => {
 
 							<TabPanels>
 								<TabPanel>
-									<Grid templateColumns='repeat(2, 1fr)' w='500px' gap='5px'>
-										{/* {productInfo.identifiers.map((iden, index) => {
-											return (
-												<>
-													<GridItem>
-														<Text>{iden[0]}</Text>
+									<Grid
+										templateColumns='repeat(2, 1fr)'
+										w={{
+											base: "700px",
+											xl: "700px",
+											lg: "500px",
+											md: "300px",
+											sm: "100px",
+										}}
+										minW='400px'
+										gap={{
+											base: "5px",
+											xl: "5px",
+											lg: "3px",
+											md: "1px",
+											sm: "0px",
+										}}
+									>
+										{
+											Object.keys(productInfo.identifiers).map((identifier, index) => {
+												return <>
+													<GridItem key={identifier}>
+														<Text color='gray'>{identifier}</Text>
 													</GridItem>
-													<GridItem>
-														<Text>{iden[1]}</Text>
+													<GridItem key={index}>
+														<Text fontWeight='semibold'>{productInfo.identifiers[identifier]}</Text>
 													</GridItem>
 												</>
-											);
-										})} */}
-										<GridItem>
-											<Text color='gray'>Brand</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold'>
-												{productInfo.identifiers["Brand"]}
-											</Text>
-										</GridItem>
+											})
+										}
 
-										<GridItem>
-											<Text color='gray'>Series</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold' textTransform='uppercase'>
-												{productInfo.identifiers["Series"]}
-											</Text>
-										</GridItem>
-
-										<GridItem>
-											<Text color='gray'>Item Model Number</Text>
-										</GridItem>
-										<GridItem>
-											<Text fontWeight='semibold' textTransform='uppercase'>
-												{productInfo.identifiers["Item model number"]}
-											</Text>
-										</GridItem>
+										{
+											Object.keys(productInfo.attributes).map((attribute, index) => {
+												return <>
+													<GridItem key={attribute}>
+														<Text color='gray'>{attribute}</Text>
+													</GridItem>
+													<GridItem key={index*-1}>
+														<Text fontWeight='semibold'>{productInfo.attributes[attribute]}</Text>
+													</GridItem>
+												</>
+											})
+										}
 									</Grid>
 								</TabPanel>
 								<TabPanel>
@@ -159,7 +192,10 @@ const ProductDetail = (props) => {
 														key={review._id}
 														name={review.user.name}
 														title={review.title}
+														stars={review.stars}
+														reviewURL={review.url}
 														desc={review.description}
+														user={review.user}
 														ecommerce={review.ecommerce.name}
 														upVote='18'
 													/>
@@ -171,7 +207,13 @@ const ProductDetail = (props) => {
 							</TabPanels>
 						</Tabs>
 					</GridItem>
-				</Grid>
+
+					<Show above='xl'>
+						<GridItem colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}>
+							<AvailableMenu ecommerce={productInfo.ecommerce} />
+						</GridItem>
+					</Show>
+				</SimpleGrid>
 			</>
 		);
 	}

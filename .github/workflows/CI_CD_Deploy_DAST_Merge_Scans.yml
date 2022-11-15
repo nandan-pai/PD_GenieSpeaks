@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - master
-      - integration
+      - dev
+      - test
   workflow_dispatch:
 
 jobs:
   paths-filter:
+    name: Trigger Folder Tests
     runs-on: ubuntu-latest
     outputs:
       geniescrapes: ${{ steps.filter.outputs.geniescrapes }}
@@ -45,16 +47,14 @@ jobs:
     if: needs.paths-filter.outputs.geniescrapes == 'true'
     needs:
     - paths-filter
-    uses: ./.github/workflows/scraper_deploy.yml
+    uses: ./.github/workflows/build_image.yml
     with:
-      app_name: geniescraper
-      registry: geniespeaks.azurecr.io/
-      registry_uri: https://geniespeaks.azurecr.io/
-      environment: 'production'
+      app_name: geniescrapes
+      registry: docker.io
+      dockerfile: ./geniescrapes/geniescrapes.dockerfile
     secrets:
-      azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
-      azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
-      azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 
   server_dev_deploy:
@@ -63,16 +63,15 @@ jobs:
     needs:
       - paths-filter
     if: needs.paths-filter.outputs.server == 'true'
-    uses: ./.github/workflows/server_deploy.yml
+    uses: ./.github/workflows/container_deploy.yml
     with:
-      app_name: gsserver
-      registry: geniespeaks.azurecr.io
-      registry_uri: https://geniespeaks.azurecr.io/
-      environment: 'production'
+      app_name: genieserves
+      registry: docker.io
+      dockerfile: ./server/server.dockerfile
     secrets:
-      azure_username: ${{ secrets.AzureAppService_ContainerUsername_d24aa6b3a1bb4b34be0b64a433b28dd6 }}
-      azure_password: ${{ secrets.AzureAppService_ContainerPassword_4abe61323a504b1a9bb359aec8377a49 }}
-      azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_0fc8a61af9b04ee7938c4a15288510bf }}
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
+      azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
 
   server_dast_zap_api:
     name: DAST ZAP API Scan
@@ -87,46 +86,29 @@ jobs:
       - paths-filter
     if: needs.paths-filter.outputs.webapp == 'true'
     # environment: development
-    uses: ./.github/workflows/webapp_deploy.yml
+    uses: ./.github/workflows/container_deploy.yml
     with:
-      app_name: gsfrontend
-      registry: geniespeaks.azurecr.io
-      registry_uri: https://geniespeaks.azurecr.io/
-      environment: 'production'
+      app_name: geniespeaks
+      registry: docker.io
+      dockerfile: ./webapp/webapp.dockerfile
     secrets:
-      azure_username: ${{ secrets.AzureAppService_ContainerUsername_9c7f19f74ce342df802412d2ef81331f }}
-      azure_password: ${{ secrets.AzureAppService_ContainerPassword_37b38bd9483a459fb307d1f1be00b486 }}
-      azure_publish_profile: ${{ secrets.AzureAppService_PublishProfile_999508607968491592d3d4cdb87b9568 }}
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
+      azure_publish_profile: ${{ secrets.AZURE_GENIESPEAKS_PUBLISHPROFILE }}
 
-  webapp_dev_static_app_deploy:
-    name: Webapp Dev Static App Deploy
-    needs:
-      - paths-filter
-    if: needs.paths-filter.outputs.webapp == 'true'
-    # environment: development
-    uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
-    secrets:
-      mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
+  # webapp_dev_static_app_deploy:
+  #   name: Webapp Dev Static App Deploy
+  #   needs:
+  #     - paths-filter
+  #   if: needs.paths-filter.outputs.webapp == 'true'
+  #   # environment: development
+  #   uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
+  #   secrets:
+  #     mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
 
   webapp_dast_zap_baseline:
     name: DAST ZAP Baseline Scan
     needs:
       - webapp_dev_deploy
-      - webapp_dev_static_app_deploy
+      # - webapp_dev_static_app_deploy
     uses: ./.github/workflows/dast_zap_baseline.yml
-
-  # production:
-  #   name: Production Deployment
-  #   needs:
-  #   - scraper_shiftleft_ng_sast
-  #   - server_shiftleft_ng_sast
-  #   - webapp_shiftleft_ng_sast
-  #   runs-on: ubuntu-latest
-  #   environment: production
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
-
-  #   - name: Testing
-  #     run: |
-  #       echo "Production Testing"

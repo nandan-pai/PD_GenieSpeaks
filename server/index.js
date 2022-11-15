@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 const app = require("./server.js");
 
 const PORT = process.env.SERVER_PORT || 5000;
+const MONGO_URI = process.env.MONGO_ATLAS_URI || "mongodb://localhost:27017/GenieSpeaks"
 
 console.log("Connecting to DB...");
 
 mongoose.connect(
-	process.env.MONGO_ATLAS_URI,
+	MONGO_URI,
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,

@@ -1,11 +1,9 @@
 # This workflow integrates ShiftLeft NG SAST with GitHub
 # Visit https://docs.shiftleft.io for help
+
 name: Server Shiftleft NG SAST
 
 on:
-  # pull_request:
-  #   branches:
-  #     - master
   workflow_call:
     secrets:
       SHIFTLEFT_ACCESS_TOKEN:

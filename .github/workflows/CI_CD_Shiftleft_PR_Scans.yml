@@ -4,11 +4,13 @@ on:
   pull_request:
     branches:
       - master
-      - integration
+      - dev
+      - test
   workflow_dispatch:
 
 jobs:
   paths-filter:
+    name: Trigger Folder Tests
     runs-on: ubuntu-latest
     outputs:
       geniescrapes: ${{ steps.filter.outputs.geniescrapes }}

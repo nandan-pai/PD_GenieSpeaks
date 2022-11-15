@@ -4,11 +4,12 @@ import NavBar from "../NavBar/NavBar";
 import LandingSearchBar from "../SearchBar/LandingSearchBar/LandingSearchBar";
 
 const LandingPage = (props) => {
-	const { searchQuery, setSearchQuery } = props;
+	const { searchQuery, setSearchQuery, setFilter } = props;
 
 	return (
 		<div className='container'>
-			<NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+			<NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+				setFilter={setFilter} />
 			<div className='content'>
 				<Heading textAlign='center' mt='5rem'>
 					The one-stop shop for reviews
@@ -19,6 +20,7 @@ const LandingPage = (props) => {
 					<LandingSearchBar
 						searchQuery={searchQuery}
 						setSearchQuery={setSearchQuery}
+						setFilter={setFilter}
 					/>
 				</HStack>
 			</div>

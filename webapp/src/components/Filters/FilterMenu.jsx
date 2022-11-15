@@ -1,29 +1,40 @@
 import {
 	Box,
 	Checkbox,
+	CheckboxGroup,
+	Drawer,
+	DrawerBody,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerOverlay,
 	HStack,
+	Icon,
+	Link,
 	RangeSlider,
 	RangeSliderFilledTrack,
 	RangeSliderMark,
 	RangeSliderThumb,
 	RangeSliderTrack,
 	Spacer,
+	Spinner,
 	Stack,
 	Text,
 	useColorMode,
-	Spinner,
-	CheckboxGroup,
+	useDisclosure,
 	VStack,
-	Show,
 } from "@chakra-ui/react";
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiBaseUrl } from "../../config";
-
-import "./Filters.css";
+import { FiFilter } from "react-icons/fi";
+import "./FilterMenu.css";
+import axios from "axios";
 import { BiError } from "react-icons/bi";
 
-const Filters = ({ searchQuery, setFilter, filter }) => {
+const FilterMenu = ({ searchQuery, setFilter, filter }) => {
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const btnRef = useRef();
+
 	const [categoryList, setCategoryList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
 
@@ -32,7 +43,7 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 
 	const getCategories = useCallback(() => {
 		if (searchQuery === "") {
-			return
+			return;
 		}
 		setCategoryLoading(true);
 		axios
@@ -124,43 +135,79 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 		);
 	};
 
+	// const handleButtonClick = () => {};
+
 	return (
 		<div>
-			<Show above='md'>
+			<Link className='filter-button' onClick={onOpen} ref={btnRef}>
 				<Box
-					h='100vh'
-					w={{ base: "300px", lg: "280px", md: "250px" }}
-					ml={5}
-					bg={isDark ? "" : "white"}
-					p={5}
-					border='1px'
-					borderRadius='10px'
+					w='110px'
+					borderWidth='1px'
+					borderColor='gray.100'
+					borderRadius='md'
+					justifyContent='center'
+					display='inline-flex'
+					padding='8px'
 				>
-					<Text fontSize='lg'>Filter</Text>
-					{isCategoryLoading ? (
-						<Spinner />
-					) : categoryList.length ? (
-						<>
-							{categoryList.map((category, index) => {
-								if (category.type === "checklist") {
-									return generate_checklist(category, index);
-								} else if (category.type === "range") {
-									return generate_range(category, index);
-								} else {
-									return <></>;
-								}
-							})}
-						</>
-					) : (
-						<VStack mt='10%'>
-							<BiError color='orange' ml='50%' size='50px' />
-							<Text fontSize='2xl'>No Filters</Text>
-						</VStack>
-					)}
+					<HStack>
+						<Text>Filters</Text>
+						<Icon as={FiFilter} />
+					</HStack>
 				</Box>
-			</Show>
+			</Link>
+
+			<Drawer
+				isOpen={isOpen}
+				placement='left'
+				onClose={onClose}
+				finalFocusRef={btnRef}
+				backgroundColor={isDark ? "#2d3748" : "white"}
+			>
+				<DrawerOverlay />
+				<DrawerContent>
+					<DrawerHeader>Filters</DrawerHeader>
+					<DrawerBody px={7}>
+						{isCategoryLoading ? (
+							<Spinner />
+						) : categoryList.length ? (
+							<>
+								{categoryList.map((category, index) => {
+									if (category.type === "checklist") {
+										return generate_checklist(category, index);
+									} else if (category.type === "range") {
+										return generate_range(category, index);
+									} else {
+										return <></>;
+									}
+								})}
+							</>
+						) : (
+							<VStack mt='10%'>
+								<BiError color='orange' ml='50%' size='50px' />
+								<Text fontSize='2xl'>No Filters</Text>
+							</VStack>
+						)}
+					</DrawerBody>
+					<DrawerFooter>
+						<Link onClick={onClose}>
+							<Box
+								w='110px'
+								borderWidth='1px'
+								borderColor='gray.100'
+								backgroundColor={isDark ? "white.100" : "gray.100"}
+								borderRadius='md'
+								justifyContent='center'
+								display='inline-flex'
+								padding='8px'
+							>
+								<Text color={isDark ? "gray.100" : "white.100"}>Close</Text>
+							</Box>
+						</Link>
+					</DrawerFooter>
+				</DrawerContent>
+			</Drawer>
 		</div>
 	);
 };
 
-export default Filters;
+export default FilterMenu;

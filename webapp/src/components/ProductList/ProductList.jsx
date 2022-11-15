@@ -7,6 +7,7 @@ import {
 	Spinner,
 	Spacer,
 	VStack,
+	Show,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -18,15 +19,15 @@ import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
 import "./ProductList.css";
 import SortMenu from "../SortMenu/SortMenu";
+import FilterMenu from "../Filters/FilterMenu";
 
-const ProductList = ({ searchQuery, setSearchQuery }) => {
+const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
 	const [sort, setSort] = useState("_id");
 	const [limit, setLimit] = useState(20);
 	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
-	const [filter, setFilter] = useState({});
 
 	let navigate = useNavigate();
 
@@ -43,7 +44,6 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 			filter,
 		};
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
-			console.log(res.data);
 			setProductList(res.data.product_list);
 			setProductCount(res.data.product_count);
 			showLoader(false);
@@ -71,7 +71,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 						</Text>
 					) : (
 						<Text
-							ml='25%'
+							ml={{ base: "25%", lg: "25%", md: "20%", sm: "10%" }}
 							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
 						>
 							Showing {offset + 1} -{" "}
@@ -83,20 +83,32 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 						</Text>
 					)}
 					<Spacer />
-					<SortMenu sort={sort} setSort={setSort} />
+					<Show below='md'>
+						<HStack>
+							<FilterMenu
+								searchQuery={searchQuery}
+								setFilter={setFilter}
+								filter={filter}
+							/>
+							<SortMenu sort={sort} setSort={setSort} />
+						</HStack>
+					</Show>
+					<Show above='md'>
+						<SortMenu sort={sort} setSort={setSort} />
+					</Show>
 				</HStack>
 			) : (
 				<></>
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
-				<GridItem colSpan={1}>
+				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
 					<Filters
 						searchQuery={searchQuery}
 						setFilter={setFilter}
 						filter={filter}
 					/>
 				</GridItem>
-				<GridItem colSpan={3}>
+				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
 					{loader ? (
 						<Spinner />
 					) : productList.length ? (
@@ -110,7 +122,7 @@ const ProductList = ({ searchQuery, setSearchQuery }) => {
 										productImage={product.images[0]}
 										price={product.min_price}
 										noOfReviews={product.review_count}
-										satisfactionRating='98.5'
+										satisfactionRating={product.satisfactory_rating}
 									/>
 								);
 							})}
