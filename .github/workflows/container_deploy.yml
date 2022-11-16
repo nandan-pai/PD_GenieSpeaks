@@ -14,14 +14,13 @@ on:
         description: Dockfile to build the image
         required: true
         type: string
-      environment:
-        description: Deployment Environment
-        required: true
-        type: string
 
     secrets:
       app_name:
         description: App Name of the container in Azure
+        required: true
+      deploy_env:
+        description: Deployment Environment
         required: true
       dockerhub_username:
         description: Dockerhub Username
@@ -61,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: ${{ inputs.environment }}
+      name: ${{ secrets.deploy_env }}
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
