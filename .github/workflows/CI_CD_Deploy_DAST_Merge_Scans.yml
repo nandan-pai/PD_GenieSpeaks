@@ -67,7 +67,7 @@ jobs:
       dockerfile: ./server/server.dockerfile
     secrets:
       app_name: ${{ secrets.SERVER_APP_NAME }}
-      dev_env: ${{ secrets.DEPLOYMENT_ENV }}
+      deploy_env: ${{ secrets.DEPLOYMENT_ENV }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
