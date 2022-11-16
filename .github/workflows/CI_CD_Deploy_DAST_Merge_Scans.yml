@@ -49,7 +49,7 @@ jobs:
     - paths-filter
     uses: ./.github/workflows/build_image.yml
     with:
-      app_name: geniescrapes
+      app_name: ${{ secrets.SCRAPER_APP_NAME }}
       registry: docker.io
       dockerfile: ./geniescrapes/geniescrapes.dockerfile
     secrets:
@@ -65,7 +65,7 @@ jobs:
     if: needs.paths-filter.outputs.server == 'true'
     uses: ./.github/workflows/container_deploy.yml
     with:
-      app_name: genieserves
+      app_name:  ${{ secrets.SERVER_APP_NAME }}
       registry: docker.io
       dockerfile: ./server/server.dockerfile
     secrets:
@@ -88,7 +88,7 @@ jobs:
     # environment: development
     uses: ./.github/workflows/container_deploy.yml
     with:
-      app_name: geniespeaks
+      app_name: ${{ secrets.WEBAPP_APP_NAME }}
       registry: docker.io
       dockerfile: ./webapp/webapp.dockerfile
     secrets:
