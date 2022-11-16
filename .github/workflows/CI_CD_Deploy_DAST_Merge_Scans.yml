@@ -36,17 +36,16 @@ jobs:
       - name: Check server folder changes
         if: steps.filter.outputs.server == 'true'
         run: echo "server folder changes"
-      
+
       - name: Check webapp folder changes
         if: steps.filter.outputs.webapp == 'true'
         run: echo "webapp folder changes"
-
 
   scraper_deploy:
     name: Scraper Dev Container Deploy
     if: needs.paths-filter.outputs.geniescrapes == 'true'
     needs:
-    - paths-filter
+      - paths-filter
     uses: ./.github/workflows/build_image.yml
     with:
       registry: docker.io
@@ -55,7 +54,6 @@ jobs:
       app_name: ${{ secrets.SCRAPER_APP_NAME }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
-
 
   server_deploy:
     name: Server Dev Container Deploy
@@ -67,9 +65,9 @@ jobs:
     with:
       registry: docker.io
       dockerfile: ./server/server.dockerfile
+      environment: ${{ secrets.ENVIRONMENT }}
     secrets:
-      app_name:  ${{ secrets.SERVER_APP_NAME }}
-      environment:  ${{ secrets.ENVIRONMENT }}
+      app_name: ${{ secrets.SERVER_APP_NAME }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
@@ -79,7 +77,6 @@ jobs:
     needs:
       - server_deploy
     uses: ./.github/workflows/dast_zap_api.yml
-
 
   webapp_deploy:
     name: Webapp Dev Container Deploy
@@ -91,9 +88,9 @@ jobs:
     with:
       registry: docker.io
       dockerfile: ./webapp/webapp.dockerfile
+      environment: ${{ secrets.ENVIRONMENT }}
     secrets:
       app_name: ${{ secrets.WEBAPP_APP_NAME }}
-      environment:  ${{ secrets.ENVIRONMENT }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESPEAKS_PUBLISHPROFILE }}
