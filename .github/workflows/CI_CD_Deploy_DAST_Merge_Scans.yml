@@ -67,7 +67,6 @@ jobs:
       dockerfile: ./server/server.dockerfile
     secrets:
       app_name: ${{ secrets.SERVER_APP_NAME }}
-      deploy_env: ${{ secrets.DEPLOYMENT_ENV }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
@@ -90,7 +89,6 @@ jobs:
       dockerfile: ./webapp/webapp.dockerfile
     secrets:
       app_name: ${{ secrets.WEBAPP_APP_NAME }}
-      deploy_env: ${{ secrets.DEPLOYMENT_ENV }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESPEAKS_PUBLISHPROFILE }}
