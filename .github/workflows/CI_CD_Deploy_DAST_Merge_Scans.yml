@@ -42,7 +42,7 @@ jobs:
         run: echo "webapp folder changes"
 
 
-  scraper_dev_deploy:
+  scraper_deploy:
     name: Scraper Dev Container Deploy
     if: needs.paths-filter.outputs.geniescrapes == 'true'
     needs:
@@ -57,7 +57,7 @@ jobs:
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 
-  server_dev_deploy:
+  server_deploy:
     name: Server Dev Container Deploy
     # environment: development
     needs:
@@ -68,6 +68,7 @@ jobs:
       app_name:  ${{ secrets.SERVER_APP_NAME }}
       registry: docker.io
       dockerfile: ./server/server.dockerfile
+      environment:  ${{ secrets.ENVIRONMENT }}
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -76,11 +77,11 @@ jobs:
   server_dast_zap_api:
     name: DAST ZAP API Scan
     needs:
-      - server_dev_deploy
+      - server_deploy
     uses: ./.github/workflows/dast_zap_api.yml
 
 
-  webapp_dev_deploy:
+  webapp_deploy:
     name: Webapp Dev Container Deploy
     needs:
       - paths-filter
@@ -91,6 +92,7 @@ jobs:
       app_name: ${{ secrets.WEBAPP_APP_NAME }}
       registry: docker.io
       dockerfile: ./webapp/webapp.dockerfile
+      environment:  ${{ secrets.ENVIRONMENT }}
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -109,6 +111,6 @@ jobs:
   webapp_dast_zap_baseline:
     name: DAST ZAP Baseline Scan
     needs:
-      - webapp_dev_deploy
+      - webapp_deploy
       # - webapp_dev_static_app_deploy
     uses: ./.github/workflows/dast_zap_baseline.yml
