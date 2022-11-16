@@ -156,56 +156,61 @@ const FilterMenu = ({ searchQuery, setFilter, filter }) => {
 				</Box>
 			</Link>
 
-			<Drawer
-				isOpen={isOpen}
-				placement='left'
-				onClose={onClose}
-				finalFocusRef={btnRef}
-				backgroundColor={isDark ? "#2d3748" : "white"}
+			<div
+				style={
+					isDark ? { backgroundColor: "#2d3748" } : { backgroundColor: "white" }
+				}
 			>
-				<DrawerOverlay />
-				<DrawerContent>
-					<DrawerHeader>Filters</DrawerHeader>
-					<DrawerBody px={7}>
-						{isCategoryLoading ? (
-							<Spinner />
-						) : categoryList.length ? (
-							<>
-								{categoryList.map((category, index) => {
-									if (category.type === "checklist") {
-										return generate_checklist(category, index);
-									} else if (category.type === "range") {
-										return generate_range(category, index);
-									} else {
-										return <></>;
-									}
-								})}
-							</>
-						) : (
-							<VStack mt='10%'>
-								<BiError color='orange' ml='50%' size='50px' />
-								<Text fontSize='2xl'>No Filters</Text>
-							</VStack>
-						)}
-					</DrawerBody>
-					<DrawerFooter>
-						<Link onClick={onClose}>
-							<Box
-								w='110px'
-								borderWidth='1px'
-								borderColor='gray.100'
-								backgroundColor={isDark ? "white.100" : "gray.100"}
-								borderRadius='md'
-								justifyContent='center'
-								display='inline-flex'
-								padding='8px'
-							>
-								<Text color={isDark ? "gray.100" : "white.100"}>Close</Text>
-							</Box>
-						</Link>
-					</DrawerFooter>
-				</DrawerContent>
-			</Drawer>
+				<Drawer
+					isOpen={isOpen}
+					placement='left'
+					onClose={onClose}
+					finalFocusRef={btnRef}
+				>
+					<DrawerOverlay />
+					<DrawerContent>
+						<DrawerHeader>Filters</DrawerHeader>
+						<DrawerBody px={7}>
+							{isCategoryLoading ? (
+								<Spinner />
+							) : categoryList.length ? (
+								<>
+									{categoryList.map((category, index) => {
+										if (category.type === "checklist") {
+											return generate_checklist(category, index);
+										} else if (category.type === "range") {
+											return generate_range(category, index);
+										} else {
+											return <></>;
+										}
+									})}
+								</>
+							) : (
+								<VStack mt='10%'>
+									<BiError color='orange' ml='50%' size='50px' />
+									<Text fontSize='2xl'>No Filters</Text>
+								</VStack>
+							)}
+						</DrawerBody>
+						<DrawerFooter>
+							<Link onClick={onClose}>
+								<Box
+									w='110px'
+									borderWidth='1px'
+									borderColor='gray.100'
+									backgroundColor={isDark ? "white.100" : "gray.100"}
+									borderRadius='md'
+									justifyContent='center'
+									display='inline-flex'
+									padding='8px'
+								>
+									<Text color={isDark ? "gray.100" : "white.100"}>Close</Text>
+								</Box>
+							</Link>
+						</DrawerFooter>
+					</DrawerContent>
+				</Drawer>
+			</div>
 		</div>
 	);
 };
