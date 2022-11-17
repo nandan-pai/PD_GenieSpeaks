@@ -51,7 +51,6 @@ const App = () => {
 					/>
 				</Routes>
 			</BrowserRouter>
-			{/* <NavSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} /> */}
 		</div>
 	);
 };
