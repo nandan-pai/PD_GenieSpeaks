@@ -57,7 +57,6 @@ jobs:
 
   server_deploy:
     name: Server Dev Container Deploy
-    # environment: development
     needs:
       - paths-filter
     if: needs.paths-filter.outputs.server == 'true'
@@ -67,6 +66,7 @@ jobs:
       dockerfile: ./server/server.dockerfile
     secrets:
       app_name: ${{ secrets.SERVER_APP_NAME }}
+      deploy_env: ${{ secrets.DEPLOYMENT_ENV }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESERVES_PUBLISHPROFILE }}
@@ -82,30 +82,19 @@ jobs:
     needs:
       - paths-filter
     if: needs.paths-filter.outputs.webapp == 'true'
-    # environment: development
     uses: ./.github/workflows/container_deploy.yml
     with:
       registry: docker.io
       dockerfile: ./webapp/webapp.dockerfile
     secrets:
       app_name: ${{ secrets.WEBAPP_APP_NAME }}
+      deploy_env: ${{ secrets.DEPLOYMENT_ENV }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_password_token: ${{ secrets.DOCKERHUB_PASSWORD }}
       azure_publish_profile: ${{ secrets.AZURE_GENIESPEAKS_PUBLISHPROFILE }}
-
-  # webapp_dev_static_app_deploy:
-  #   name: Webapp Dev Static App Deploy
-  #   needs:
-  #     - paths-filter
-  #   if: needs.paths-filter.outputs.webapp == 'true'
-  #   # environment: development
-  #   uses: ./.github/workflows/azure-static-web-apps-mango-bush-0d243c810.yml
-  #   secrets:
-  #     mango_bush_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_BUSH_0D243C810 }}
 
   webapp_dast_zap_baseline:
     name: DAST ZAP Baseline Scan
     needs:
       - webapp_deploy
-      # - webapp_dev_static_app_deploy
     uses: ./.github/workflows/dast_zap_baseline.yml
