@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "server": "nodemon index.js",
-    "dev": "concurrently \"npm run webapp\" \"npm run server\""
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "npm run start --prefix ../webapp"
   },
   "repository": {
     "type": "git",

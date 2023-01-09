@@ -122,7 +122,9 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 										productImage={product.images[0]}
 										price={product.min_price}
 										noOfReviews={product.review_count}
-										satisfactionRating={product.satisfactory_rating}
+										satisfactionRating={parseFloat(
+											product.satisfactory_rating
+										).toFixed(2)}
 									/>
 								);
 							})}
