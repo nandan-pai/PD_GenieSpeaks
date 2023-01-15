@@ -26,6 +26,15 @@ const customTheme = extendTheme({
 		extrabold: 800,
 		black: 900,
 	},
+	components: {
+		Progress: {
+			baseStyle: {
+				track: {
+					bg: "#f7fafc",
+				},
+			},
+		},
+	},
 });
 
 export default customTheme;
