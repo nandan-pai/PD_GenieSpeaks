@@ -14,7 +14,7 @@ const RatingCard = () => {
 		<div>
 			<Center>
 				<Text fontWeight='bold' fontSize='18px' my={5}>
-					User Reviews & Ratings
+					User Ratings
 				</Text>
 			</Center>
 			<Box
