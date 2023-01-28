@@ -8,6 +8,8 @@ import {
 	Spacer,
 	VStack,
 	Show,
+	Box,
+	Tooltip,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -17,9 +19,11 @@ import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
-import "./ProductList.css";
+import { GoInfo } from "react-icons/go";
 import SortMenu from "../SortMenu/SortMenu";
 import FilterMenu from "../Filters/FilterMenu";
+import "./ProductList.css";
+import SuggestionCard from "../Card/SuggestionCard/SuggestionCard";
 
 const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [productList, setProductList] = useState([]);
@@ -112,23 +116,54 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 					{loader ? (
 						<Spinner />
 					) : productList.length ? (
-						<SimpleGrid minChildWidth='420px' spacing='10px'>
-							{productList.map((product, index) => {
-								return (
-									<ProductCard
-										key={product._id}
-										_id={product._id}
-										productName={product.title}
-										productImage={product.images[0]}
-										price={product.min_price}
-										noOfReviews={product.review_count}
-										satisfactionRating={parseFloat(
-											product.satisfactory_rating
-										).toFixed(2)}
-									/>
-								);
-							})}
-						</SimpleGrid>
+						<>
+							<Box
+								h='200px'
+								w='98%'
+								mt='10px'
+								p='10px'
+								// borderWidth='0.5px'
+								// borderRadius='md'
+							>
+								<HStack>
+									<Text color='gray.100' fontWeight='semibold'>
+										Suggestions
+									</Text>
+									<Tooltip
+										label='This is the suggestion'
+										fontSize='md'
+										fontWeight='md'
+										placement='top'
+										hasArrow
+									>
+										<GoInfo />
+									</Tooltip>
+								</HStack>
+								<HStack mt={2} spacing={5}>
+									<SuggestionCard />
+									<SuggestionCard />
+									<SuggestionCard />
+									{/* <SuggestionCard /> */}
+								</HStack>
+							</Box>
+							<SimpleGrid minChildWidth='420px' spacing='10px'>
+								{productList.map((product, index) => {
+									return (
+										<ProductCard
+											key={product._id}
+											_id={product._id}
+											productName={product.title}
+											productImage={product.images[0]}
+											price={product.min_price}
+											noOfReviews={product.review_count}
+											satisfactionRating={parseFloat(
+												product.satisfactory_rating
+											).toFixed(2)}
+										/>
+									);
+								})}
+							</SimpleGrid>
+						</>
 					) : (
 						<VStack mt='10%'>
 							<BiError color='orange' ml='50%' size='50px' />

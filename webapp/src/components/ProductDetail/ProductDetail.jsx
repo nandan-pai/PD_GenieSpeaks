@@ -203,6 +203,7 @@ const ProductDetail = (props) => {
 														name={review.user.name}
 														title={review.title}
 														stars={review.stars}
+														remainingStars={5 - review.stars}
 														reviewURL={review.url}
 														desc={review.description}
 														user={review.user}
