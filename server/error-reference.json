@@ -1,0 +1,11 @@
+{
+    "1" : "",
+    "2" : "",
+    "7" : "Consumed Parameters",
+    "8" : "Invalid Parameters",
+    "9" : "Partial Parameters",
+    "10": "Internal Service Error. Computation Error",
+    "11": "The resource requested could not be found.",
+    "12": "Service Unavailable. Database Connection Failure.",
+    "13": "Invaid User token"
+}

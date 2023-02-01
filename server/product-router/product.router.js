@@ -10,7 +10,13 @@ router.get('/', async (req, res) => {
   try {
     const prodID = req.query.id
     if (!prodID) {
-      return res.status(400).json({ message: 'Requires Product ID' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 10,
+          "message": "Partial Parameters: Requires Product ID."
+        }
+      })
     }
     //Me bad
     //Dont Say
@@ -230,7 +236,14 @@ router.get('/', async (req, res) => {
     res.status(200).json({ productData: productData[0] })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error.",
+        "trace_back": e
+      }
+    })
   }
 })
 
@@ -238,7 +251,13 @@ router.get('/search/category', async (req, res) => {
   try {
     const query = req.query.query
     if (!query) {
-      return res.status(400).json({ message: 'Requires Query' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 10,
+          "message": "Partial Parameters: Requires Search Query."
+        }
+      })
     }
 
     const search_query = {
@@ -516,7 +535,14 @@ router.get('/search/category', async (req, res) => {
     })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error.",
+        "trace_back": e
+      }
+    })
   }
 })
 
@@ -530,7 +556,13 @@ router.post('/search', async (req, res) => {
     let sort_form = 1;
 
     if (!query) {
-      return res.status(400).json({ message: 'Requires Query' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 10,
+          "message": "Partial Parameters: Requires Search Query."
+        }
+      })
     }
     if (!limit) {
       limit = 10
@@ -702,7 +734,14 @@ router.post('/search', async (req, res) => {
     })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error.",
+        "trace_back": e
+      }
+    })
   }
 })
 

@@ -1,7 +1,9 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const mongoose = require('mongoose')
 
+require('./db_init.js')
 require('dotenv').config()
 
 const app = express()
@@ -9,8 +11,6 @@ const app = express()
 // middlewares
 app.use(express.json())
 app.use(cookieParser())
-
-// cors
 app.use(cors({
   origin: true,
   credentials: true
@@ -24,15 +24,37 @@ const requestLogger = (req, res, next) => {
   console.log(log)
   next()
 }
-
 app.use(requestLogger)
+
+// Validate DB Connection
+const validateDBConn = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(404).json({
+      'error': {
+        'code': 503,
+        'error_ref': 12,
+        'message': 'Service Unavailable. Database Connection Failure.'
+      }
+    })
+  }
+  next()
+}
+app.use(validateDBConn)
 
 // Links
 app.use('/api/static', express.static('public'))
 
-app.use('/api/user', require('./UserRouter/user.router.js'))
-app.use('/api/prod', require('./ProductRouter/product.router.js'))
+app.use('/api/user', require('./user-router/user.router.js'))
+app.use('/api/prod', require('./product-router/product.router.js'))
 
-app.use('*', (req, res) => res.status(404).json({ message: 'link not found' }))
+app.use('*', (req, res) =>
+  res.status(404).json({
+    'error': {
+      'code': 404,
+      'error_ref': 11,
+      'message': 'The resource requested could not be found.'
+    }
+  })
+)
 
 module.exports = app
