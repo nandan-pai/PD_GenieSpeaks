@@ -12,6 +12,7 @@ import {
 import {
 	FaStar,
 	FaAmazon,
+	FaRegStar,
 	// FaRegThumbsUp,
 	// FaRegThumbsDown,
 } from "react-icons/fa";
@@ -50,8 +51,17 @@ const ReviewCard = (props) => {
 					<HStack mb='2' alignSelf='start'>
 						{[...Array(props.stars)].map((e, i) => {
 							return (
-								<Icon as={FaStar} color='yellow' mr='2px' fontSize='20px' key={i}/>
+								<Icon
+									as={FaStar}
+									color='yellow'
+									mr='2px'
+									fontSize='20px'
+									key={i}
+								/>
 							);
+						})}
+						{[...Array(props.remainingStars)].map((e, i) => {
+							return <Icon as={FaRegStar} mr='2px' fontSize='20px' key={i} />;
 						})}
 					</HStack>
 				</VStack>

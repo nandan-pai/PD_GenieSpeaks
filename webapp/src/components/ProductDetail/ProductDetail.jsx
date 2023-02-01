@@ -27,6 +27,7 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
 import AvailableMenu from "../AvailableMenu/AvailableMenu";
+import RatingCard from "../Card/RatingCard/RatingCard";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
@@ -40,7 +41,6 @@ const ProductDetail = (props) => {
 			setProductInfo(res.data.productData);
 			setIsLoading(false);
 		});
-
 	};
 
 	useEffect(getProductInfo, [id]);
@@ -54,9 +54,9 @@ const ProductDetail = (props) => {
 					setFilter={props.setFilter}
 				/>
 
-				<Loader hidden={! isLoading} />
-				<Loader hidden={! isLoading} />
-				<Loader hidden={! isLoading} />
+				<Loader hidden={!isLoading} />
+				<Loader hidden={!isLoading} />
+				<Loader hidden={!isLoading} />
 			</div>
 		);
 	} else {
@@ -77,7 +77,7 @@ const ProductDetail = (props) => {
 						sm: "repeat(1, 1fr)",
 					}}
 					minChildWidth='500px'
-					spacing={5}
+					spacing={10}
 					mt={10}
 					ml={20}
 				>
@@ -92,6 +92,8 @@ const ProductDetail = (props) => {
 							alignSelf='center'
 							justifySelf='center'
 						/>
+
+						<RatingCard />
 					</GridItem>
 
 					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
@@ -112,7 +114,7 @@ const ProductDetail = (props) => {
 							<HStack mb='50px' alignSelf={["left", "left"]}>
 								<Icon as={FaRegThumbsUp} color='green' />
 								<Text fontWeight='semibold' color='green'>
-									{productInfo.satisfactory_rating}%
+									{parseFloat(productInfo.satisfactory_rating).toFixed(2)}%
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
 								<Text>{productInfo.reviews.length} reviews</Text>
@@ -154,31 +156,39 @@ const ProductDetail = (props) => {
 											sm: "0px",
 										}}
 									>
-										{
-											Object.keys(productInfo.identifiers).map((identifier, index) => {
-												return <>
-													<GridItem key={identifier}>
-														<Text color='gray'>{identifier}</Text>
-													</GridItem>
-													<GridItem key={index}>
-														<Text fontWeight='semibold'>{productInfo.identifiers[identifier]}</Text>
-													</GridItem>
-												</>
-											})
-										}
+										{Object.keys(productInfo.identifiers).map(
+											(identifier, index) => {
+												return (
+													<>
+														<GridItem key={identifier}>
+															<Text color='gray'>{identifier}</Text>
+														</GridItem>
+														<GridItem key={index}>
+															<Text fontWeight='semibold'>
+																{productInfo.identifiers[identifier]}
+															</Text>
+														</GridItem>
+													</>
+												);
+											}
+										)}
 
-										{
-											Object.keys(productInfo.attributes).map((attribute, index) => {
-												return <>
-													<GridItem key={attribute}>
-														<Text color='gray'>{attribute}</Text>
-													</GridItem>
-													<GridItem key={index*-1}>
-														<Text fontWeight='semibold'>{productInfo.attributes[attribute]}</Text>
-													</GridItem>
-												</>
-											})
-										}
+										{Object.keys(productInfo.attributes).map(
+											(attribute, index) => {
+												return (
+													<>
+														<GridItem key={attribute}>
+															<Text color='gray'>{attribute}</Text>
+														</GridItem>
+														<GridItem key={index * -1}>
+															<Text fontWeight='semibold'>
+																{productInfo.attributes[attribute]}
+															</Text>
+														</GridItem>
+													</>
+												);
+											}
+										)}
 									</Grid>
 								</TabPanel>
 								<TabPanel>
@@ -193,6 +203,7 @@ const ProductDetail = (props) => {
 														name={review.user.name}
 														title={review.title}
 														stars={review.stars}
+														remainingStars={5 - review.stars}
 														reviewURL={review.url}
 														desc={review.description}
 														user={review.user}
