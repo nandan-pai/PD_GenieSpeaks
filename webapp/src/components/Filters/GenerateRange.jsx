@@ -1,16 +1,18 @@
 import {
-	RangeSlider,
-	RangeSliderFilledTrack,
-	RangeSliderMark,
-	RangeSliderThumb,
-	RangeSliderTrack,
-	Text,
-	// useColorMode,
+    RangeSlider,
+    RangeSliderFilledTrack,
+    RangeSliderMark,
+    RangeSliderThumb,
+    RangeSliderTrack,
+    Text,
+    // useColorMode,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export default function GenerateRange({ obj, index, setFilter, filter }) {
-	// const { colorMode } = useColorMode();
-	// const isDark = colorMode === "dark";
+    const [priceRange, setPriceRange] = useState([]);
+    // const { colorMode } = useColorMode();
+    // const isDark = colorMode === "dark";
 
     return (
         <div className='filter-category price' key={index}>
@@ -22,7 +24,9 @@ export default function GenerateRange({ obj, index, setFilter, filter }) {
                 min={obj.value[0]}
                 max={obj.value[1]}
                 step={10000}
-                onChange={(val) =>
+                onChange={(val) => {
+                    console.log(val)
+                    setPriceRange(val)
                     setFilter({
                         ...filter,
                         [obj.name.toString()]: {
@@ -31,16 +35,16 @@ export default function GenerateRange({ obj, index, setFilter, filter }) {
                             value: val,
                         },
                     })
-                }
+                }}
             >
                 <RangeSliderTrack bg='gray'>
                     <RangeSliderFilledTrack bg='tomato' />
                 </RangeSliderTrack>
-                <RangeSliderMark value={obj.value[0]} mt='1' ml='-2.5' fontSize='sm'>
-                    {obj.value[0]}
+                <RangeSliderMark value={priceRange[0]} mt='1' ml='-2.5' fontSize='sm'>
+                    {priceRange[0]}
                 </RangeSliderMark>
-                <RangeSliderMark value={obj.value[1]} mt='1' ml='-35' fontSize='sm'>
-                    {obj.value[1]}
+                <RangeSliderMark value={priceRange[1]} mt='1' ml='-35' fontSize='sm'>
+                    {priceRange[1]}
                 </RangeSliderMark>
 
                 <RangeSliderThumb index={0} />
