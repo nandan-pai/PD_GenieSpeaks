@@ -9,7 +9,6 @@ import {
 	VStack,
 	Show,
 	Box,
-	Tooltip,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -19,7 +18,6 @@ import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
-import { GoInfo } from "react-icons/go";
 import SortMenu from "../SortMenu/SortMenu";
 import FilterMenu from "../Filters/FilterMenu";
 import "./ProductList.css";
@@ -125,20 +123,6 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 								// borderWidth='0.5px'
 								// borderRadius='md'
 							>
-								<HStack>
-									<Text color='gray.100' fontWeight='semibold'>
-										Suggestions
-									</Text>
-									<Tooltip
-										label='This is the suggestion'
-										fontSize='md'
-										fontWeight='md'
-										placement='top'
-										hasArrow
-									>
-										<GoInfo />
-									</Tooltip>
-								</HStack>
 								<HStack mt={2} spacing={5}>
 									<SuggestionCard />
 									<SuggestionCard />

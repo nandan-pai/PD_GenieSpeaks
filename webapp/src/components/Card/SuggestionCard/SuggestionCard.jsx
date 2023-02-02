@@ -1,5 +1,14 @@
-import { Box, HStack, Icon, LinkBox, Text, VStack } from "@chakra-ui/react";
+import {
+	Box,
+	HStack,
+	Icon,
+	LinkBox,
+	Text,
+	Tooltip,
+	VStack,
+} from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
+import { GoInfo } from "react-icons/go";
 
 const SuggestionCard = () => {
 	const handleClick = () => {
@@ -18,6 +27,20 @@ const SuggestionCard = () => {
 			<HStack>
 				<Box w='120px' h='120px' bgColor='red' minW='100px'></Box>
 				<VStack alignItems='start'>
+					<HStack>
+						<Text color='gray.100' fontWeight='semibold'>
+							Suggestion
+						</Text>
+						<Tooltip
+							label='Based on your previous searches and trending products'
+							fontSize='md'
+							fontWeight='md'
+							placement='auto'
+							hasArrow
+						>
+							<GoInfo />
+						</Tooltip>
+					</HStack>
 					<Text
 						fontWeight='semibold'
 						fontSize='18px'
