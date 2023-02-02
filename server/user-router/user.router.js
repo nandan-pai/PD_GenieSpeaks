@@ -11,13 +11,25 @@ router.post('/register', async (req, res) => {
     const { name, email, password } = req.body
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'fill all the fields' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 9,
+          "message": "Partial Parameters: Fill all fields.",
+        }
+      })
     }
 
     const existingUser = await User.exists({ email: email })
 
     if (existingUser) {
-      return res.status(400).json({ message: 'Email ID is taken' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 7,
+          "message": "Consumed Parameters: Email ID is taken.",
+        }
+      })
     }
 
     const salt = await bcrypt.genSalt()
@@ -34,7 +46,14 @@ router.post('/register', async (req, res) => {
     res.status(200).json({ message: 'Account Creation Success' })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error. Failed to create account.",
+        "trace_back": e
+      }
+    })
   }
 })
 
@@ -43,19 +62,37 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'fill all the fields' })
+      return res.status(400).json({
+        "error": {
+          "code": 400,
+          "error_ref": 9,
+          "message": "Fill all fields.",
+        }
+      })
     }
 
     const existingUser = await User.findOne({ email: email })
 
     if (!existingUser) {
-      return res.status(401).json({ message: 'Invalid Email or Password' })
+      return res.status(401).json({
+        "error": {
+          "code": 401,
+          "error_ref": 8,
+          "message": "Invalid Email or Password.",
+        }
+      })
     }
 
     const isPasswordValid = await bcrypt.compare(password, existingUser.hashedpassword)
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid email or password' })
+      return res.status(401).json({
+        "error": {
+          "code": 401,
+          "error_ref": 8,
+          "message": "Invalid Email or Password.",
+        }
+      })
     }
 
     const userToken = jwt.sign({
@@ -70,7 +107,14 @@ router.post('/login', async (req, res) => {
 
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error.",
+        "trace_back": e
+      }
+    })
   }
 })
 
@@ -124,7 +168,14 @@ router.post('/review', UserAuth, async (req, res) => {
     res.status(200).json({ message: 'Reviewed Saved' })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({
+      "error": {
+        "code": 500,
+        "error_ref": 10,
+        "message": "Internal Service Error.",
+        "trace_back": e
+      }
+    })
   }
 })
 

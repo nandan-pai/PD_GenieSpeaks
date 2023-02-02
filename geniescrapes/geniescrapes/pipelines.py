@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 '''Pipeline to feed data into MongoDB'''
 import os
+import bcrypt
 from datetime import datetime
 
 import pymongo
@@ -91,13 +92,19 @@ class GeniescrapesPipeline:
     def create_user(self, name):
         '''creates users in the database and returns the userID'''
         try:
+            # generating the salt
+            salt = bcrypt.gensalt()
+
             new_user = {}
 
             new_user['name'] = name
             new_user['profilepic'] = 'defaults/defaultprofilepic.png'
             new_user['email'] = name.strip().replace(
                 ' ', '').lower() + '@geniespeaks.inf'
-            new_user['hashedpassword'] = ''
+
+            # password.encode('utf-8')
+            new_user['hashedpassword'] = bcrypt.hashpw(
+                password="login1234", salt=salt)
             new_user['reviews'] = []
             new_user['bookmarks'] = []
             new_user['created_on'] = datetime.today()
