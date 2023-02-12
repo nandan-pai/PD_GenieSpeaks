@@ -1,16 +1,16 @@
 import { Box, HStack, Icon, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
-import PriceCard from "../Card/PriceCard/PriceCard";
+import PriceCard from "../PriceCard/PriceCard";
 import { FiExternalLink } from "react-icons/fi";
 import { Link } from "@chakra-ui/react";
 
 const AvailableMenu = (props) => {
 	return (
 		<Box
-			height='60%'
-			maxH='180px'
+			maxH='100vh'
 			mr={5}
 			ml={5}
+			p='5px'
 			borderWidth='1px'
 			borderRadius='md'
 		>
