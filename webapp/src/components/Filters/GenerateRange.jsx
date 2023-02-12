@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 
 export default function GenerateRange({ obj, index, setFilter, filter }) {
-    const [priceRange, setPriceRange] = useState([]);
+    const [currRange, setCurrRange] = useState(obj.value);
     // const { colorMode } = useColorMode();
     // const isDark = colorMode === "dark";
 
@@ -25,8 +25,8 @@ export default function GenerateRange({ obj, index, setFilter, filter }) {
                 max={obj.value[1]}
                 step={10000}
                 onChange={(val) => {
-                    console.log(val)
-                    setPriceRange(val)
+                    // console.log(val)
+                    setCurrRange(val)
                     setFilter({
                         ...filter,
                         [obj.name.toString()]: {
@@ -40,11 +40,11 @@ export default function GenerateRange({ obj, index, setFilter, filter }) {
                 <RangeSliderTrack bg='gray'>
                     <RangeSliderFilledTrack bg='tomato' />
                 </RangeSliderTrack>
-                <RangeSliderMark value={priceRange[0]} mt='1' ml='-2.5' fontSize='sm'>
-                    {priceRange[0]}
+                <RangeSliderMark value={currRange[0]} mt='1' ml='-2.5' fontSize='sm'>
+                    {currRange[0]}
                 </RangeSliderMark>
-                <RangeSliderMark value={priceRange[1]} mt='1' ml='-35' fontSize='sm'>
-                    {priceRange[1]}
+                <RangeSliderMark value={currRange[1]} mt='1' ml='-35' fontSize='sm'>
+                    {currRange[1]}
                 </RangeSliderMark>
 
                 <RangeSliderThumb index={0} />

@@ -41,7 +41,7 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 		<div>
 			<Show above='md'>
 				<Box
-					h='100vh'
+					maxH='100vh'
 					w={{ base: "300px", lg: "280px", md: "250px" }}
 					ml={5}
 					bg={isDark ? "" : "white"}
@@ -56,9 +56,9 @@ const Filters = ({ searchQuery, setFilter, filter }) => {
 						<>
 							{categoryList.map((category, index) => {
 								if (category.type === "checklist") {
-									return <GenerateChecklist obj={category} index={index} filter={filter} setFilter={setFilter}/>
+									return <GenerateChecklist obj={category} key={index} index={index} filter={filter} setFilter={setFilter}/>
 								} else if (category.type === "range") {
-									return <GenerateRange obj={category} index={index} filter={filter} setFilter={setFilter}/>
+									return <GenerateRange obj={category} key={index} index={index} filter={filter} setFilter={setFilter}/>
 								} else {
 									return <></>;
 								}

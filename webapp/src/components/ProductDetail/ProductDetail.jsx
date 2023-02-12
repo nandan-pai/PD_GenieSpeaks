@@ -26,7 +26,7 @@ import {
 import { FaRegThumbsUp } from "react-icons/fa";
 import { BsDot } from "react-icons/bs";
 import ReviewCard from "../Card/ReviewCard/ReviewCard";
-import AvailableMenu from "../AvailableMenu/AvailableMenu";
+import AvailableMenu from "./AvailableMenu/AvailableMenu";
 import RatingCard from "../Card/RatingCard/RatingCard";
 
 const ProductDetail = (props) => {
