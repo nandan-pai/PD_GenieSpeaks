@@ -29,7 +29,7 @@ const ProductCard = ({
 	noOfReviews,
 	productImage,
 	satisfactionRating,
-	renewed,
+	isRenewed,
 	_id,
 }) => {
 	const { colorMode } = useColorMode();
@@ -58,26 +58,17 @@ const ProductCard = ({
 					<Image src={productImage} maxH='200px' />
 				</Box>
 				<Box>
-					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(4, 1fr)'>
-						{renewed ? (
-							<GridItem colSpan={2} rowSpan={1}>
-								<Tag size='md' variant='solid' colorScheme='green'>
-									Renewed
-								</Tag>
-							</GridItem>
-						) : (
-							<></>
-						)}
-						{/* <GridItem colSpan={2} rowSpan={1}>
-							{renewed ? (
-								<Tag size='md' variant='solid' colorScheme='green'>
-									Renewed
-								</Tag>
-							) : (
-								<></>
-							)}
-						</GridItem> */}
-						<GridItem colSpan={2} rowSpan={renewed ? 2 : 3}>
+					{isRenewed ? (
+						<GridItem colSpan={2} rowSpan={1}>
+							<Tag size='md' variant='solid' colorScheme='green'>
+								Renewed
+							</Tag>
+						</GridItem>
+					) : (
+						<></>
+					)}
+					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(3, 1fr)'>
+						<GridItem colSpan={2} rowSpan={2}>
 							<LinkOverlay onClick={handleClick}>
 								<Text fontSize='lg' fontWeight='semibold' noOfLines={[4, 3, 4]}>
 									{productName}
@@ -86,8 +77,26 @@ const ProductCard = ({
 						</GridItem>
 						<GridItem colSpan={2}>
 							<HStack mb='5'>
-								<Icon as={FaRegThumbsUp} color='green' />
-								<Text fontWeight='semibold' color='green'>
+								<Icon
+									as={FaRegThumbsUp}
+									color={
+										satisfactionRating < 35
+											? "red"
+											: satisfactionRating < 70
+											? "orange"
+											: "green"
+									}
+								/>
+								<Text
+									fontWeight='semibold'
+									color={
+										satisfactionRating < 35
+											? "red"
+											: satisfactionRating < 70
+											? "orange"
+											: "green"
+									}
+								>
 									{satisfactionRating}%
 								</Text>
 							</HStack>

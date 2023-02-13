@@ -159,6 +159,7 @@ const NavBar = (props) => {
 						searchQuery={props.searchQuery}
 						setSearchQuery={props.setSearchQuery}
 						setFilter={props.setFilter}
+						setOffset={props.setOffset}
 					/>
 				)}
 			</HStack>

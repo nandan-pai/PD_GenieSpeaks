@@ -11,6 +11,7 @@ import {
 	Box,
 	Tooltip,
 	Flex,
+	useColorMode,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -34,7 +35,10 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [limit, setLimit] = useState(20);
 	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
-	// const [pageQuantity, setPageQuantity] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const { colorMode } = useColorMode();
+	const isDark = colorMode === "dark";
 
 	let navigate = useNavigate();
 
@@ -72,6 +76,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 				searchQuery={searchQuery}
 				setSearchQuery={setSearchQuery}
 				setFilter={setFilter}
+				setOffset={setOffset}
 			/>
 			{productCount ? (
 				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
@@ -91,7 +96,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 							Showing {offset + 1} -{" "}
 							{offset + limit < productList.length
 								? offset + limit
-								: productList.length}{" "}
+								: offset + productList.length}{" "}
 							of {productCount} results for&nbsp;
 							<span className='query'>"{searchQuery}"</span>
 						</Text>
@@ -131,15 +136,13 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 								w='98%'
 								mt='10px'
 								p='10px'
-								bgColor='#e3e6e8'
+								bgColor={isDark ? "#252525" : "#e3e6e8"}
 								// mb='10px'
 								// borderWidth='0.5px'
 								borderRadius='md'
 							>
 								<HStack>
-									<Text color='gray.100' fontWeight='semibold'>
-										Suggestions
-									</Text>
+									<Text fontWeight='semibold'>Suggestions</Text>
 									<Tooltip
 										label='Based on your previous searches and trending products'
 										fontSize='md'
@@ -168,7 +171,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 											productImage={product.images[0]}
 											price={product.min_price}
 											noOfReviews={product.review_count}
-											renewed={true}
+											isRenewed={true}
 											satisfactionRating={parseFloat(
 												product.satisfactory_rating
 											).toFixed(2)}
@@ -177,7 +180,13 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 								})}
 							</SimpleGrid>
 							<Flex align='center' justify='center'>
-								<Paginator pages={6} />
+								<Paginator
+									setOffset={setOffset}
+									limit={limit}
+									pages={Math.ceil(productCount / limit)}
+									currentPage={currentPage}
+									setCurrentPage={setCurrentPage}
+								/>
 							</Flex>
 						</>
 					) : (
