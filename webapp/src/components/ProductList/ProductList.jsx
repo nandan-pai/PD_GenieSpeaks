@@ -10,6 +10,7 @@ import {
 	Show,
 	Box,
 	Tooltip,
+	Flex,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -23,7 +24,7 @@ import SortMenu from "../SortMenu/SortMenu";
 import FilterMenu from "../Filters/FilterMenu";
 import "./ProductList.css";
 import SuggestionCard from "../Card/SuggestionCard/SuggestionCard";
-// import Paginator from "../Paginator/Paginator";
+import Paginator from "../Paginator/Paginator";
 import { GoInfo } from "react-icons/go";
 
 const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
@@ -149,7 +150,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 										<GoInfo />
 									</Tooltip>
 								</HStack>
-								<HStack mt={2} spacing={5} ml={3} mb={2}>
+								<HStack mt={2} spacing={2} ml={1} mb={2}>
 									<SuggestionCard />
 									<SuggestionCard />
 									<SuggestionCard />
@@ -157,7 +158,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 									<SuggestionCard />
 								</HStack>
 							</Box>
-							<SimpleGrid minChildWidth='420px' spacing='10px'>
+							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
 								{productList.map((product, index) => {
 									return (
 										<ProductCard
@@ -175,7 +176,9 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 									);
 								})}
 							</SimpleGrid>
-							{/* <Paginator pages={pageQuantity} /> */}
+							<Flex align='center' justify='center'>
+								<Paginator pages={6} />
+							</Flex>
 						</>
 					) : (
 						<VStack mt='10%'>

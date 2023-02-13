@@ -19,7 +19,7 @@ const SuggestionCard = () => {
 			rounded='md'
 			borderWidth='1px'
 			p={2}
-			w='200px'
+			w='250px'
 			h='350px'
 			onClick={handleClick}
 			_hover={{ cursor: "pointer" }}

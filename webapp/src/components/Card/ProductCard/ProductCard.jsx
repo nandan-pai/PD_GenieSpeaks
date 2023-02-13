@@ -59,7 +59,16 @@ const ProductCard = ({
 				</Box>
 				<Box>
 					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(4, 1fr)'>
-						<GridItem colSpan={2} rowSpan={1}>
+						{renewed ? (
+							<GridItem colSpan={2} rowSpan={1}>
+								<Tag size='md' variant='solid' colorScheme='green'>
+									Renewed
+								</Tag>
+							</GridItem>
+						) : (
+							<></>
+						)}
+						{/* <GridItem colSpan={2} rowSpan={1}>
 							{renewed ? (
 								<Tag size='md' variant='solid' colorScheme='green'>
 									Renewed
@@ -67,10 +76,10 @@ const ProductCard = ({
 							) : (
 								<></>
 							)}
-						</GridItem>
-						<GridItem colSpan={2} rowSpan={2}>
+						</GridItem> */}
+						<GridItem colSpan={2} rowSpan={renewed ? 2 : 3}>
 							<LinkOverlay onClick={handleClick}>
-								<Text fontSize='lg' fontWeight='semibold' noOfLines={[1, 2, 3]}>
+								<Text fontSize='lg' fontWeight='semibold' noOfLines={[4, 3, 4]}>
 									{productName}
 								</Text>
 							</LinkOverlay>
