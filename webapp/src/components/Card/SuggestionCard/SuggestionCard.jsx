@@ -3,12 +3,11 @@ import {
 	HStack,
 	Icon,
 	LinkBox,
+	Spacer,
 	Text,
-	Tooltip,
 	VStack,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
-import { GoInfo } from "react-icons/go";
 
 const SuggestionCard = () => {
 	const handleClick = () => {
@@ -20,27 +19,37 @@ const SuggestionCard = () => {
 			rounded='md'
 			borderWidth='1px'
 			p={2}
-			maxW='750px'
+			w='200px'
+			h='350px'
 			onClick={handleClick}
 			_hover={{ cursor: "pointer" }}
+			bgColor='#f7fafc'
 		>
-			<HStack>
-				<Box w='120px' h='120px' bgColor='red' minW='100px'></Box>
+			<VStack alignItems='start'>
+				<Box w='100%' h='200px' bgColor='red'></Box>
+				<Text
+					fontWeight='semibold'
+					fontSize='18px'
+					noOfLines={[1, 2]}
+					maxW='200px'
+				>
+					dfusdhvsifjdafsdsdfd adfaa adgdsgfsgfs gsf gdgvdsgfdf dfaf afa
+				</Text>
+				{/* <HStack spacing={10}> */}
+				<HStack ml='10px'>
+					<Icon as={FaRegThumbsUp} color='green' />
+					<Text fontWeight='semibold' color='green'>
+						90%
+					</Text>
+				</HStack>
+				<Text fontWeight='bold' fontSize='xl'>
+					&#8377;8814
+				</Text>
+				{/* </HStack> */}
+			</VStack>
+			{/* <HStack>
+				<Box w='80px' h='250px' bgColor='red' minW='100px'></Box>
 				<VStack alignItems='start'>
-					<HStack>
-						<Text color='gray.100' fontWeight='semibold'>
-							Suggestion
-						</Text>
-						<Tooltip
-							label='Based on your previous searches and trending products'
-							fontSize='md'
-							fontWeight='md'
-							placement='auto'
-							hasArrow
-						>
-							<GoInfo />
-						</Tooltip>
-					</HStack>
 					<Text
 						fontWeight='semibold'
 						fontSize='18px'
@@ -61,7 +70,7 @@ const SuggestionCard = () => {
 						</Text>
 					</HStack>
 				</VStack>
-			</HStack>
+			</HStack> */}
 		</LinkBox>
 	);
 };

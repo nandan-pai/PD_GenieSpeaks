@@ -9,6 +9,7 @@ import {
 	VStack,
 	Show,
 	Box,
+	Tooltip,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
 import { useState, useEffect, useCallback } from "react";
@@ -22,6 +23,8 @@ import SortMenu from "../SortMenu/SortMenu";
 import FilterMenu from "../Filters/FilterMenu";
 import "./ProductList.css";
 import SuggestionCard from "../Card/SuggestionCard/SuggestionCard";
+// import Paginator from "../Paginator/Paginator";
+import { GoInfo } from "react-icons/go";
 
 const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [productList, setProductList] = useState([]);
@@ -30,6 +33,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	const [limit, setLimit] = useState(20);
 	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
+	// const [pageQuantity, setPageQuantity] = useState(0);
 
 	let navigate = useNavigate();
 
@@ -53,6 +57,13 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
 	useEffect(getProductList, [searchQuery, getProductList]);
+
+	// useEffect(() => {
+	// 	const pagesTotal = Math.ceil(productList.length / limit);
+
+	// 	setPageQuantity(pagesTotal);
+	// 	console.log(pageQuantity);
+	// }, [productList.length, limit]);
 
 	return (
 		<div className='prodList' mr='10px'>
@@ -116,18 +127,34 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 					) : productList.length ? (
 						<>
 							<Box
-								h='200px'
 								w='98%'
 								mt='10px'
 								p='10px'
+								bgColor='#e3e6e8'
+								// mb='10px'
 								// borderWidth='0.5px'
-								// borderRadius='md'
+								borderRadius='md'
 							>
-								<HStack mt={2} spacing={5}>
+								<HStack>
+									<Text color='gray.100' fontWeight='semibold'>
+										Suggestions
+									</Text>
+									<Tooltip
+										label='Based on your previous searches and trending products'
+										fontSize='md'
+										fontWeight='md'
+										placement='auto'
+										hasArrow
+									>
+										<GoInfo />
+									</Tooltip>
+								</HStack>
+								<HStack mt={2} spacing={5} ml={3} mb={2}>
 									<SuggestionCard />
 									<SuggestionCard />
 									<SuggestionCard />
-									{/* <SuggestionCard /> */}
+									<SuggestionCard />
+									<SuggestionCard />
 								</HStack>
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px'>
@@ -140,6 +167,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 											productImage={product.images[0]}
 											price={product.min_price}
 											noOfReviews={product.review_count}
+											renewed={true}
 											satisfactionRating={parseFloat(
 												product.satisfactory_rating
 											).toFixed(2)}
@@ -147,6 +175,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 									);
 								})}
 							</SimpleGrid>
+							{/* <Paginator pages={pageQuantity} /> */}
 						</>
 					) : (
 						<VStack mt='10%'>

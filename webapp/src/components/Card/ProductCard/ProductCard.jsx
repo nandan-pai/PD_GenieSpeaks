@@ -9,6 +9,7 @@ import {
 	Image,
 	LinkBox,
 	LinkOverlay,
+	Tag,
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
@@ -28,6 +29,7 @@ const ProductCard = ({
 	noOfReviews,
 	productImage,
 	satisfactionRating,
+	renewed,
 	_id,
 }) => {
 	const { colorMode } = useColorMode();
@@ -56,7 +58,16 @@ const ProductCard = ({
 					<Image src={productImage} maxH='200px' />
 				</Box>
 				<Box>
-					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(3, 1fr)'>
+					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(4, 1fr)'>
+						<GridItem colSpan={2} rowSpan={1}>
+							{renewed ? (
+								<Tag size='md' variant='solid' colorScheme='green'>
+									Renewed
+								</Tag>
+							) : (
+								<></>
+							)}
+						</GridItem>
 						<GridItem colSpan={2} rowSpan={2}>
 							<LinkOverlay onClick={handleClick}>
 								<Text fontSize='lg' fontWeight='semibold' noOfLines={[1, 2, 3]}>
