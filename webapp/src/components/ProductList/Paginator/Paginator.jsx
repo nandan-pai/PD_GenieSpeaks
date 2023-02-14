@@ -4,7 +4,8 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import SearchContext from "../../../context/SearchContext/SearchContext";
 
 const Paginator = ({ pages }) => {
-	const { setOffset, limit, currentPage, setCurrentPage } = useContext(SearchContext);
+	const { setOffset, limit, currentPage, setCurrentPage } =
+		useContext(SearchContext);
 	const handleClick = (e) => {
 		setCurrentPage(parseInt(e.target.textContent));
 		setOffset((parseInt(e.target.textContent) - 1) * limit);
@@ -18,6 +19,61 @@ const Paginator = ({ pages }) => {
 	const handleNext = () => {
 		setCurrentPage(currentPage + 1);
 		setOffset(currentPage * limit);
+	};
+
+	const showPaginationNumbers = (pages) => {
+		let paginationNumbers = [];
+
+		if (pages) {
+			let showMax = 5;
+			let startPage;
+			let endPage;
+
+			if (pages <= showMax) {
+				startPage = 1;
+				endPage = pages;
+			} else {
+				startPage = currentPage;
+
+				if (startPage !== pages && startPage + 1 !== pages) {
+					endPage = currentPage + showMax - 1;
+				} else {
+					endPage = pages;
+				}
+			}
+
+			for (let i = startPage; i <= endPage; i++) {
+				paginationNumbers.push(i);
+			}
+
+			return showRenderedPageNumbers(paginationNumbers);
+		}
+	};
+
+	const showRenderedPageNumbers = (paginationNumbers) => {
+		if (paginationNumbers) {
+			let result = paginationNumbers.map((number, index) => {
+				return (
+					<LinkBox
+						key={index}
+						h='40px'
+						w='40px'
+						borderWidth='1px'
+						rounded='md'
+						textAlign='center'
+						padding={2}
+						onClick={handleClick}
+						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+						bgColor={currentPage === index + 1 ? "#252525" : "white"}
+						color={currentPage === index + 1 ? "white" : "black"}
+					>
+						<Text>{index + 1}</Text>
+					</LinkBox>
+				);
+			});
+
+			return result;
+		}
 	};
 
 	return (
@@ -39,25 +95,25 @@ const Paginator = ({ pages }) => {
 				</LinkBox>
 			)}
 			<Box w={2} h={2}></Box>
-			{Array.from(Array(pages), (e, i) => {
-				return (
-					<LinkBox
-						key={i}
-						h='40px'
-						w='40px'
-						borderWidth='1px'
-						rounded='md'
-						textAlign='center'
-						padding={2}
-						onClick={handleClick}
-						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
-						bgColor={currentPage === i + 1 ? "#252525" : "white"}
-						color={currentPage === i + 1 ? "white" : "black"}
-					>
-						<Text>{i + 1}</Text>
-					</LinkBox>
-				);
-			})}
+			{showPaginationNumbers(pages)}
+			{/* {Array.from(Array(pages), (e, i) => {
+				return showPaginationNumbers(pages, i);
+				// <LinkBox
+				// 	key={i}
+				// 	h='40px'
+				// 	w='40px'
+				// 	borderWidth='1px'
+				// 	rounded='md'
+				// 	textAlign='center'
+				// 	padding={2}
+				// 	onClick={handleClick}
+				// 	_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+				// 	bgColor={currentPage === i + 1 ? "#252525" : "white"}
+				// 	color={currentPage === i + 1 ? "white" : "black"}
+				// >
+				// 	<Text>{i + 1}</Text>
+				// </LinkBox>
+			})} */}
 			<Box w={2} h={2}></Box>
 			{currentPage === pages ? (
 				<></>

@@ -1,182 +1,217 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const Product = require('../models/product.model.js')
-const Review = require('../models/review.model.js')
-const ECommerce = require('../models/ecommerce.model.js')
-const User = require('../models/user.model.js')
-const UserAuth = require('./userAuth.js')
+const Product = require("../models/product.model.js");
+const Review = require("../models/review.model.js");
+const ECommerce = require("../models/ecommerce.model.js");
+const User = require("../models/user.model.js");
+const UserAuth = require("./userAuth.js");
 
-router.post('/register', async (req, res) => {
-  try {
-    const { name, email, password } = req.body
+router.post("/register", async (req, res) => {
+	try {
+		const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 9,
-          "message": "Partial Parameters: Fill all fields.",
-        }
-      })
-    }
+		if (!name || !email || !password) {
+			return res.status(400).json({
+				error: {
+					code: 400,
+					error_ref: 9,
+					message: "Partial Parameters: Fill all fields.",
+				},
+			});
+		}
 
-    const existingUser = await User.exists({ email: email })
+		const existingUser = await User.exists({ email: email });
 
-    if (existingUser) {
-      return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 7,
-          "message": "Consumed Parameters: Email ID is taken.",
-        }
-      })
-    }
+		if (existingUser) {
+			return res.status(400).json({
+				error: {
+					code: 400,
+					error_ref: 7,
+					message: "Consumed Parameters: Email ID is taken.",
+				},
+			});
+		}
 
-    const salt = await bcrypt.genSalt()
-    const hashedpassword = await bcrypt.hash(password, salt)
+		const salt = await bcrypt.genSalt();
+		const hashedpassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
-      name,
-      email,
-      hashedpassword
-    })
+		const newUser = new User({
+			name,
+			email,
+			hashedpassword,
+		});
 
-    await newUser.save()
+		await newUser.save();
 
-    res.status(200).json({ message: 'Account Creation Success' })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error. Failed to create account.",
-        "trace_back": e
-      }
-    })
-  }
-})
+		res.status(200).json({ message: "Account Creation Success" });
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			error: {
+				code: 500,
+				error_ref: 10,
+				message: "Internal Service Error. Failed to create account.",
+				trace_back: e,
+			},
+		});
+	}
+});
 
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body
+// ! Referencing and linking to suggestions in frontend
+router.get("/suggestions", async (req, res) => {
+	try {
+		const randomSuggestion = await Product.aggregate([
+			{
+				$sample: {
+					size: 5,
+				},
+			},
+		]);
 
-    if (!email || !password) {
-      return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 9,
-          "message": "Fill all fields.",
-        }
-      })
-    }
+		res.json(randomSuggestion);
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			error: {
+				code: 500,
+				error_ref: 10,
+				message: "Internal Service Error. Failed to create account.",
+				trace_back: e,
+			},
+		});
+	}
+});
 
-    const existingUser = await User.findOne({ email: email })
+router.post("/login", async (req, res) => {
+	try {
+		const { email, password } = req.body;
 
-    if (!existingUser) {
-      return res.status(401).json({
-        "error": {
-          "code": 401,
-          "error_ref": 8,
-          "message": "Invalid Email or Password.",
-        }
-      })
-    }
+		if (!email || !password) {
+			return res.status(400).json({
+				error: {
+					code: 400,
+					error_ref: 9,
+					message: "Fill all fields.",
+				},
+			});
+		}
 
-    const isPasswordValid = await bcrypt.compare(password, existingUser.hashedpassword)
+		const existingUser = await User.findOne({ email: email });
 
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        "error": {
-          "code": 401,
-          "error_ref": 8,
-          "message": "Invalid Email or Password.",
-        }
-      })
-    }
+		if (!existingUser) {
+			return res.status(401).json({
+				error: {
+					code: 401,
+					error_ref: 8,
+					message: "Invalid Email or Password.",
+				},
+			});
+		}
 
-    const userToken = jwt.sign({
-      _id: existingUser._id,
-      name: existingUser.name,
-      email: existingUser.email
-    }, process.env.JWT_SECRET)
+		const isPasswordValid = await bcrypt.compare(
+			password,
+			existingUser.hashedpassword
+		);
 
-    return res.status(200)
-      .cookie('userToken', userToken, { httpOnly: true })
-      .json({ message: 'Login Success' })
+		if (!isPasswordValid) {
+			return res.status(401).json({
+				error: {
+					code: 401,
+					error_ref: 8,
+					message: "Invalid Email or Password.",
+				},
+			});
+		}
 
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error.",
-        "trace_back": e
-      }
-    })
-  }
-})
+		const userToken = jwt.sign(
+			{
+				_id: existingUser._id,
+				name: existingUser.name,
+				email: existingUser.email,
+			},
+			process.env.JWT_SECRET
+		);
 
-router.get('/logout', (req, res) => {
-  res.cookie('userToken', '', {
-    httpOnly: true,
-    expires: new Date(0)
-  }).send()
-})
+		return res
+			.status(200)
+			.cookie("userToken", userToken, { httpOnly: true })
+			.json({ message: "Login Success" });
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			error: {
+				code: 500,
+				error_ref: 10,
+				message: "Internal Service Error.",
+				trace_back: e,
+			},
+		});
+	}
+});
 
-router.get('/verify', UserAuth, (req, res) => {
-  const { _id, name, email } = req.userInfo
+router.get("/logout", (req, res) => {
+	res
+		.cookie("userToken", "", {
+			httpOnly: true,
+			expires: new Date(0),
+		})
+		.send();
+});
 
-  return res.json({
-    authorized: true,
-    message: 'Success',
-    _id,
-    name,
-    email
-  }).status(200)
-})
+router.get("/verify", UserAuth, (req, res) => {
+	const { _id, name, email } = req.userInfo;
 
-router.post('/review', UserAuth, async (req, res) => {
-  try {
-    const { _id, name, email } = req.userInfo
-    const { productID, title, body, proof, review_star } = req.body
+	return res
+		.json({
+			authorized: true,
+			message: "Success",
+			_id,
+			name,
+			email,
+		})
+		.status(200);
+});
 
-    const GenieSpeaks = await ECommerce.findOne({ name: 'GenieSpeaks' })
+router.post("/review", UserAuth, async (req, res) => {
+	try {
+		const { _id, name, email } = req.userInfo;
+		const { productID, title, body, proof, review_star } = req.body;
 
-    const newReview = new Review({
-      title,
-      description,
-      review_star,
-      product: productID,
-      user: _id,
-      ecommerce: GenieSpeaks,
-    })
+		const GenieSpeaks = await ECommerce.findOne({ name: "GenieSpeaks" });
 
-    saved_review = await newReview.save()
+		const newReview = new Review({
+			title,
+			description,
+			review_star,
+			product: productID,
+			user: _id,
+			ecommerce: GenieSpeaks,
+		});
 
-    await Product.findByIdAndUpdate(
-      { '_id': productID },
-      { $push: { 'reviews': saved_review } }
-    )
+		saved_review = await newReview.save();
 
-    await User.findByIdAndUpdate(
-      { '_id': _id },
-      { $push: { 'reviews': saved_review } }
-    )
+		await Product.findByIdAndUpdate(
+			{ _id: productID },
+			{ $push: { reviews: saved_review } }
+		);
 
-    res.status(200).json({ message: 'Reviewed Saved' })
-  } catch (e) {
-    console.error(e)
-    res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error.",
-        "trace_back": e
-      }
-    })
-  }
-})
+		await User.findByIdAndUpdate(
+			{ _id: _id },
+			{ $push: { reviews: saved_review } }
+		);
 
-module.exports = router
+		res.status(200).json({ message: "Reviewed Saved" });
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			error: {
+				code: 500,
+				error_ref: 10,
+				message: "Internal Service Error.",
+				trace_back: e,
+			},
+		});
+	}
+});
+
+module.exports = router;
