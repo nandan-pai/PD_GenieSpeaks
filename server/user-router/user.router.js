@@ -57,31 +57,6 @@ router.post("/register", async (req, res) => {
 	}
 });
 
-// ! Referencing and linking to suggestions in frontend
-router.get("/suggestions", async (req, res) => {
-	try {
-		const randomSuggestion = await Product.aggregate([
-			{
-				$sample: {
-					size: 5,
-				},
-			},
-		]);
-
-		res.json(randomSuggestion);
-	} catch (e) {
-		console.error(e);
-		res.status(500).json({
-			error: {
-				code: 500,
-				error_ref: 10,
-				message: "Internal Service Error. Failed to create account.",
-				trace_back: e,
-			},
-		});
-	}
-});
-
 router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -208,6 +183,93 @@ router.post("/review", UserAuth, async (req, res) => {
 				code: 500,
 				error_ref: 10,
 				message: "Internal Service Error.",
+				trace_back: e,
+			},
+		});
+	}
+});
+
+router.get("/suggestions", async (req, res) => {
+	try {
+		const randomSuggestion = await Product.aggregate([
+			{
+			  '$sample': {
+				'size': 5
+			  }
+			}, {
+			  '$addFields': {
+				'review_count': {
+				  '$size': '$reviews'
+				}, 
+				'satisfactory_rating': {
+				  '$cond': [
+					{
+					  '$eq': [
+						{
+						  '$size': '$reviews'
+						}, 0
+					  ]
+					}, 0, {
+					  '$multiply': [
+						{
+						  '$divide': [
+							'$rating_sum', {
+							  '$multiply': [
+								{
+								  '$size': '$reviews'
+								}, 5
+							  ]
+							}
+						  ]
+						}, 100
+					  ]
+					}
+				  ]
+				}
+			  }
+			}, {
+			  '$lookup': {
+				'from': 'Organization', 
+				'localField': 'organization', 
+				'foreignField': '_id', 
+				'as': 'organization'
+			  }
+			}, {
+			  '$set': {
+				'organization': {
+				  '$arrayElemAt': [
+					'$organization', 0
+				  ]
+				}
+			  }
+			}, {
+			  '$addFields': {
+				'min_price': {
+				  '$min': '$ecommerce.curr_price'
+				}
+			  }
+			}, {
+			  '$project': {
+				'_id': 1, 
+				'title': 1, 
+				'images': 1, 
+				'organization._id': 1, 
+				'organization.name': 1, 
+				'review_count': 1, 
+				'satisfactory_rating': 1, 
+				'min_price': 1
+			  }
+			}
+		  ]);
+
+		res.json(randomSuggestion);
+	} catch (e) {
+		console.error(e);
+		res.status(500).json({
+			error: {
+				code: 500,
+				error_ref: 10,
+				message: "Internal Service Error. Failed to create account.",
 				trace_back: e,
 			},
 		});
