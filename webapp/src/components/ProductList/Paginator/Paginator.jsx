@@ -7,20 +7,16 @@ const Paginator = ({ pages }) => {
 	const { setOffset, limit, currentPage, setCurrentPage } = useContext(SearchContext);
 	const handleClick = (e) => {
 		setCurrentPage(parseInt(e.target.textContent));
-
 		setOffset((parseInt(e.target.textContent) - 1) * limit);
 	};
 
-	// ! Fix previous button
 	const handlePrevious = () => {
 		setCurrentPage(currentPage - 1);
 		setOffset((currentPage - 2) * limit);
 	};
 
 	const handleNext = () => {
-		console.log(currentPage)
 		setCurrentPage(currentPage + 1);
-		console.log(currentPage)
 		setOffset(currentPage * limit);
 	};
 
