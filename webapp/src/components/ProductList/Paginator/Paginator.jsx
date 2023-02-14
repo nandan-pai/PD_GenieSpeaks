@@ -96,24 +96,6 @@ const Paginator = ({ pages }) => {
 			)}
 			<Box w={2} h={2}></Box>
 			{showPaginationNumbers(pages)}
-			{/* {Array.from(Array(pages), (e, i) => {
-				return showPaginationNumbers(pages, i);
-				// <LinkBox
-				// 	key={i}
-				// 	h='40px'
-				// 	w='40px'
-				// 	borderWidth='1px'
-				// 	rounded='md'
-				// 	textAlign='center'
-				// 	padding={2}
-				// 	onClick={handleClick}
-				// 	_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
-				// 	bgColor={currentPage === i + 1 ? "#252525" : "white"}
-				// 	color={currentPage === i + 1 ? "white" : "black"}
-				// >
-				// 	<Text>{i + 1}</Text>
-				// </LinkBox>
-			})} */}
 			<Box w={2} h={2}></Box>
 			{currentPage === pages ? (
 				<></>
@@ -127,7 +109,6 @@ const Paginator = ({ pages }) => {
 					py={2}
 					onClick={handleNext}
 					_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
-					isDisabled={currentPage < pages ? "false" : "true"}
 				>
 					<Icon as={FaChevronRight} />
 				</LinkBox>

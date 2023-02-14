@@ -191,85 +191,94 @@ router.post("/review", UserAuth, async (req, res) => {
 
 router.get("/suggestions", async (req, res) => {
 	try {
-		const randomSuggestion = await Product.aggregate([
+		const randomSuggestions = await Product.aggregate([
 			{
-			  '$sample': {
-				'size': 5
-			  }
-			}, {
-			  '$addFields': {
-				'review_count': {
-				  '$size': '$reviews'
-				}, 
-				'satisfactory_rating': {
-				  '$cond': [
-					{
-					  '$eq': [
-						{
-						  '$size': '$reviews'
-						}, 0
-					  ]
-					}, 0, {
-					  '$multiply': [
-						{
-						  '$divide': [
-							'$rating_sum', {
-							  '$multiply': [
-								{
-								  '$size': '$reviews'
-								}, 5
-							  ]
-							}
-						  ]
-						}, 100
-					  ]
-					}
-				  ]
-				}
-			  }
-			}, {
-			  '$lookup': {
-				'from': 'Organization', 
-				'localField': 'organization', 
-				'foreignField': '_id', 
-				'as': 'organization'
-			  }
-			}, {
-			  '$set': {
-				'organization': {
-				  '$arrayElemAt': [
-					'$organization', 0
-				  ]
-				}
-			  }
-			}, {
-			  '$addFields': {
-				'min_price': {
-				  '$min': '$ecommerce.curr_price'
-				}
-			  }
-			}, {
-			  '$project': {
-				'_id': 1, 
-				'title': 1, 
-				'images': 1, 
-				'organization._id': 1, 
-				'organization.name': 1, 
-				'review_count': 1, 
-				'satisfactory_rating': 1, 
-				'min_price': 1
-			  }
-			}
-		  ]);
+				$sample: {
+					size: 5,
+				},
+			},
+			{
+				$addFields: {
+					review_count: {
+						$size: "$reviews",
+					},
+					satisfactory_rating: {
+						$cond: [
+							{
+								$eq: [
+									{
+										$size: "$reviews",
+									},
+									0,
+								],
+							},
+							0,
+							{
+								$multiply: [
+									{
+										$divide: [
+											"$rating_sum",
+											{
+												$multiply: [
+													{
+														$size: "$reviews",
+													},
+													5,
+												],
+											},
+										],
+									},
+									100,
+								],
+							},
+						],
+					},
+				},
+			},
+			{
+				$lookup: {
+					from: "Organization",
+					localField: "organization",
+					foreignField: "_id",
+					as: "organization",
+				},
+			},
+			{
+				$set: {
+					organization: {
+						$arrayElemAt: ["$organization", 0],
+					},
+				},
+			},
+			{
+				$addFields: {
+					min_price: {
+						$min: "$ecommerce.curr_price",
+					},
+				},
+			},
+			{
+				$project: {
+					_id: 1,
+					title: 1,
+					images: 1,
+					"organization._id": 1,
+					"organization.name": 1,
+					review_count: 1,
+					satisfactory_rating: 1,
+					min_price: 1,
+				},
+			},
+		]);
 
-		res.json(randomSuggestion);
+		res.json({ randomSuggestions: randomSuggestions });
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
 			error: {
 				code: 500,
 				error_ref: 10,
-				message: "Internal Service Error. Failed to create account.",
+				message: "Internal Service Error. Failed to generate suggestions",
 				trace_back: e,
 			},
 		});

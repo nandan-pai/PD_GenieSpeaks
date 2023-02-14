@@ -2,6 +2,7 @@ import {
 	Box,
 	HStack,
 	Icon,
+	Image,
 	LinkBox,
 	Text,
 	VStack,
@@ -9,7 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
 
-const SuggestionCard = () => {
+const SuggestionCard = ({
+	_id,
+	productName,
+	productImage,
+	satisfactionRating,
+	price,
+}) => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
@@ -29,23 +36,24 @@ const SuggestionCard = () => {
 			bgColor={isDark ? "#252525" : "#f7fafc"}
 		>
 			<VStack alignItems='start'>
-				<Box w='100%' h='200px' bgColor='red'></Box>
+				<Image src={productImage} h='200px' w='100%' />
+				{/* <Box w='100%' h='200px' bgColor='red'></Box> */}
 				<Text
 					fontWeight='semibold'
 					fontSize='18px'
 					noOfLines={[1, 2]}
 					maxW='200px'
 				>
-					dfusdhvsifjdafsdsdfd adfaa adgdsgfsgfs gsf gdgvdsgfdf dfaf afa
+					{productName}
 				</Text>
 				<HStack ml='10px'>
 					<Icon as={FaRegThumbsUp} color='green' />
 					<Text fontWeight='semibold' color='green'>
-						90%
+						{satisfactionRating}%
 					</Text>
 				</HStack>
 				<Text fontWeight='bold' fontSize='xl'>
-					&#8377;8814
+					&#8377;{price}
 				</Text>
 			</VStack>
 		</LinkBox>

@@ -24,21 +24,29 @@ import SortMenu from "../SortMenu/SortMenu";
 import Filters from "./Filters/Filters";
 import FilterMenu from "./Filters/FilterMenu";
 import "./ProductList.css";
-import SuggestionCard from "../Card/SuggestionCard/SuggestionCard";
+import SuggestionCard from "./SuggestionCard/SuggestionCard";
 import Paginator from "./Paginator/Paginator";
 import { GoInfo } from "react-icons/go";
 import SearchContext from "../../context/SearchContext/SearchContext";
 
 const ProductList = () => {
-	const { searchQuery, filter, sort, setSort, limit, offset } = useContext(SearchContext);
+	const { searchQuery, filter, sort, setSort, limit, offset } =
+		useContext(SearchContext);
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
+	const [suggestionList, setSuggestionList] = useState([]);
 	const [loader, showLoader] = useState(true);
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	let navigate = useNavigate();
+
+	const getSuggestionList = useCallback(() => {
+		axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
+			setSuggestionList(res.data.randomSuggestions);
+		});
+	}, []);
 
 	const getProductList = useCallback(() => {
 		if (searchQuery === "") {
@@ -59,7 +67,10 @@ const ProductList = () => {
 		});
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
-	useEffect(getProductList, [searchQuery, getProductList]);
+	useEffect(() => {
+		getProductList();
+		getSuggestionList();
+	}, [searchQuery, getProductList, getSuggestionList]);
 
 	return (
 		<div className='prodList' mr='10px'>
@@ -132,11 +143,20 @@ const ProductList = () => {
 									</Tooltip>
 								</HStack>
 								<HStack mt={2} spacing={2} ml={1} mb={2}>
-									<SuggestionCard />
-									<SuggestionCard />
-									<SuggestionCard />
-									<SuggestionCard />
-									<SuggestionCard />
+									{suggestionList.map((suggestion, index) => {
+										return (
+											<SuggestionCard
+												key={index}
+												_id={suggestion._id}
+												productName={suggestion.title}
+												productImage={suggestion.images[0]}
+												satisfactionRating={parseFloat(
+													suggestion.satisfactory_rating
+												).toFixed(2)}
+												price={suggestion.min_price}
+											/>
+										);
+									})}
 								</HStack>
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
@@ -158,9 +178,7 @@ const ProductList = () => {
 								})}
 							</SimpleGrid>
 							<Flex align='center' justify='center'>
-								<Paginator
-									pages={Math.ceil(productCount / limit)}
-								/>
+								<Paginator pages={Math.ceil(productCount / limit)} />
 							</Flex>
 						</>
 					) : (
