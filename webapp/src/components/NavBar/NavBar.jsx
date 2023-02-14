@@ -108,13 +108,13 @@ const MenuLinks = ({ isOpen }) => {
 					_hover={
 						isDark
 							? {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 							: {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 					}
 				/>
 			</Stack>
@@ -139,7 +139,7 @@ const NavBarContainer = ({ children }) => {
 	);
 };
 
-const NavBar = (props) => {
+const NavBar = () => {
 	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleOpen = () => setIsOpen(!isOpen);
@@ -155,12 +155,7 @@ const NavBar = (props) => {
 				{location.pathname === "/" ? (
 					""
 				) : (
-					<NavSearchBar
-						searchQuery={props.searchQuery}
-						setSearchQuery={props.setSearchQuery}
-						setFilter={props.setFilter}
-						setOffset={props.setOffset}
-					/>
+					<NavSearchBar />
 				)}
 			</HStack>
 

@@ -1,16 +1,16 @@
 import {
-	Checkbox,
-	CheckboxGroup,
-	HStack,
-	Spacer,
-	Stack,
-	Text,
-	useColorMode,
+    Checkbox,
+    CheckboxGroup,
+    HStack,
+    Spacer,
+    Stack,
+    Text,
+    useColorMode,
 } from "@chakra-ui/react";
 
 export default function GenerateChecklist({ obj, index, setFilter, filter }) {
-	const { colorMode } = useColorMode();
-	const isDark = colorMode === "dark";
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === "dark";
 
     return (
         <div className='filter-category' key={index}>

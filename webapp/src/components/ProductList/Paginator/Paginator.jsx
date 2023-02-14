@@ -1,13 +1,10 @@
 import { Box, HStack, Icon, LinkBox, Text } from "@chakra-ui/react";
+import { useContext } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 
-const Paginator = ({
-	setOffset,
-	limit,
-	pages,
-	currentPage,
-	setCurrentPage,
-}) => {
+const Paginator = ({ pages }) => {
+	const { setOffset, limit, currentPage, setCurrentPage } = useContext(SearchContext);
 	const handleClick = (e) => {
 		setCurrentPage(parseInt(e.target.textContent));
 
@@ -17,13 +14,13 @@ const Paginator = ({
 	// ! Fix previous button
 	const handlePrevious = () => {
 		setCurrentPage(currentPage - 1);
-
-		setOffset(currentPage * limit);
+		setOffset((currentPage - 2) * limit);
 	};
 
 	const handleNext = () => {
+		console.log(currentPage)
 		setCurrentPage(currentPage + 1);
-
+		console.log(currentPage)
 		setOffset(currentPage * limit);
 	};
 

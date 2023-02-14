@@ -14,28 +14,26 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
-import { useState, useEffect, useCallback } from "react";
-import Filters from "../Filters/Filters";
+import { useState, useEffect, useCallback, useContext } from "react";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
 import SortMenu from "../SortMenu/SortMenu";
-import FilterMenu from "../Filters/FilterMenu";
+import Filters from "./Filters/Filters";
+import FilterMenu from "./Filters/FilterMenu";
 import "./ProductList.css";
 import SuggestionCard from "../Card/SuggestionCard/SuggestionCard";
-import Paginator from "../Paginator/Paginator";
+import Paginator from "./Paginator/Paginator";
 import { GoInfo } from "react-icons/go";
+import SearchContext from "../../context/SearchContext/SearchContext";
 
-const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
+const ProductList = () => {
+	const { searchQuery, filter, sort, setSort, limit, offset } = useContext(SearchContext);
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
-	const [sort, setSort] = useState("_id");
-	const [limit, setLimit] = useState(20);
-	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
-	const [currentPage, setCurrentPage] = useState(1);
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
@@ -63,21 +61,9 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 
 	useEffect(getProductList, [searchQuery, getProductList]);
 
-	// useEffect(() => {
-	// 	const pagesTotal = Math.ceil(productList.length / limit);
-
-	// 	setPageQuantity(pagesTotal);
-	// 	console.log(pageQuantity);
-	// }, [productList.length, limit]);
-
 	return (
 		<div className='prodList' mr='10px'>
-			<NavBar
-				searchQuery={searchQuery}
-				setSearchQuery={setSearchQuery}
-				setFilter={setFilter}
-				setOffset={setOffset}
-			/>
+			<NavBar />
 			{productCount ? (
 				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
 					{productCount === 1 ? (
@@ -104,11 +90,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 					<Spacer />
 					<Show below='md'>
 						<HStack>
-							<FilterMenu
-								searchQuery={searchQuery}
-								setFilter={setFilter}
-								filter={filter}
-							/>
+							<FilterMenu />
 							<SortMenu sort={sort} setSort={setSort} />
 						</HStack>
 					</Show>
@@ -121,11 +103,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
-					<Filters
-						searchQuery={searchQuery}
-						setFilter={setFilter}
-						filter={filter}
-					/>
+					<Filters />
 				</GridItem>
 				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
 					{loader ? (
@@ -181,11 +159,7 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 							</SimpleGrid>
 							<Flex align='center' justify='center'>
 								<Paginator
-									setOffset={setOffset}
-									limit={limit}
 									pages={Math.ceil(productCount / limit)}
-									currentPage={currentPage}
-									setCurrentPage={setCurrentPage}
 								/>
 							</Flex>
 						</>

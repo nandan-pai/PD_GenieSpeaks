@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
 	Box,
 	Drawer,
@@ -20,12 +20,14 @@ import { FiFilter } from "react-icons/fi";
 import { BiError } from "react-icons/bi";
 import axios from "axios";
 
-import { ApiBaseUrl } from "../../config";
+import { ApiBaseUrl } from "../../../config";
 import GenerateChecklist from "./GenerateChecklist";
 import GenerateRange from "./GenerateRange";
 import "./FilterMenu.css";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 
-const FilterMenu = ({ searchQuery, setFilter, filter }) => {
+const FilterMenu = () => {
+	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const btnRef = useRef();
 
