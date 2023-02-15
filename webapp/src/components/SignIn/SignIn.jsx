@@ -9,10 +9,15 @@ import {
 	Input,
 	Text,
 	useColorMode,
+	Checkbox,
+	Divider,
+	Stack,
 } from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { OAuthButtonGroup } from "./OAuthButtonGroup";
+import { PasswordField } from './PasswordField'
 
 import "./SignIn.css";
 
@@ -56,6 +61,15 @@ const SignIn = () => {
 							Sign In
 						</Button>
 					</FormControl>
+					<HStack>
+						<Divider />
+						<Text fontSize="sm" whiteSpace="nowrap" color="muted">
+							or continue with
+						</Text>
+						<Divider />															
+					</HStack>
+					<OAuthButtonGroup />
+
 					<HStack>
 						<Text>Don't Have an Account?</Text>
 						<Link to='/signup'>
