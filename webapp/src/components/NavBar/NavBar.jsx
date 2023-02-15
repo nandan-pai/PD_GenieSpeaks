@@ -78,25 +78,14 @@ const MenuLinks = ({ isOpen }) => {
 				pt={[4, 4, 0]}
 			>
 				<Link to='/signin'>
-					<Text
-						color={isDark ? "white.100" : "gray.100"}
-						fontWeight='semibold'
-						_hover={{
-							textDecoration: "underline",
-						}}
-					>
-						Sign In
-					</Text>
-				</Link>
-
-				<Link to='/signup'>
 					<Button
 						bg={isDark ? "white.100" : "gray.100"}
 						borderRadius='md'
 						display='block'
 						color={isDark ? "gray.100" : "white.100"}
+						_hover={{ textDecoration: "underline" }}
 					>
-						Create a free account
+						Sign In
 					</Button>
 				</Link>
 
