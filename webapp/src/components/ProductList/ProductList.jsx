@@ -169,7 +169,7 @@ const ProductList = () => {
 											productImage={product.images[0]}
 											price={product.min_price}
 											noOfReviews={product.review_count}
-											isRenewed={true}
+											isRenewed={false}
 											satisfactionRating={parseFloat(
 												product.satisfactory_rating
 											).toFixed(2)}

@@ -36,8 +36,7 @@ const SuggestionCard = ({
 			bgColor={isDark ? "#252525" : "#f7fafc"}
 		>
 			<VStack alignItems='start'>
-				<Image src={productImage} h='200px' w='100%' />
-				{/* <Box w='100%' h='200px' bgColor='red'></Box> */}
+				<Image src={productImage} h='200px' w='100%' objectFit='contain' />
 				<Text
 					fontWeight='semibold'
 					fontSize='18px'
