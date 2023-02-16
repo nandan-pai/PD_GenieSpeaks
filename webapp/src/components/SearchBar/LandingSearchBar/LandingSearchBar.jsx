@@ -7,20 +7,22 @@ import {
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import React from "react";
+import { useContext } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 import "./LandingSearchBar.css";
 
-const LandingSearchBar = (props) => {
+const LandingSearchBar = () => {
+	const { searchQuery, setSearchQuery, resetFashion } = useContext(SearchContext);
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
-		props.setFilter({})
-		if (props.searchQuery !== "") {
+		resetFashion()
+		if (searchQuery !== "") {
 			navigate("/search");
 		}
 	};
@@ -32,9 +34,9 @@ const LandingSearchBar = (props) => {
 					<InputLeftElement pointerEvents='none' children={<FaSearch />} />
 					<Input
 						type='text'
-						value={props.searchQuery}
+						value={searchQuery}
 						onChange={(e) => {
-							props.setSearchQuery(e.target.value);
+							setSearchQuery(e.target.value);
 						}}
 						placeholder='Search for products or organization'
 					/>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import {
 	Box,
 	Text,
@@ -10,12 +10,14 @@ import {
 import axios from "axios";
 import { BiError } from "react-icons/bi";
 
-import { ApiBaseUrl } from "../../config";
+import { ApiBaseUrl } from "../../../config.js";
 import GenerateChecklist from "./GenerateChecklist";
 import GenerateRange from "./GenerateRange";
 import "./Filters.css";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 
-const Filters = ({ searchQuery, setFilter, filter }) => {
+const Filters = () => {
+	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const [categoryList, setCategoryList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
 

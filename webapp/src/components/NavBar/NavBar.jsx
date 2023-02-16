@@ -78,25 +78,14 @@ const MenuLinks = ({ isOpen }) => {
 				pt={[4, 4, 0]}
 			>
 				<Link to='/signin'>
-					<Text
-						color={isDark ? "white.100" : "gray.100"}
-						fontWeight='semibold'
-						_hover={{
-							textDecoration: "underline",
-						}}
-					>
-						Sign In
-					</Text>
-				</Link>
-
-				<Link to='/signup'>
 					<Button
 						bg={isDark ? "white.100" : "gray.100"}
 						borderRadius='md'
 						display='block'
 						color={isDark ? "gray.100" : "white.100"}
+						_hover={{ textDecoration: "underline" }}
 					>
-						Create a free account
+						Sign In
 					</Button>
 				</Link>
 
@@ -108,13 +97,13 @@ const MenuLinks = ({ isOpen }) => {
 					_hover={
 						isDark
 							? {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 							: {
-									bg: "gray.100",
-									color: "white.100",
-							  }
+								bg: "gray.100",
+								color: "white.100",
+							}
 					}
 				/>
 			</Stack>
@@ -139,7 +128,7 @@ const NavBarContainer = ({ children }) => {
 	);
 };
 
-const NavBar = (props) => {
+const NavBar = () => {
 	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleOpen = () => setIsOpen(!isOpen);
@@ -155,11 +144,7 @@ const NavBar = (props) => {
 				{location.pathname === "/" ? (
 					""
 				) : (
-					<NavSearchBar
-						searchQuery={props.searchQuery}
-						setSearchQuery={props.setSearchQuery}
-						setFilter={props.setFilter}
-					/>
+					<NavSearchBar />
 				)}
 			</HStack>
 
