@@ -1,12 +1,13 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import Loader from "../Loader/Loader";
 import {
 	Box,
+	Button,
 	Container,
 	Grid,
 	GridItem,
@@ -22,16 +23,20 @@ import {
 	TabPanels,
 	Tabs,
 	Text,
+	VStack,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
-import { BsDot } from "react-icons/bs";
-import ReviewCard from "../Card/ReviewCard/ReviewCard";
+import { BsDot, BsPencilFill } from "react-icons/bs";
+import ReviewCard from "./ReviewCard/ReviewCard";
 import AvailableMenu from "./AvailableMenu/AvailableMenu";
-import RatingCard from "../Card/RatingCard/RatingCard";
+import RatingCard from "./RatingCard/RatingCard";
+
+import "./ProductDetail.css";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
+	const navigate = useNavigate();
 
 	const { id } = useParams();
 
@@ -44,6 +49,10 @@ const ProductDetail = (props) => {
 	};
 
 	useEffect(getProductInfo, [id]);
+
+	const handleReviewBtn = () => {
+		navigate(`/product/${id}/review`);
+	};
 
 	if (isLoading) {
 		return (
@@ -93,7 +102,17 @@ const ProductDetail = (props) => {
 							justifySelf='center'
 						/>
 
-						<RatingCard />
+						<VStack>
+							<RatingCard />
+							<Button
+								leftIcon={<BsPencilFill />}
+								bgColor='gray.100'
+								color='white'
+								onClick={handleReviewBtn}
+							>
+								Write a Review
+							</Button>
+						</VStack>
 					</GridItem>
 
 					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
@@ -138,82 +157,86 @@ const ProductDetail = (props) => {
 
 							<TabPanels>
 								<TabPanel>
-									<Grid
-										templateColumns='repeat(2, 1fr)'
-										w={{
-											base: "700px",
-											xl: "700px",
-											lg: "500px",
-											md: "300px",
-											sm: "100px",
-										}}
-										minW='400px'
-										gap={{
-											base: "5px",
-											xl: "5px",
-											lg: "3px",
-											md: "1px",
-											sm: "0px",
-										}}
-									>
-										{Object.keys(productInfo.identifiers).map(
-											(identifier, index) => {
-												return (
-													<>
-														<GridItem key={identifier}>
-															<Text color='gray'>{identifier}</Text>
-														</GridItem>
-														<GridItem key={index}>
-															<Text fontWeight='semibold'>
-																{productInfo.identifiers[identifier]}
-															</Text>
-														</GridItem>
-													</>
-												);
-											}
-										)}
+									<Box className='scrollable-content' p={5}>
+										<Grid
+											templateColumns='repeat(2, 1fr)'
+											w={{
+												base: "700px",
+												xl: "700px",
+												lg: "500px",
+												md: "300px",
+												sm: "100px",
+											}}
+											minW='400px'
+											gap={{
+												base: "5px",
+												xl: "5px",
+												lg: "3px",
+												md: "1px",
+												sm: "0px",
+											}}
+										>
+											{Object.keys(productInfo.identifiers).map(
+												(identifier, index) => {
+													return (
+														<>
+															<GridItem key={identifier}>
+																<Text color='gray'>{identifier}</Text>
+															</GridItem>
+															<GridItem key={index}>
+																<Text fontWeight='semibold'>
+																	{productInfo.identifiers[identifier]}
+																</Text>
+															</GridItem>
+														</>
+													);
+												}
+											)}
 
-										{Object.keys(productInfo.attributes).map(
-											(attribute, index) => {
-												return (
-													<>
-														<GridItem key={attribute}>
-															<Text color='gray'>{attribute}</Text>
-														</GridItem>
-														<GridItem key={index * -1}>
-															<Text fontWeight='semibold'>
-																{productInfo.attributes[attribute]}
-															</Text>
-														</GridItem>
-													</>
-												);
-											}
-										)}
-									</Grid>
+											{Object.keys(productInfo.attributes).map(
+												(attribute, index) => {
+													return (
+														<>
+															<GridItem key={attribute}>
+																<Text color='gray'>{attribute}</Text>
+															</GridItem>
+															<GridItem key={index * -1}>
+																<Text fontWeight='semibold'>
+																	{productInfo.attributes[attribute]}
+																</Text>
+															</GridItem>
+														</>
+													);
+												}
+											)}
+										</Grid>
+									</Box>
 								</TabPanel>
 								<TabPanel>
-									<Container size='2xl' maxW='800px' maxH='200px'>
-										{isLoading ? (
-											<div></div>
-										) : (
-											productInfo.reviews.map((review, index) => {
-												return (
-													<ReviewCard
-														key={review._id}
-														name={review.user.name}
-														title={review.title}
-														stars={review.stars}
-														remainingStars={5 - review.stars}
-														reviewURL={review.url}
-														desc={review.description}
-														user={review.user}
-														ecommerce={review.ecommerce.name}
-														upVote='18'
-													/>
-												);
-											})
-										)}
-									</Container>
+									<Box className='scrollable-reviews'>
+										<Container size='2xl' maxW='800px' maxH='200px'>
+											{isLoading ? (
+												<div></div>
+											) : (
+												productInfo.reviews.map((review, index) => {
+													return (
+														<ReviewCard
+															key={review._id}
+															name={review.user.name}
+															title={review.title}
+															stars={review.stars}
+															remainingStars={5 - review.stars}
+															reviewURL={review.url}
+															desc={review.description}
+															user={review.user}
+															ecommerce={review.ecommerce.name}
+															upVote='18'
+														/>
+													);
+												})
+											)}
+										</Container>
+									</Box>
 								</TabPanel>
 							</TabPanels>
 						</Tabs>

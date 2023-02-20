@@ -11,12 +11,12 @@ import axios from "axios";
 import { BiError } from "react-icons/bi";
 
 import { ApiBaseUrl } from "../../../config.js";
-import GenerateChecklist from "./GenerateChecklist";
-import GenerateRange from "./GenerateRange";
-import "./Filters.css";
-import SearchContext from "../../../context/SearchContext/SearchContext";
+import GenerateChecklist from "./GenerateChecklist.jsx";
+import GenerateRange from "./GenerateRange.jsx";
+import SearchContext from "../../../context/SearchContext/SearchContext.js";
+import "./FilterDesktop.css";
 
-const Filters = () => {
+const FilterDesktop = () => {
 	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const [categoryList, setCategoryList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
@@ -26,7 +26,7 @@ const Filters = () => {
 
 	const getCategories = useCallback(() => {
 		if (searchQuery === "") {
-			return
+			return;
 		}
 		setCategoryLoading(true);
 		axios
@@ -58,9 +58,25 @@ const Filters = () => {
 						<>
 							{categoryList.map((category, index) => {
 								if (category.type === "checklist") {
-									return <GenerateChecklist obj={category} key={index} index={index} filter={filter} setFilter={setFilter}/>
+									return (
+										<GenerateChecklist
+											obj={category}
+											key={index}
+											index={index}
+											filter={filter}
+											setFilter={setFilter}
+										/>
+									);
 								} else if (category.type === "range") {
-									return <GenerateRange obj={category} key={index} index={index} filter={filter} setFilter={setFilter}/>
+									return (
+										<GenerateRange
+											obj={category}
+											key={index}
+											index={index}
+											filter={filter}
+											setFilter={setFilter}
+										/>
+									);
 								} else {
 									return <></>;
 								}
@@ -78,4 +94,4 @@ const Filters = () => {
 	);
 };
 
-export default Filters;
+export default FilterDesktop;

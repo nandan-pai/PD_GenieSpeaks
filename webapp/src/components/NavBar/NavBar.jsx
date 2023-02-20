@@ -5,6 +5,7 @@ import {
 	HStack,
 	Icon,
 	IconButton,
+	Show,
 	Stack,
 	Text,
 	useColorMode,
@@ -97,13 +98,13 @@ const MenuLinks = ({ isOpen }) => {
 					_hover={
 						isDark
 							? {
-								bg: "gray.100",
-								color: "white.100",
-							}
+									bg: "gray.100",
+									color: "white.100",
+							  }
 							: {
-								bg: "gray.100",
-								color: "white.100",
-							}
+									bg: "gray.100",
+									color: "white.100",
+							  }
 					}
 				/>
 			</Stack>
@@ -140,12 +141,10 @@ const NavBar = () => {
 				w={{ base: "50%", lg: "60%", md: "50%", sm: "70%" }}
 				spacing='50px'
 			>
-				<Logo />
-				{location.pathname === "/" ? (
-					""
-				) : (
-					<NavSearchBar />
-				)}
+				<Show above='md'>
+					<Logo />
+				</Show>
+				{location.pathname === "/" ? "" : <NavSearchBar />}
 			</HStack>
 
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />

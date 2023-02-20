@@ -21,8 +21,8 @@ import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
 import SortMenu from "../SortMenu/SortMenu";
-import Filters from "./Filters/Filters";
-import FilterMenu from "./Filters/FilterMenu";
+import FilterDesktop from "./Filters/FilterDesktop";
+import FilterMobile from "./Filters/FilterMobile";
 import "./ProductList.css";
 import SuggestionCard from "./SuggestionCard/SuggestionCard";
 import Paginator from "./Paginator/Paginator";
@@ -101,7 +101,7 @@ const ProductList = () => {
 					<Spacer />
 					<Show below='md'>
 						<HStack>
-							<FilterMenu />
+							<FilterMobile />
 							<SortMenu sort={sort} setSort={setSort} />
 						</HStack>
 					</Show>
@@ -114,7 +114,7 @@ const ProductList = () => {
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
 				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
-					<Filters />
+					<FilterDesktop />
 				</GridItem>
 				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
 					{loader ? (

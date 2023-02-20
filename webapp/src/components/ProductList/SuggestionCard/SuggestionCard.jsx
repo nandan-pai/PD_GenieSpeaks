@@ -9,6 +9,7 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const SuggestionCard = ({
 	_id,
@@ -17,11 +18,13 @@ const SuggestionCard = ({
 	satisfactionRating,
 	price,
 }) => {
+	const navigate = useNavigate();
+
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	const handleClick = () => {
-		console.log("Suggestion clicked");
+		navigate(`/product/${_id}`);
 	};
 
 	return (
