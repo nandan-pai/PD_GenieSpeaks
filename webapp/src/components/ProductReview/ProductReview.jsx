@@ -16,42 +16,16 @@ import {
 	Text,
 	Textarea,
 	VStack,
-	useColorMode,
 } from "@chakra-ui/react";
-import { FaChevronLeft, FaRegStar, FaStar } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
+import InputReviewStars from "./InputReviewStars";
 
 const ProductReview = (props) => {
-	const { colorMode } = useColorMode();
-	const isDark = colorMode === "dark";
 
 	const [productInfo, setProductInfo] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
 
-	const initialList = [
-		{
-			index: 0,
-			isActive: false,
-		},
-		{
-			index: 1,
-			isActive: false,
-		},
-		{
-			index: 2,
-			isActive: false,
-		},
-		{
-			index: 3,
-			isActive: false,
-		},
-		{
-			index: 4,
-			isActive: false,
-		},
-	];
-
-	const [starList, setStarList] = useState(initialList);
-	const [currentIndex, setCurrentIndex] = useState(0);
+	const [reviewStar, setReviewStar] = useState(0);
 
 	const navigate = useNavigate();
 
@@ -66,29 +40,6 @@ const ProductReview = (props) => {
 	};
 
 	useEffect(getProductInfo, [id]);
-
-	const handleRatingChange = (index) => {
-		setCurrentIndex(index);
-
-		const newStarList = [...starList];
-		// const toggleStar = newStarList.find((star) => star.index === index);
-
-		// ! TO FIX
-		// newStarList.map((star) => {
-		// 	if (!currentIndex.isActive) {
-		// 		if (star.index <= currentIndex) {
-		// 			star.isActive = true;
-		// 		}
-		// 	} else {
-		// 		if (star.index <= currentIndex) {
-		// 			star.isActive = true;
-		// 		}
-		// 	}
-		// });
-
-		// toggleStar.isActive = !toggleStar.isActive;
-		setStarList(newStarList);
-	};
 
 	const handleBack = () => {
 		navigate(`/product/${id}`);
@@ -136,23 +87,7 @@ const ProductReview = (props) => {
 						<Divider orientation='horizontal' />
 
 						<Heading size='sm'>Overall Rating</Heading>
-						<HStack alignSelf='start'>
-							{starList.map((star) => {
-								return (
-									<Icon
-										as={star.isActive ? FaStar : FaRegStar}
-										mr='2px'
-										fontSize='30px'
-										color={
-											star.isActive ? "orange" : isDark ? "white" : "black"
-										}
-										key={star.index}
-										_hover={{ cursor: "pointer", color: "orange" }}
-										onClick={() => handleRatingChange(star.index)}
-									/>
-								);
-							})}
-						</HStack>
+						<InputReviewStars reviewStar={reviewStar} setReviewStar={setReviewStar}/>
 
 						<Divider orientation='horizontal' mb={5} mt={5} />
 

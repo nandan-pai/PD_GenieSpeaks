@@ -104,7 +104,7 @@ class GeniescrapesPipeline:
 
             # password.encode('utf-8')
             new_user['hashedpassword'] = bcrypt.hashpw(
-                password="login1234", salt=salt)
+                password='login1234'.encode('utf-8'), salt=salt)
             new_user['reviews'] = []
             new_user['bookmarks'] = []
             new_user['created_on'] = datetime.today()
