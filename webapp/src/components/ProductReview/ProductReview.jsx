@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ApiBaseUrl } from "../../config";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import Loader from "../Loader/Loader";
 import {
@@ -16,12 +16,44 @@ import {
 	Text,
 	Textarea,
 	VStack,
+	useColorMode,
 } from "@chakra-ui/react";
-import { FaRegStar } from "react-icons/fa";
+import { FaChevronLeft, FaRegStar, FaStar } from "react-icons/fa";
 
 const ProductReview = (props) => {
+	const { colorMode } = useColorMode();
+	const isDark = colorMode === "dark";
+
 	const [productInfo, setProductInfo] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
+
+	const initialList = [
+		{
+			index: 0,
+			isActive: false,
+		},
+		{
+			index: 1,
+			isActive: false,
+		},
+		{
+			index: 2,
+			isActive: false,
+		},
+		{
+			index: 3,
+			isActive: false,
+		},
+		{
+			index: 4,
+			isActive: false,
+		},
+	];
+
+	const [starList, setStarList] = useState(initialList);
+	const [currentIndex, setCurrentIndex] = useState(0);
+
+	const navigate = useNavigate();
 
 	const { id } = useParams();
 
@@ -34,6 +66,33 @@ const ProductReview = (props) => {
 	};
 
 	useEffect(getProductInfo, [id]);
+
+	const handleRatingChange = (index) => {
+		setCurrentIndex(index);
+
+		const newStarList = [...starList];
+		// const toggleStar = newStarList.find((star) => star.index === index);
+
+		// ! TO FIX
+		// newStarList.map((star) => {
+		// 	if (!currentIndex.isActive) {
+		// 		if (star.index <= currentIndex) {
+		// 			star.isActive = true;
+		// 		}
+		// 	} else {
+		// 		if (star.index <= currentIndex) {
+		// 			star.isActive = true;
+		// 		}
+		// 	}
+		// });
+
+		// toggleStar.isActive = !toggleStar.isActive;
+		setStarList(newStarList);
+	};
+
+	const handleBack = () => {
+		navigate(`/product/${id}`);
+	};
 
 	if (isLoading) {
 		return (
@@ -58,6 +117,15 @@ const ProductReview = (props) => {
 					setFilter={props.setFilter}
 				/>
 				<Box mx={80} p={5}>
+					<HStack
+						mb={5}
+						_hover={{ textDecoration: "underline", cursor: "pointer" }}
+						onClick={handleBack}
+						w='80px'
+					>
+						<Icon as={FaChevronLeft} />
+						<Text fontWeight='semibold'>Back</Text>
+					</HStack>
 					<VStack mx={30} align='start' spacing={5}>
 						<Heading size='md'>Write a Review</Heading>
 						<HStack align='start' mt={5} spacing={5}>
@@ -69,16 +137,18 @@ const ProductReview = (props) => {
 
 						<Heading size='sm'>Overall Rating</Heading>
 						<HStack alignSelf='start'>
-							{[...Array(5)].map((e, i) => {
+							{starList.map((star) => {
 								return (
 									<Icon
-										as={FaRegStar}
+										as={star.isActive ? FaStar : FaRegStar}
 										mr='2px'
 										fontSize='30px'
-										color='black'
-										key={i}
+										color={
+											star.isActive ? "orange" : isDark ? "white" : "black"
+										}
+										key={star.index}
 										_hover={{ cursor: "pointer", color: "orange" }}
-										onClick={() => console.log(i)}
+										onClick={() => handleRatingChange(star.index)}
 									/>
 								);
 							})}
