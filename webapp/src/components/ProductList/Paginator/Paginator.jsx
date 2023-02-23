@@ -6,6 +6,7 @@ import SearchContext from "../../../context/SearchContext/SearchContext";
 const Paginator = ({ pages }) => {
 	const { setOffset, limit, currentPage, setCurrentPage } =
 		useContext(SearchContext);
+
 	const handleClick = (e) => {
 		setCurrentPage(parseInt(e.target.textContent));
 		setOffset((parseInt(e.target.textContent) - 1) * limit);
@@ -19,6 +20,16 @@ const Paginator = ({ pages }) => {
 	const handleNext = () => {
 		setCurrentPage(currentPage + 1);
 		setOffset(currentPage * limit);
+	};
+
+	const handleToFirst = () => {
+		setCurrentPage(1);
+		setOffset(0);
+	};
+
+	const handleToLast = () => {
+		setCurrentPage(pages);
+		setOffset(pages * limit - currentPage * limit);
 	};
 
 	const showPaginationNumbers = (pages) => {
@@ -81,18 +92,31 @@ const Paginator = ({ pages }) => {
 			{currentPage === 1 ? (
 				<></>
 			) : (
-				<LinkBox
-					h='40px'
-					w='40px'
-					borderWidth='1px'
-					rounded='md'
-					textAlign='center'
-					py={2}
-					onClick={handlePrevious}
-					_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
-				>
-					<Icon as={FaChevronLeft} />
-				</LinkBox>
+				<HStack spacing={2}>
+					<LinkBox
+						h='40px'
+						borderWidth='1px'
+						rounded='md'
+						textAlign='center'
+						p={2}
+						onClick={handleToFirst}
+						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+					>
+						<Text>Go To First</Text>
+					</LinkBox>
+					<LinkBox
+						h='40px'
+						w='40px'
+						borderWidth='1px'
+						rounded='md'
+						textAlign='center'
+						py={2}
+						onClick={handlePrevious}
+						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+					>
+						<Icon as={FaChevronLeft} />
+					</LinkBox>
+				</HStack>
 			)}
 			<Box w={2} h={2}></Box>
 			{showPaginationNumbers(pages)}
@@ -100,18 +124,31 @@ const Paginator = ({ pages }) => {
 			{currentPage === pages ? (
 				<></>
 			) : (
-				<LinkBox
-					h='40px'
-					w='40px'
-					borderWidth='1px'
-					rounded='md'
-					textAlign='center'
-					py={2}
-					onClick={handleNext}
-					_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
-				>
-					<Icon as={FaChevronRight} />
-				</LinkBox>
+				<HStack spacing={2}>
+					<LinkBox
+						h='40px'
+						w='40px'
+						borderWidth='1px'
+						rounded='md'
+						textAlign='center'
+						py={2}
+						onClick={handleNext}
+						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+					>
+						<Icon as={FaChevronRight} />
+					</LinkBox>
+					<LinkBox
+						h='40px'
+						borderWidth='1px'
+						rounded='md'
+						textAlign='center'
+						p={2}
+						onClick={handleToLast}
+						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
+					>
+						<Text>Go To Last</Text>
+					</LinkBox>
+				</HStack>
 			)}
 		</HStack>
 	);
