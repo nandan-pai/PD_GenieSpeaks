@@ -79,22 +79,48 @@ const ProductDetail = (props) => {
 
 				<SimpleGrid
 					templateColumns={{
-						base: "repeat(4, 1fr)",
 						xl: "repeat(5, 1fr)",
-						lg: "repeat(3, 1fr)",
-						md: "repeat(3, 1fr)",
+						lg: "repeat(5, 1fr)",
+						md: "repeat(5, 1fr)",
 						sm: "repeat(1, 1fr)",
+						base: "repeat(1, 1fr)",
 					}}
 					minChildWidth='500px'
-					spacing={10}
+					spacing={{ xl: 10, lg: 10, md: 5, sm: 3, base: 3 }}
 					mt={10}
-					ml={20}
+					ml={{ xl: 20, lg: 20, md: 10, sm: 5, base: 5 }}
 				>
 					<GridItem colSpan={1}>
+						<Show below='md'>
+							<Heading
+								mb='10px'
+								fontSize={{
+									md: "md",
+									sm: "md",
+									base: "md",
+								}}
+								textAlign={["left, left"]}
+								w='90%'
+							>
+								{productInfo.title}
+							</Heading>
+						</Show>
 						<Image
 							src={productInfo.images[0]}
-							w='300px'
-							h='300px'
+							w={{
+								xl: "300px",
+								lg: "250px",
+								md: "200px",
+								sm: "200px",
+								base: "200px",
+							}}
+							h={{
+								xl: "300px",
+								lg: "250px",
+								md: "200px",
+								sm: "200px",
+								base: "200px",
+							}}
 							ml='35px'
 							justifyContent='center'
 							alignItems='center'
@@ -102,34 +128,36 @@ const ProductDetail = (props) => {
 							justifySelf='center'
 						/>
 
-						<VStack>
-							<RatingCard />
-							<Button
-								leftIcon={<BsPencilFill />}
-								bgColor='gray.100'
-								color='white'
-								onClick={handleReviewBtn}
-							>
-								Write a Review
-							</Button>
-						</VStack>
+						<Show above='md'>
+							<VStack>
+								<RatingCard />
+								<Button
+									leftIcon={<BsPencilFill />}
+									bgColor='gray.100'
+									color='white'
+									onClick={handleReviewBtn}
+								>
+									Write a Review
+								</Button>
+							</VStack>
+						</Show>
 					</GridItem>
 
-					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
+					<GridItem colSpan={{ xl: 3, lg: 3, md: 3, sm: 1, base: 1 }}>
 						<Box textAlign={["left", "left"]}>
-							<Heading
-								mb='10px'
-								fontSize={{
-									base: "xl",
-									xl: "xl",
-									lg: "lg",
-									md: "md",
-									sm: "md",
-								}}
-								textAlign={["left, left"]}
-							>
-								{productInfo.title}
-							</Heading>
+							<Show above='md'>
+								<Heading
+									mb='10px'
+									fontSize={{
+										xl: "xl",
+										lg: "lg",
+										md: "md",
+									}}
+									textAlign={["left, left"]}
+								>
+									{productInfo.title}
+								</Heading>
+							</Show>
 							<HStack mb='50px' alignSelf={["left", "left"]}>
 								<Icon as={FaRegThumbsUp} color='green' />
 								<Text fontWeight='semibold' color='green'>
@@ -142,7 +170,7 @@ const ProductDetail = (props) => {
 
 						<Show below='xl'>
 							<GridItem
-								colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}
+								colSpan={{ xl: 1, lg: 2, md: 2, sm: 1, base: 1 }}
 								mb={5}
 							>
 								<AvailableMenu ecommerce={productInfo.ecommerce} />
@@ -152,28 +180,38 @@ const ProductDetail = (props) => {
 						<Tabs>
 							<TabList>
 								<Tab>About Product</Tab>
-								<Tab>Reviews</Tab>
+								{productInfo.reviews.length > 0 ? <Tab>Reviews</Tab> : <></>}
 							</TabList>
 
 							<TabPanels>
 								<TabPanel>
-									<Box className='scrollable-content' p={5}>
+									<Box
+										className='scrollable-content'
+										h='90vh'
+										w={{
+											xl: "48vw",
+											lg: "48vw",
+											md: "60vw",
+											sm: "95vw",
+											base: "95vw",
+										}}
+										overflow='auto'
+									>
 										<Grid
 											templateColumns='repeat(2, 1fr)'
 											w={{
-												base: "700px",
-												xl: "700px",
-												lg: "500px",
-												md: "300px",
-												sm: "100px",
+												xl: "100%",
+												lg: "100%",
+												md: "80%",
+												sm: "90vw",
+												base: "90vw",
 											}}
-											minW='400px'
 											gap={{
-												base: "5px",
 												xl: "5px",
 												lg: "3px",
 												md: "1px",
 												sm: "0px",
+												base: "0px",
 											}}
 										>
 											{Object.keys(productInfo.identifiers).map(
@@ -213,8 +251,24 @@ const ProductDetail = (props) => {
 									</Box>
 								</TabPanel>
 								<TabPanel>
-									<Box className='scrollable-reviews'>
-										<Container size='2xl' maxW='800px' maxH='200px'>
+									<Box
+										className='scrollable-reviews'
+										h='90vh'
+										w={{
+											xl: "48vw",
+											lg: "48vw",
+											md: "60vw",
+											sm: "95vw",
+											base: "95vw",
+										}}
+										overflow='auto'
+									>
+										<Container
+											size='2xl'
+											maxW='800px'
+											maxH='200px'
+											w='fit-content'
+										>
 											{isLoading ? (
 												<div></div>
 											) : (
@@ -243,7 +297,10 @@ const ProductDetail = (props) => {
 					</GridItem>
 
 					<Show above='xl'>
-						<GridItem colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}>
+						<GridItem
+							colSpan={{ xl: 1, lg: 2, md: 2, sm: 1, base: 1 }}
+							w='fit-content'
+						>
 							<AvailableMenu ecommerce={productInfo.ecommerce} />
 						</GridItem>
 					</Show>

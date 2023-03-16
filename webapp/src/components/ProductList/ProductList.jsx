@@ -48,6 +48,8 @@ const ProductList = () => {
 		});
 	}, []);
 
+	useEffect(() => {});
+
 	const getProductList = useCallback(() => {
 		if (searchQuery === "") {
 			return navigate("/");
@@ -76,27 +78,65 @@ const ProductList = () => {
 		<div className='prodList' mr='10px'>
 			<NavBar />
 			{productCount ? (
-				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
+				<HStack mr={{ lg: "20px", md: "5px", sm: "5px", base: "5px" }}>
 					{productCount === 1 ? (
-						<Text
-							ml='25%'
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {productCount} of {productCount} result for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "25%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									Showing {productCount} of {productCount} result for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='md'>
+								<Text
+									ml={{ md: "25%", sm: "15%", base: "10%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									{productCount} of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					) : (
-						<Text
-							ml={{ base: "25%", lg: "25%", md: "20%", sm: "10%" }}
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {offset + 1} -{" "}
-							{offset + limit < productList.length
-								? offset + limit
-								: offset + productList.length}{" "}
-							of {productCount} results for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "20%" }}
+									fontSize={{
+										xl: "md",
+										lg: "md",
+										md: "sm",
+									}}
+								>
+									Showing {offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} results for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='sm'>
+								<Text
+									ml={{ md: "20%", sm: "10%", base: "10%" }}
+									fontSize={{
+										md: "sm",
+										sm: "sm",
+										base: "sm",
+									}}
+								>
+									{offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					)}
 					<Spacer />
 					<Show below='md'>
@@ -113,10 +153,10 @@ const ProductList = () => {
 				<></>
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
-				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
+				<GridItem colSpan={{ lg: 1, md: 1, base: 1 }}>
 					<FilterDesktop />
 				</GridItem>
-				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
+				<GridItem colSpan={{ lg: 3, md: 3, sm: 4, base: 4 }}>
 					{loader ? (
 						<Spinner />
 					) : productList.length ? (
@@ -126,8 +166,6 @@ const ProductList = () => {
 								mt='10px'
 								p='10px'
 								bgColor={isDark ? "#252525" : "#e3e6e8"}
-								// mb='10px'
-								// borderWidth='0.5px'
 								borderRadius='md'
 							>
 								<HStack>
@@ -142,7 +180,14 @@ const ProductList = () => {
 										<GoInfo />
 									</Tooltip>
 								</HStack>
-								<HStack mt={2} spacing={2} ml={1} mb={2}>
+
+								<HStack
+									mt={2}
+									spacing={2}
+									ml={1}
+									mb={2}
+									className='suggestionContainer'
+								>
 									{suggestionList.map((suggestion, index) => {
 										return (
 											<SuggestionCard
