@@ -9,11 +9,11 @@ import {
 } from "@chakra-ui/react";
 
 export default function GenerateChecklist({
-	obj,
-	index,
-	setFilter,
-	filter,
-	defaultFilterValue
+	index = 0,
+	obj = { identifier: "", name: "", return: "", type: "", value: [] },
+	defaultFilterValue = [],
+	filter = {},
+	setFilter
 }) {
 	// console.log(`GenerateChecklist-${obj.name}`, defaultFilterValue? defaultFilterValue["value"]: defaultFilterValue)
 	const { colorMode } = useColorMode();

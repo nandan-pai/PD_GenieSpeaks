@@ -60,7 +60,7 @@ const FilterDesktop = () => {
 				>
 					<Text fontSize='lg'>Filter</Text>
 					{
-						Object.keys(filter).length? <Text fontSize='md'>Applied Filter: </Text>: <></>
+						Object.keys(filter).length ? <Text fontSize='md'>Applied Filter: </Text> : <></>
 					}
 					{
 						Object.keys(filter).map((filter_key) => {
@@ -90,27 +90,27 @@ const FilterDesktop = () => {
 								if (category.type === "checklist") {
 									return (
 										<GenerateChecklist
-											obj={category}
 											key={index}
 											index={index}
-											filter={filter}
-											setFilter={setFilter}
+											obj={category}
 											defaultFilterValue={
 												filter[category.name.toString()] ? filter[category.name.toString()]["value"] : []
 											}
+											filter={filter}
+											setFilter={setFilter}
 										/>
 									);
 								} else if (category.type === "range") {
 									return (
 										<GenerateRange
-											obj={category}
 											key={index}
 											index={index}
-											filter={filter}
-											setFilter={setFilter}
+											obj={category}
 											defaultFilterValue={
 												filter[category.name.toString()] ? filter[category.name.toString()]["value"] : [category.value[0], category.value[1]]
 											}
+											filter={filter}
+											setFilter={setFilter}
 										/>
 									);
 								} else {

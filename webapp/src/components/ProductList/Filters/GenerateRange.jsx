@@ -10,18 +10,18 @@ import {
 import { useState } from "react";
 
 export default function GenerateRange({
-    obj,
-    index,
-    setFilter,
-    filter,
-    defaultFilterValue
+    index = 0,
+    obj = { identifier: "", name: "", return: "", type: "", value: [0, 100000] },
+    defaultFilterValue = [0, 100000],
+    filter = {},
+    setFilter
 }) {
-    const [currRange, setCurrRange] = useState(obj.value);
+    // const [currRange, setCurrRange] = useState(obj.value);
     // const { colorMode } = useColorMode();
     // const isDark = colorMode === "dark";
 
     const handleRangeChange = (val) => {
-        setCurrRange(val)
+        // setCurrRange(val)
         if (!val.length) {
             delete filter[obj.name.toString()]
         } else {
