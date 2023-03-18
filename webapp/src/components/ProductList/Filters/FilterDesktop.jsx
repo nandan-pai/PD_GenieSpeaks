@@ -78,7 +78,7 @@ const FilterDesktop = () => {
 		<div>
 			<Show above='md'>
 				<Box
-					maxH='100vh'
+					// maxH='100vh'
 					w={{ base: "300px", lg: "280px", md: "250px" }}
 					ml={5}
 					bg={isDark ? "" : "white"}
@@ -86,7 +86,7 @@ const FilterDesktop = () => {
 					border='1px'
 					borderRadius='10px'
 				>
-					<Text fontSize='lg'>Filter</Text>
+					<Text fontSize='lg' textAlign='center'>Filter</Text>
 					{
 						Object.keys(filter).length ? <Text fontSize='md'>Applied Filter: </Text> : <></>
 					}
