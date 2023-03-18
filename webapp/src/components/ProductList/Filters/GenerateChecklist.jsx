@@ -20,8 +20,7 @@ export default function GenerateChecklist({
 	const isDark = colorMode === "dark";
 
 	const handleCheckboxChange = (val) => {
-		console.log(val==[])
-		if(!val.length) {
+		if (!val.length) {
 			delete filter[obj.name.toString()]
 		} else {
 			filter[obj.name.toString()] = {
@@ -45,6 +44,7 @@ export default function GenerateChecklist({
 					handleCheckboxChange(e)
 				}
 				defaultValue={defaultFilterValue}
+				value={defaultFilterValue}
 			>
 				<Stack mt='2' ml='2' pr={5} className='scrollable'>
 					{obj.value.map((objval) => {

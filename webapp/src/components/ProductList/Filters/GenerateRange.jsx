@@ -14,27 +14,27 @@ export default function GenerateRange({
     index,
     setFilter,
     filter,
-	defaultFilterValue
+    defaultFilterValue
 }) {
     const [currRange, setCurrRange] = useState(obj.value);
     // const { colorMode } = useColorMode();
     // const isDark = colorMode === "dark";
 
-	const handleRangeChange = (val) => {
+    const handleRangeChange = (val) => {
         setCurrRange(val)
-		if(!val.length) {
-			delete filter[obj.name.toString()]
-		} else {
-			filter[obj.name.toString()] = {
-				identifier: obj.identifier,
-				type: obj.return,
-				value: val,
-			}
-		}
-		setFilter({
-			...filter
-		})
-	}
+        if (!val.length) {
+            delete filter[obj.name.toString()]
+        } else {
+            filter[obj.name.toString()] = {
+                identifier: obj.identifier,
+                type: obj.return,
+                value: val,
+            }
+        }
+        setFilter({
+            ...filter
+        })
+    }
 
     return (
         <div className='filter-category price' key={index}>
@@ -43,6 +43,7 @@ export default function GenerateRange({
             </Text>
             <RangeSlider
                 defaultValue={defaultFilterValue}
+                value={defaultFilterValue}
                 min={obj.value[0]}
                 max={obj.value[1]}
                 step={10000}
@@ -53,11 +54,19 @@ export default function GenerateRange({
                 <RangeSliderTrack bg='gray'>
                     <RangeSliderFilledTrack bg='tomato' />
                 </RangeSliderTrack>
-                <RangeSliderMark value={currRange[0]} mt='1' ml='-2.5' fontSize='sm'>
-                    {currRange[0]}
+                <RangeSliderMark
+                    value={defaultFilterValue[0]}
+                    mt='1'
+                    ml='-2.5'
+                    fontSize='sm'>
+                    {defaultFilterValue[0]}
                 </RangeSliderMark>
-                <RangeSliderMark value={currRange[1]} mt='1' ml='-35' fontSize='sm'>
-                    {currRange[1]}
+                <RangeSliderMark
+                    value={defaultFilterValue[1]}
+                    mt='1'
+                    ml='-35'
+                    fontSize='sm'>
+                    {defaultFilterValue[1]}
                 </RangeSliderMark>
 
                 <RangeSliderThumb index={0} />
