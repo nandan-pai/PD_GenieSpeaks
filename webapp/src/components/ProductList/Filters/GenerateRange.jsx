@@ -9,7 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-export default function GenerateRange({ obj, index, setFilter, filter }) {
+export default function GenerateRange({
+    obj,
+    index,
+    setFilter,
+    filter,
+	defaultFilterValue
+}) {
     const [currRange, setCurrRange] = useState(obj.value);
     // const { colorMode } = useColorMode();
     // const isDark = colorMode === "dark";
@@ -20,12 +26,11 @@ export default function GenerateRange({ obj, index, setFilter, filter }) {
                 {obj.name}
             </Text>
             <RangeSlider
-                defaultValue={[obj.value[0], obj.value[1]]}
+                defaultValue={defaultFilterValue}
                 min={obj.value[0]}
                 max={obj.value[1]}
                 step={10000}
                 onChange={(val) => {
-                    // console.log(val)
                     setCurrRange(val)
                     setFilter({
                         ...filter,
