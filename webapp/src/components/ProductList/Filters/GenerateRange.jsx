@@ -7,7 +7,7 @@ import {
     Text,
     // useColorMode,
 } from "@chakra-ui/react";
-import { useState } from "react";
+// import { useState } from "react";
 
 export default function GenerateRange({
     index = 0,
@@ -26,9 +26,12 @@ export default function GenerateRange({
             delete filter[obj.name.toString()]
         } else {
             filter[obj.name.toString()] = {
+				name: obj.name,
+				type: obj.type,
                 identifier: obj.identifier,
-                type: obj.return,
-                value: val,
+                return_format: obj.return_format,
+                return_type: obj.return_type,
+                value: val
             }
         }
         setFilter({

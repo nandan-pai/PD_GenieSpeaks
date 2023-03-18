@@ -24,9 +24,12 @@ export default function GenerateChecklist({
 			delete filter[obj.name.toString()]
 		} else {
 			filter[obj.name.toString()] = {
+				name: obj.name,
+				type: obj.type,
 				identifier: obj.identifier,
-				type: obj.return,
-				value: val,
+                return_format: obj.return_format,
+                return_type: obj.return_type,
+				value: val
 			}
 		}
 		setFilter({
@@ -47,7 +50,7 @@ export default function GenerateChecklist({
 				value={defaultFilterValue}
 			>
 				<Stack mt='2' ml='2' pr={5} className='scrollable'>
-					{obj.value.map((objval) => {
+					{obj.value.filter(objval => objval._id).map((objval) => {
 						return (
 							<HStack key={objval._id}>
 								<Checkbox value={objval._id ? objval._id : "null"}>

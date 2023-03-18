@@ -57,6 +57,34 @@ const FilterMobile = () => {
 		})
 	}
 
+	const displayAppliedFilters = (filter_key) => {
+		const filter_header = filter[filter_key]['name']
+
+		let filter_body = ""
+		if (filter[filter_key]['type'] === 'range') {
+			filter_body = `Min ${filter[filter_key]['value'][0]} - Max ${filter[filter_key]['value'][1]}`
+		} else {
+			filter_body = filter[filter_key]['value'].join(",")
+		}
+
+		const close_button = <svg
+			style={{ color: "red" }}
+			onClick={() => handleFilterRemove(filter_key)}
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			fill="currentColor"
+			viewBox="0 0 16 16">
+			<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+		</svg>
+
+		return (
+			<div style={{ border: "2px solid aqua" }} key={filter_key}>
+				{filter_header} - {filter_body} {close_button}
+			</div>
+		)
+	}
+
 
 	useEffect(getCategories, [searchQuery, getCategories]);
 
@@ -93,30 +121,15 @@ const FilterMobile = () => {
 					<DrawerOverlay />
 					<DrawerContent>
 						<DrawerHeader>Filters</DrawerHeader>
-						{
-							Object.keys(filter).length ? <Text fontSize='md'>Applied Filter: </Text> : <></>
-						}
-						{
-							Object.keys(filter).map((filter_key) => {
-								return (
-									<div style={{ border: "2px solid aqua" }} key={filter_key}>
-										{filter[filter_key]['identifier']} - {
-											filter[filter_key]['value'].join(",")
-										}
-										<svg
-											style={{ color: "red" }}
-											onClick={() => handleFilterRemove(filter_key)}
-											xmlns="http://www.w3.org/2000/svg"
-											width="16"
-											height="16"
-											fill="currentColor"
-											viewBox="0 0 16 16">
-											<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-										</svg>
-									</div>)
-							})
-						}
 						<DrawerBody px={7}>
+							{
+								Object.keys(filter).length ? <Text fontSize='md'>Applied Filter: </Text> : <></>
+							}
+							{
+								Object.keys(filter).map((filter_key) => {
+									return displayAppliedFilters(filter_key);
+								})
+							}
 							{isCategoryLoading ? (
 								<Spinner />
 							) : categoryList.length ? (

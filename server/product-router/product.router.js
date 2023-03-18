@@ -11,10 +11,10 @@ router.get('/', async (req, res) => {
     const prodID = req.query.id
     if (!prodID) {
       return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 10,
-          "message": "Partial Parameters: Requires Product ID."
+        'error': {
+          'code': 400,
+          'error_ref': 10,
+          'message': 'Partial Parameters: Requires Product ID.'
         }
       })
     }
@@ -237,11 +237,11 @@ router.get('/', async (req, res) => {
   } catch (e) {
     console.error(e)
     res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error.",
-        "trace_back": e
+      'error': {
+        'code': 500,
+        'error_ref': 10,
+        'message': 'Internal Service Error.',
+        'trace_back': e
       }
     })
   }
@@ -252,10 +252,10 @@ router.get('/search/category', async (req, res) => {
     const query = req.query.query
     if (!query) {
       return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 10,
-          "message": "Partial Parameters: Requires Search Query."
+        'error': {
+          'code': 400,
+          'error_ref': 10,
+          'message': 'Partial Parameters: Requires Search Query.'
         }
       })
     }
@@ -351,7 +351,8 @@ router.get('/search/category', async (req, res) => {
                 'name': 'Price',
                 'type': 'range',
                 'identifier': 'ecommerce.curr_price',
-                'return': 'range',
+                'return_format': 'array',
+                'return_type': 'int',
                 'value': [
                   '$min_price', '$max_price'
                 ]
@@ -416,10 +417,11 @@ router.get('/search/category', async (req, res) => {
               '$concatArrays': [
                 '$category_list', [
                   {
-                    'name': 'Ecommerce',
+                    'name': 'ECommerce',
                     'type': 'checklist',
                     'identifier': 'ecommerce.ecommerceID',
-                    'return': 'ObjectId',
+                    'return_format': 'array',
+                    'return_type': 'ObjectId',
                     'value': '$ecommerce_list'
                   }
                 ]
@@ -474,7 +476,8 @@ router.get('/search/category', async (req, res) => {
                     'name': 'Organization',
                     'type': 'checklist',
                     'identifier': 'organization',
-                    'return': 'ObjectId',
+                    'return_format': 'array',
+                    'return_type': 'ObjectId',
                     'value': '$organization_list'
                   }
                 ]
@@ -519,7 +522,8 @@ router.get('/search/category', async (req, res) => {
                     'name': 'CPU Types',
                     'type': 'checklist',
                     'identifier': 'attributes.Processor Type',
-                    'return': 'name',
+                    'return_format': 'array',
+                    'return_type': 'string',
                     'value': '$cpu_type'
                   }
                 ]
@@ -536,11 +540,11 @@ router.get('/search/category', async (req, res) => {
   } catch (e) {
     console.error(e)
     res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error.",
-        "trace_back": e
+      'error': {
+        'code': 500,
+        'error_ref': 10,
+        'message': 'Internal Service Error.',
+        'trace_back': e
       }
     })
   }
@@ -557,10 +561,10 @@ router.post('/search', async (req, res) => {
 
     if (!query) {
       return res.status(400).json({
-        "error": {
-          "code": 400,
-          "error_ref": 10,
-          "message": "Partial Parameters: Requires Search Query."
+        'error': {
+          'code': 400,
+          'error_ref': 10,
+          'message': 'Partial Parameters: Requires Search Query.'
         }
       })
     }
@@ -571,9 +575,9 @@ router.post('/search', async (req, res) => {
       offset = 0
     }
     if (!sort) {
-      sort = "_id"
+      sort = '_id'
     } else {
-      if (sort[0] === "-") {
+      if (sort[0] === '-') {
         sort_form = -1
         sort = sort.substr(1)
       }
@@ -588,8 +592,8 @@ router.post('/search', async (req, res) => {
             }
           } else {
             let temp = []
-            if (filter[key].type === 'ObjectId') {
-              filter[key].value.forEach((value, index, array) => {
+            if (filter[key].return_type === 'ObjectId') {
+              filter[key].value.forEach((value) => {
                 temp.push(mongoose.Types.ObjectId(value))
               })
             } else {
@@ -603,7 +607,6 @@ router.post('/search', async (req, res) => {
       }
     }
 
-    // console.log(filter_query)
     const search_query = {
       '$or': [
         {
@@ -735,11 +738,11 @@ router.post('/search', async (req, res) => {
   } catch (e) {
     console.error(e)
     res.status(500).json({
-      "error": {
-        "code": 500,
-        "error_ref": 10,
-        "message": "Internal Service Error.",
-        "trace_back": e
+      'error': {
+        'code': 500,
+        'error_ref': 10,
+        'message': 'Internal Service Error.',
+        'trace_back': e
       }
     })
   }
