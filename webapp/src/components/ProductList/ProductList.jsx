@@ -23,30 +23,24 @@ import { BiError } from "react-icons/bi";
 import SortMenu from "../SortMenu/SortMenu";
 import FilterDesktop from "./Filters/FilterDesktop";
 import FilterMobile from "./Filters/FilterMobile";
-import "./ProductList.css";
-import SuggestionCard from "./SuggestionCard/SuggestionCard";
 import Paginator from "./Paginator/Paginator";
 import { GoInfo } from "react-icons/go";
 import SearchContext from "../../context/SearchContext/SearchContext";
+import SuggestionCarousel from "./SuggestionCarousel/SuggestionCarousel";
+
+import "./ProductList.css";
 
 const ProductList = () => {
 	const { searchQuery, filter, sort, setSort, limit, offset } =
 		useContext(SearchContext);
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
-	const [suggestionList, setSuggestionList] = useState([]);
 	const [loader, showLoader] = useState(true);
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	let navigate = useNavigate();
-
-	const getSuggestionList = useCallback(() => {
-		axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
-			setSuggestionList(res.data.randomSuggestions);
-		});
-	}, []);
 
 	useEffect(() => {});
 
@@ -71,8 +65,7 @@ const ProductList = () => {
 
 	useEffect(() => {
 		getProductList();
-		getSuggestionList();
-	}, [searchQuery, getProductList, getSuggestionList]);
+	}, [searchQuery, getProductList]);
 
 	return (
 		<div className='prodList' mr='10px'>
@@ -180,29 +173,7 @@ const ProductList = () => {
 										<GoInfo />
 									</Tooltip>
 								</HStack>
-
-								<HStack
-									mt={2}
-									spacing={2}
-									ml={1}
-									mb={2}
-									className='suggestionContainer'
-								>
-									{suggestionList.map((suggestion, index) => {
-										return (
-											<SuggestionCard
-												key={index}
-												_id={suggestion._id}
-												productName={suggestion.title}
-												productImage={suggestion.images[0]}
-												satisfactionRating={parseFloat(
-													suggestion.satisfactory_rating
-												).toFixed(2)}
-												price={suggestion.min_price}
-											/>
-										);
-									})}
-								</HStack>
+								<SuggestionCarousel />
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
 								{productList.map((product, index) => {

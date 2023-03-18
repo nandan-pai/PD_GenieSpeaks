@@ -35,7 +35,6 @@ const SuggestionCard = ({
 			borderWidth='1px'
 			p={2}
 			w='100%'
-			// maxW='250px'
 			h='350px'
 			onClick={handleClick}
 			_hover={{ cursor: "pointer" }}
