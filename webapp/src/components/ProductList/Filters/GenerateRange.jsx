@@ -20,6 +20,22 @@ export default function GenerateRange({
     // const { colorMode } = useColorMode();
     // const isDark = colorMode === "dark";
 
+	const handleRangeChange = (val) => {
+        setCurrRange(val)
+		if(!val.length) {
+			delete filter[obj.name.toString()]
+		} else {
+			filter[obj.name.toString()] = {
+				identifier: obj.identifier,
+				type: obj.return,
+				value: val,
+			}
+		}
+		setFilter({
+			...filter
+		})
+	}
+
     return (
         <div className='filter-category price' key={index}>
             <Text fontSize='md' fontWeight='semibold' mt='5'>
@@ -30,16 +46,8 @@ export default function GenerateRange({
                 min={obj.value[0]}
                 max={obj.value[1]}
                 step={10000}
-                onChange={(val) => {
-                    setCurrRange(val)
-                    setFilter({
-                        ...filter,
-                        [obj.name.toString()]: {
-                            identifier: obj.identifier,
-                            type: obj.return,
-                            value: val,
-                        },
-                    })
+                onChange={(e) => {
+                    handleRangeChange(e)
                 }}
             >
                 <RangeSliderTrack bg='gray'>

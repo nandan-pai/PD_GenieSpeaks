@@ -63,7 +63,7 @@ const FilterDesktop = () => {
 					<Text fontSize='md'>Applied Filter: </Text>
 					{
 						Object.keys(filter).map((filter_key) => {
-							console.log(filter)
+							// console.log(filter)
 							return (
 								<div style={{ border: "2px solid aqua" }} key={filter_key}>
 									{filter[filter_key]['identifier']} - {

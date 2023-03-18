@@ -19,14 +19,19 @@ export default function GenerateChecklist({
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
-	const handleCheckboxChange = (e) => {
-		setFilter({
-			...filter,
-			[obj.name.toString()]: {
+	const handleCheckboxChange = (val) => {
+		console.log(val==[])
+		if(!val.length) {
+			delete filter[obj.name.toString()]
+		} else {
+			filter[obj.name.toString()] = {
 				identifier: obj.identifier,
 				type: obj.return,
-				value: e,
-			},
+				value: val,
+			}
+		}
+		setFilter({
+			...filter
 		})
 	}
 
