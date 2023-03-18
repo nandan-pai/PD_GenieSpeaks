@@ -136,12 +136,8 @@ const NavBar = () => {
 
 	return (
 		<NavBarContainer>
-			<HStack
-				display='inline-flex'
-				w={{ base: "50%", lg: "60%", md: "50%", sm: "70%" }}
-				spacing='50px'
-			>
-				<Show above='md'>
+			<HStack display='inline-flex' w='70%' spacing='50px'>
+				<Show above='sm'>
 					<Logo />
 				</Show>
 				{location.pathname === "/" ? "" : <NavSearchBar />}

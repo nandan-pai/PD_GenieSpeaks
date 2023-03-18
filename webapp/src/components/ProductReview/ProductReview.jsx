@@ -13,6 +13,7 @@ import {
 	Icon,
 	Image,
 	Input,
+	Stack,
 	Text,
 	Textarea,
 	VStack,
@@ -99,7 +100,10 @@ const ProductReview = (props) => {
 					setFilter={props.setFilter}
 				/>
 				<form onSubmit={handleSubmit}>
-					<Box mx={80} p={5}>
+					<Box
+						ml={{ xl: "15%", lg: "15%", md: "10%", sm: "5%", base: "5%" }}
+						p={5}
+					>
 						<HStack
 							mb={5}
 							_hover={{ textDecoration: "underline", cursor: "pointer" }}
@@ -111,10 +115,27 @@ const ProductReview = (props) => {
 						</HStack>
 						<VStack mx={30} align='start' spacing={5}>
 							<Heading size='md'>Write a Review</Heading>
-							<HStack align='start' mt={5} spacing={5}>
+							<Stack
+								direction={{
+									xl: "row",
+									lg: "row",
+									md: "row",
+									sm: "column",
+									base: "column",
+								}}
+								align={{
+									xl: "start",
+									lg: "start",
+									md: "start",
+									sm: "center",
+									base: "center",
+								}}
+								mt={5}
+								spacing={5}
+							>
 								<Image src={productInfo.images[0]} w='150px' h='150px' />
 								<Text>{productInfo.title}</Text>
-							</HStack>
+							</Stack>
 
 							<Divider orientation='horizontal' />
 

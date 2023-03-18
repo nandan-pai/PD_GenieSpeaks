@@ -51,6 +51,7 @@ const ProductCard = ({
 			mr={5}
 			ml={{ sm: 5 }}
 			maxH='300px'
+			maxW='100vw'
 			bgColor={isDark ? "" : "white"}
 		>
 			<HStack spacing={5}>
@@ -70,7 +71,17 @@ const ProductCard = ({
 					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(3, 1fr)'>
 						<GridItem colSpan={2} rowSpan={2}>
 							<LinkOverlay onClick={handleClick}>
-								<Text fontSize='lg' fontWeight='semibold' noOfLines={[4, 3, 4]}>
+								<Text
+									fontSize={{
+										xl: "lg",
+										lg: "lg",
+										md: "lg",
+										sm: "md",
+										base: "md",
+									}}
+									fontWeight='semibold'
+									noOfLines={{ xl: 4, lg: 4, md: 3, sm: 3, base: 3 }}
+								>
 									{productName}
 								</Text>
 							</LinkOverlay>
