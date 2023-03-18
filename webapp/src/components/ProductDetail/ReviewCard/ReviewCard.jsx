@@ -8,6 +8,7 @@ import {
 	Image,
 	Spacer,
 	Link,
+	Show,
 } from "@chakra-ui/react";
 import {
 	FaStar,
@@ -25,17 +26,23 @@ const ReviewCard = (props) => {
 
 	return (
 		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2} key={props._id}>
-			<HStack spacing={{ base: 8, xl: 8, lg: 6, md: 4, sm: 2 }}>
-				<Image
-					borderRadius='full'
-					boxSize='50px'
-					src='https://bit.ly/dan-abramov'
-					// src={ApiBaseUrl+ "/static/" + props.user.profilepic}
-					alt={props.user.name}
-				/>
+			<HStack spacing={{ xl: 8, lg: 6, md: 4, sm: 2, base: 2 }}>
+				<Show above='md'>
+					<Image
+						borderRadius='full'
+						boxSize='50px'
+						src='https://bit.ly/dan-abramov'
+						// src={ApiBaseUrl+ "/static/" + props.user.profilepic}
+						alt={props.user.name}
+					/>
+				</Show>
 				<VStack>
 					<HStack>
-						<Text fontSize='lg' fontWeight='semibold' alignSelf='start'>
+						<Text
+							fontSize={{ xl: "lg", lg: "lg", md: "md", sm: "md", base: "md" }}
+							fontWeight='semibold'
+							alignSelf='start'
+						>
 							{props.name}
 						</Text>
 						<Link href={props.reviewURL} isExternal>

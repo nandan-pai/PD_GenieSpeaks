@@ -1,5 +1,4 @@
 import {
-	Box,
 	HStack,
 	Icon,
 	Image,
@@ -9,6 +8,9 @@ import {
 	useColorMode,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+import "./SuggestionCard.css";
 
 const SuggestionCard = ({
 	_id,
@@ -17,19 +19,22 @@ const SuggestionCard = ({
 	satisfactionRating,
 	price,
 }) => {
+	const navigate = useNavigate();
+
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	const handleClick = () => {
-		console.log("Suggestion clicked");
+		navigate(`/product/${_id}`);
 	};
 
 	return (
 		<LinkBox
+			className='suggestionCard'
 			rounded='md'
 			borderWidth='1px'
 			p={2}
-			w='250px'
+			w='100%'
 			h='350px'
 			onClick={handleClick}
 			_hover={{ cursor: "pointer" }}
@@ -39,7 +44,7 @@ const SuggestionCard = ({
 				<Image src={productImage} h='200px' w='100%' objectFit='contain' />
 				<Text
 					fontWeight='semibold'
-					fontSize='18px'
+					fontSize={{ xl: "18px", sm: "16px", base: "16px" }}
 					noOfLines={[1, 2]}
 					maxW='200px'
 				>

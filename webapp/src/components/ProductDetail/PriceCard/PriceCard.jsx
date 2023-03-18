@@ -16,7 +16,9 @@ const PriceCard = (props) => {
 		<Box p={5}>
 			<Text>{props.ecommerce.name}</Text>
 			<HStack>
-				<Heading>&#8377;{props.ecommerce.curr_price}</Heading>
+				<Heading size={{ xl: "xl", lg: "xl", md: "md", sm: "lg", base: "md" }}>
+					&#8377;{props.ecommerce.curr_price}
+				</Heading>
 				<Spacer />
 				<Box
 					w='110px'
@@ -26,7 +28,7 @@ const PriceCard = (props) => {
 					bg='green.200'
 					justifyContent='center'
 					display='inline-flex'
-					padding='5px'
+					padding={{ xl: "5px", lg: "5px", md: "3px", sm: "0px", base: "0px" }}
 				>
 					<Link
 						className='ecommerce-product'

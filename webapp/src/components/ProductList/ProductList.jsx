@@ -21,20 +21,20 @@ import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
 import SortMenu from "../SortMenu/SortMenu";
-import Filters from "./Filters/Filters";
-import FilterMenu from "./Filters/FilterMenu";
-import "./ProductList.css";
-import SuggestionCard from "./SuggestionCard/SuggestionCard";
+import FilterDesktop from "./Filters/FilterDesktop";
+import FilterMobile from "./Filters/FilterMobile";
 import Paginator from "./Paginator/Paginator";
 import { GoInfo } from "react-icons/go";
 import SearchContext from "../../context/SearchContext/SearchContext";
+import SuggestionCarousel from "./SuggestionCarousel/SuggestionCarousel";
+
+import "./ProductList.css";
 
 const ProductList = () => {
 	const { searchQuery, filter, sort, setSort, limit, offset } =
 		useContext(SearchContext);
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
-	const [suggestionList, setSuggestionList] = useState([]);
 	const [loader, showLoader] = useState(true);
 
 	const { colorMode } = useColorMode();
@@ -42,11 +42,7 @@ const ProductList = () => {
 
 	let navigate = useNavigate();
 
-	const getSuggestionList = useCallback(() => {
-		axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
-			setSuggestionList(res.data.randomSuggestions);
-		});
-	}, []);
+	useEffect(() => {});
 
 	const getProductList = useCallback(() => {
 		if (searchQuery === "") {
@@ -69,39 +65,76 @@ const ProductList = () => {
 
 	useEffect(() => {
 		getProductList();
-		getSuggestionList();
-	}, [searchQuery, getProductList, getSuggestionList]);
+	}, [searchQuery, getProductList]);
 
 	return (
 		<div className='prodList' mr='10px'>
 			<NavBar />
 			{productCount ? (
-				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
+				<HStack mr={{ lg: "20px", md: "5px", sm: "5px", base: "5px" }}>
 					{productCount === 1 ? (
-						<Text
-							ml='25%'
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {productCount} of {productCount} result for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "25%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									Showing {productCount} of {productCount} result for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='md'>
+								<Text
+									ml={{ md: "25%", sm: "15%", base: "10%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									{productCount} of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					) : (
-						<Text
-							ml={{ base: "25%", lg: "25%", md: "20%", sm: "10%" }}
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {offset + 1} -{" "}
-							{offset + limit < productList.length
-								? offset + limit
-								: offset + productList.length}{" "}
-							of {productCount} results for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "20%" }}
+									fontSize={{
+										xl: "md",
+										lg: "md",
+										md: "sm",
+									}}
+								>
+									Showing {offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} results for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='sm'>
+								<Text
+									ml={{ md: "20%", sm: "10%", base: "10%" }}
+									fontSize={{
+										md: "sm",
+										sm: "sm",
+										base: "sm",
+									}}
+								>
+									{offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					)}
 					<Spacer />
 					<Show below='md'>
 						<HStack>
-							<FilterMenu />
+							<FilterMobile />
 							<SortMenu sort={sort} setSort={setSort} />
 						</HStack>
 					</Show>
@@ -113,10 +146,10 @@ const ProductList = () => {
 				<></>
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
-				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
-					<Filters />
+				<GridItem colSpan={{ lg: 1, md: 1, base: 1 }}>
+					<FilterDesktop />
 				</GridItem>
-				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
+				<GridItem colSpan={{ lg: 3, md: 3, sm: 4, base: 4 }}>
 					{loader ? (
 						<Spinner />
 					) : productList.length ? (
@@ -126,8 +159,6 @@ const ProductList = () => {
 								mt='10px'
 								p='10px'
 								bgColor={isDark ? "#252525" : "#e3e6e8"}
-								// mb='10px'
-								// borderWidth='0.5px'
 								borderRadius='md'
 							>
 								<HStack>
@@ -142,22 +173,7 @@ const ProductList = () => {
 										<GoInfo />
 									</Tooltip>
 								</HStack>
-								<HStack mt={2} spacing={2} ml={1} mb={2}>
-									{suggestionList.map((suggestion, index) => {
-										return (
-											<SuggestionCard
-												key={index}
-												_id={suggestion._id}
-												productName={suggestion.title}
-												productImage={suggestion.images[0]}
-												satisfactionRating={parseFloat(
-													suggestion.satisfactory_rating
-												).toFixed(2)}
-												price={suggestion.min_price}
-											/>
-										);
-									})}
-								</HStack>
+								<SuggestionCarousel />
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
 								{productList.map((product, index) => {

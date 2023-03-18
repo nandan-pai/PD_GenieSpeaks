@@ -23,10 +23,10 @@ import axios from "axios";
 import { ApiBaseUrl } from "../../../config";
 import GenerateChecklist from "./GenerateChecklist";
 import GenerateRange from "./GenerateRange";
-import "./FilterMenu.css";
+import "./FilterMobile.css";
 import SearchContext from "../../../context/SearchContext/SearchContext";
 
-const FilterMenu = () => {
+const FilterMobile = () => {
 	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const btnRef = useRef();
@@ -92,9 +92,23 @@ const FilterMenu = () => {
 								<>
 									{categoryList.map((category, index) => {
 										if (category.type === "checklist") {
-											return <GenerateChecklist obj={category} index={index} filter={filter} setFilter={setFilter}/>
+											return (
+												<GenerateChecklist
+													obj={category}
+													index={index}
+													filter={filter}
+													setFilter={setFilter}
+												/>
+											);
 										} else if (category.type === "range") {
-											return <GenerateRange obj={category} index={index} filter={filter} setFilter={setFilter}/>
+											return (
+												<GenerateRange
+													obj={category}
+													index={index}
+													filter={filter}
+													setFilter={setFilter}
+												/>
+											);
 										} else {
 											return <></>;
 										}
@@ -130,4 +144,4 @@ const FilterMenu = () => {
 	);
 };
 
-export default FilterMenu;
+export default FilterMobile;
