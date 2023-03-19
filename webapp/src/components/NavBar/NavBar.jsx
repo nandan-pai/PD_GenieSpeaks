@@ -140,7 +140,13 @@ const NavBar = () => {
 				<Show above='sm'>
 					<Logo />
 				</Show>
-				{location.pathname === "/" ? "" : <NavSearchBar />}
+				{location.pathname === "/" ? (
+					<Show below='sm'>
+						<Logo />
+					</Show>
+				) : (
+					<NavSearchBar />
+				)}
 			</HStack>
 
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />

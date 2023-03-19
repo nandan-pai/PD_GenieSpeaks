@@ -1,4 +1,4 @@
-import { Box, HStack, Icon, LinkBox, Text } from "@chakra-ui/react";
+import { Box, HStack, Icon, LinkBox, Show, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import SearchContext from "../../../context/SearchContext/SearchContext";
@@ -67,18 +67,22 @@ const Paginator = ({ pages }) => {
 				return (
 					<LinkBox
 						key={index}
-						h='40px'
-						w='40px'
+						h={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
+						w={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
 						borderWidth='1px'
 						rounded='md'
 						textAlign='center'
-						padding={2}
+						padding={{ xl: 2, lg: 2, md: 1, sm: 1, base: 1 }}
 						onClick={handleClick}
 						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
 						bgColor={currentPage === index + 1 ? "#252525" : "white"}
 						color={currentPage === index + 1 ? "white" : "black"}
 					>
-						<Text>{index + 1}</Text>
+						<Text
+							fontSize={{ xl: "md", lg: "md", md: "sm", sm: "sm", base: "sm" }}
+						>
+							{index + 1}
+						</Text>
 					</LinkBox>
 				);
 			});
@@ -102,15 +106,36 @@ const Paginator = ({ pages }) => {
 						onClick={handleToFirst}
 						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
 					>
-						<Text>Go To First</Text>
+						<Show above='md'>
+							<Text
+								fontSize={{
+									xl: "md",
+									lg: "md",
+									md: "sm",
+								}}
+							>
+								Go To First
+							</Text>
+						</Show>
+						<Show below='md'>
+							<Text
+								fontSize={{
+									md: "sm",
+									sm: "sm",
+									base: "sm",
+								}}
+							>
+								First
+							</Text>
+						</Show>
 					</LinkBox>
 					<LinkBox
-						h='40px'
-						w='40px'
+						h={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
+						w={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
 						borderWidth='1px'
 						rounded='md'
 						textAlign='center'
-						py={2}
+						py={{ xl: 2, lg: 2, md: 1, sm: 1, base: 1 }}
 						onClick={handlePrevious}
 						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
 					>
@@ -118,20 +143,24 @@ const Paginator = ({ pages }) => {
 					</LinkBox>
 				</HStack>
 			)}
-			<Box w={2} h={2}></Box>
+			<Show above='md'>
+				<Box w={2} h={2}></Box>
+			</Show>
 			{showPaginationNumbers(pages)}
-			<Box w={2} h={2}></Box>
+			<Show above='md'>
+				<Box w={2} h={2}></Box>
+			</Show>
 			{currentPage === pages ? (
 				<></>
 			) : (
 				<HStack spacing={2}>
 					<LinkBox
-						h='40px'
-						w='40px'
+						h={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
+						w={{ xl: "40px", lg: "40px", md: "30px", sm: "30px", base: "30px" }}
 						borderWidth='1px'
 						rounded='md'
 						textAlign='center'
-						py={2}
+						py={{ xl: 2, lg: 2, md: 1, sm: 1, base: 1 }}
 						onClick={handleNext}
 						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
 					>
@@ -146,7 +175,28 @@ const Paginator = ({ pages }) => {
 						onClick={handleToLast}
 						_hover={{ cursor: "pointer", color: "white", bgColor: "#252525" }}
 					>
-						<Text>Go To Last</Text>
+						<Show above='md'>
+							<Text
+								fontSize={{
+									xl: "md",
+									lg: "md",
+									md: "sm",
+								}}
+							>
+								Go To Last
+							</Text>
+						</Show>
+						<Show below='md'>
+							<Text
+								fontSize={{
+									md: "sm",
+									sm: "sm",
+									base: "sm",
+								}}
+							>
+								Last
+							</Text>
+						</Show>
 					</LinkBox>
 				</HStack>
 			)}
