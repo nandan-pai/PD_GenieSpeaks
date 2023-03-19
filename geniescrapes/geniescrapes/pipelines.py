@@ -9,7 +9,7 @@
 import os
 import bcrypt
 from datetime import datetime
-from reviewFilter import ReviewFilter
+from .reviewFilter import ReviewFilter
 
 import pymongo
 
@@ -84,12 +84,13 @@ class GeniescrapesPipeline:
             new_review["user"] = user
             new_review["ecommerce"] = ecommerce
 
-            sentiment = ReviewFilter.analyze_sentiment(
+            reviewFilter = ReviewFilter()
+            sentiment = reviewFilter.analyze_sentiment(
                 review=review['description'])
-            normalized_rating = ReviewFilter.normalize_rating(
+            normalized_rating = reviewFilter.normalize_rating(
                 stars=review['stars'])
 
-            new_review['authentic'] = ReviewFilter.authenticity_measure(
+            new_review['authentic'] = reviewFilter.authenticity_measure(
                 anal_review=sentiment, normies=normalized_rating)
 
             saved_review = self.review.insert_one(new_review)
