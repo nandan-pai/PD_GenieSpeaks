@@ -8,6 +8,8 @@ import {
 	Show,
 	HStack,
 	Badge,
+	Grid,
+	GridItem,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { BiError } from "react-icons/bi";
@@ -22,6 +24,7 @@ import { AiFillCloseCircle } from "react-icons/ai";
 const FilterDesktop = () => {
 	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const [categoryList, setCategoryList] = useState([]);
+	// const [filterList, setFilterList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
 
 	const { colorMode } = useColorMode();
@@ -50,18 +53,42 @@ const FilterDesktop = () => {
 	const displayAppliedFilters = (filter_key) => {
 		const filter_header = filter[filter_key]["name"];
 
-		let filter_body = "";
+		let filterList = [];
 
 		if (filter[filter_key]["type"] === "range") {
-			filter_body = `${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`;
+			const filter_body = `${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`;
+
+			filterList.push(filter_body);
 		} else {
-			filter_body = filter[filter_key]["value"].join(",");
+			// filter_body = filter[filter_key]["value"].join(",");
+
+			filterList.push(filter[filter_key]["value"]);
 		}
 
 		return (
 			<Box key={filter_key}>
+				{/* <Grid templateColumns='repeat(2, 1fr)'>
+					<GridItem colSpan={1}>
+						<Text>{filter_header}</Text>
+					</GridItem>
+					<GridItem colSpan={1}>
+						{filterList.map((appliedFilter) => {
+							return (
+								<Badge variant='subtle' colorScheme='blue'>
+									<HStack>
+										<Text>{appliedFilter}</Text>
+										<AiFillCloseCircle
+											color='gray'
+											onClick={() => handleFilterRemove(filter_key)}
+										/>
+									</HStack>
+								</Badge>
+							);
+						})}
+					</GridItem>
+				</Grid> */}
 				<Text>
-					{filter_header} - {filter_body}
+					{filter_header} - {filterList}
 				</Text>
 				<AiFillCloseCircle
 					color='gray'
@@ -79,6 +106,7 @@ const FilterDesktop = () => {
 				<Box
 					// maxH='100vh'
 					w={{ base: "300px", lg: "280px", md: "250px" }}
+					maxW={{ base: "300px", lg: "280px", md: "250px" }}
 					ml={5}
 					bg={isDark ? "" : "white"}
 					p={5}
