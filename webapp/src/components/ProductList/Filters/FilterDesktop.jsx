@@ -43,10 +43,15 @@ const FilterDesktop = () => {
 	}, [searchQuery]);
 
 	const handleFilterRemove = (filter_key, filter_value) => {
-		if(filter[filter_key]['type'] === 'range' || filter[filter_key]['value'].length === 1) {
+		if (
+			filter[filter_key]["type"] === "range" ||
+			filter[filter_key]["value"].length === 1
+		) {
 			delete filter[filter_key];
 		} else {
-			filter[filter_key]['value'] = filter[filter_key]['value'].filter(val => val !== filter_value);
+			filter[filter_key]["value"] = filter[filter_key]["value"].filter(
+				(val) => val !== filter_value
+			);
 		}
 		setFilter({
 			...filter,
@@ -59,9 +64,9 @@ const FilterDesktop = () => {
 		let filter_body = [];
 
 		if (filter[filter_key]["type"] === "range") {
-			// filter_body = [`${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`];
-			filter_body = [`Min ${filter[filter_key]["value"][0]}`, `Max ${filter[filter_key]["value"][1]}`];
-
+			filter_body = [
+				`${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`,
+			];
 		} else {
 			filter_body = filter[filter_key]["value"];
 		}
@@ -70,17 +75,24 @@ const FilterDesktop = () => {
 			<Box key={filter_key}>
 				<Grid templateColumns='repeat(2, 1fr)'>
 					<GridItem colSpan={1}>
-						<Text>{filter_header}</Text>
+						<HStack>
+							<Text>{filter_header}</Text>
+							{filter_header === "Price" ? <Text>(&#8377;)</Text> : <></>}
+						</HStack>
 					</GridItem>
 					<GridItem colSpan={1}>
 						{filter_body.map((filter_value) => {
 							return (
-								<Badge variant='subtle' colorScheme='blue'>
+								<Badge variant='subtle' colorScheme='blue' ml='2px'>
 									<HStack>
-										<Text>{filter_value}</Text>
+										<Text maxW='120px' overflow='hidden'>
+											{filter_value}
+										</Text>
 										<AiFillCloseCircle
 											color='gray'
-											onClick={() => handleFilterRemove(filter_key, filter_value)}
+											onClick={() =>
+												handleFilterRemove(filter_key, filter_value)
+											}
 										/>
 									</HStack>
 								</Badge>
