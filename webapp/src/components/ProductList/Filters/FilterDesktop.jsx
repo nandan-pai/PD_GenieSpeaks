@@ -24,7 +24,6 @@ import { AiFillCloseCircle } from "react-icons/ai";
 const FilterDesktop = () => {
 	const { searchQuery, filter, setFilter } = useContext(SearchContext);
 	const [categoryList, setCategoryList] = useState([]);
-	// const [filterList, setFilterList] = useState([]);
 	const [isCategoryLoading, setCategoryLoading] = useState(true);
 
 	const { colorMode } = useColorMode();
@@ -43,8 +42,12 @@ const FilterDesktop = () => {
 			});
 	}, [searchQuery]);
 
-	const handleFilterRemove = (filter_key) => {
-		delete filter[filter_key];
+	const handleFilterRemove = (filter_key, filter_value) => {
+		if(filter[filter_key]['type'] === 'range' || filter[filter_key]['value'].length === 1) {
+			delete filter[filter_key];
+		} else {
+			filter[filter_key]['value'] = filter[filter_key]['value'].filter(val => val !== filter_value);
+		}
 		setFilter({
 			...filter,
 		});
@@ -53,47 +56,38 @@ const FilterDesktop = () => {
 	const displayAppliedFilters = (filter_key) => {
 		const filter_header = filter[filter_key]["name"];
 
-		let filterList = [];
+		let filter_body = [];
 
 		if (filter[filter_key]["type"] === "range") {
-			const filter_body = `${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`;
+			// filter_body = [`${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`];
+			filter_body = [`Min ${filter[filter_key]["value"][0]}`, `Max ${filter[filter_key]["value"][1]}`];
 
-			filterList.push(filter_body);
 		} else {
-			// filter_body = filter[filter_key]["value"].join(",");
-
-			filterList.push(filter[filter_key]["value"]);
+			filter_body = filter[filter_key]["value"];
 		}
 
 		return (
 			<Box key={filter_key}>
-				{/* <Grid templateColumns='repeat(2, 1fr)'>
+				<Grid templateColumns='repeat(2, 1fr)'>
 					<GridItem colSpan={1}>
 						<Text>{filter_header}</Text>
 					</GridItem>
 					<GridItem colSpan={1}>
-						{filterList.map((appliedFilter) => {
+						{filter_body.map((filter_value) => {
 							return (
 								<Badge variant='subtle' colorScheme='blue'>
 									<HStack>
-										<Text>{appliedFilter}</Text>
+										<Text>{filter_value}</Text>
 										<AiFillCloseCircle
 											color='gray'
-											onClick={() => handleFilterRemove(filter_key)}
+											onClick={() => handleFilterRemove(filter_key, filter_value)}
 										/>
 									</HStack>
 								</Badge>
 							);
 						})}
 					</GridItem>
-				</Grid> */}
-				<Text>
-					{filter_header} - {filterList}
-				</Text>
-				<AiFillCloseCircle
-					color='gray'
-					onClick={() => handleFilterRemove(filter_key)}
-				/>
+				</Grid>
 			</Box>
 		);
 	};
