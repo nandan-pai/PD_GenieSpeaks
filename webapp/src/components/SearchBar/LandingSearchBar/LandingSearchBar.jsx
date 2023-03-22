@@ -53,7 +53,7 @@ const LandingSearchBar = () => {
 							onChange={(e) => {
 								setSearchQuery(e.target.value);
 							}}
-							placeholder='Search for products or organization'
+							placeholder='Search for tech products'
 						/>
 					</InputGroup>
 					<Button
