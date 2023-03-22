@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
+	Badge,
 	Box,
 	Drawer,
 	DrawerBody,
@@ -7,6 +8,8 @@ import {
 	DrawerFooter,
 	DrawerHeader,
 	DrawerOverlay,
+	Grid,
+	GridItem,
 	HStack,
 	Icon,
 	Link,
@@ -25,6 +28,7 @@ import GenerateChecklist from "./GenerateChecklist";
 import GenerateRange from "./GenerateRange";
 import "./FilterMobile.css";
 import SearchContext from "../../../context/SearchContext/SearchContext";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 const FilterMobile = () => {
 	const { searchQuery, filter, setFilter } = useContext(SearchContext);
@@ -50,41 +54,67 @@ const FilterMobile = () => {
 			});
 	}, [searchQuery]);
 
-	const handleFilterRemove = (filter_key) => {
-		delete filter[filter_key]
+	const handleFilterRemove = (filter_key, filter_value) => {
+		if (
+			filter[filter_key]["type"] === "range" ||
+			filter[filter_key]["value"].length === 1
+		) {
+			delete filter[filter_key];
+		} else {
+			filter[filter_key]["value"] = filter[filter_key]["value"].filter(
+				(val) => val !== filter_value
+			);
+		}
 		setFilter({
-			...filter
-		})
-	}
+			...filter,
+		});
+	};
 
 	const displayAppliedFilters = (filter_key) => {
-		const filter_header = filter[filter_key]['name']
+		const filter_header = filter[filter_key]["name"];
 
-		let filter_body = ""
-		if (filter[filter_key]['type'] === 'range') {
-			filter_body = `Min ${filter[filter_key]['value'][0]} - Max ${filter[filter_key]['value'][1]}`
+		let filter_body = [];
+
+		if (filter[filter_key]["type"] === "range") {
+			filter_body = [
+				`${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`,
+			];
 		} else {
-			filter_body = filter[filter_key]['value'].join(",")
+			filter_body = filter[filter_key]["value"];
 		}
 
-		const close_button = <svg
-			style={{ color: "red" }}
-			onClick={() => handleFilterRemove(filter_key)}
-			xmlns="http://www.w3.org/2000/svg"
-			width="16"
-			height="16"
-			fill="currentColor"
-			viewBox="0 0 16 16">
-			<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-		</svg>
-
 		return (
-			<div style={{ border: "2px solid aqua" }} key={filter_key}>
-				{filter_header} - {filter_body} {close_button}
-			</div>
-		)
-	}
-
+			<Box key={filter_key}>
+				<Grid templateColumns='repeat(2, 1fr)'>
+					<GridItem colSpan={1}>
+						<HStack>
+							<Text>{filter_header}</Text>
+							{filter_header === "Price" ? <Text>(&#8377;)</Text> : <></>}
+						</HStack>
+					</GridItem>
+					<GridItem colSpan={1}>
+						{filter_body.map((filter_value) => {
+							return (
+								<Badge variant='subtle' colorScheme='blue' ml='2px'>
+									<HStack>
+										<Text maxW='120px' overflow='hidden'>
+											{filter_value}
+										</Text>
+										<AiFillCloseCircle
+											color='gray'
+											onClick={() =>
+												handleFilterRemove(filter_key, filter_value)
+											}
+										/>
+									</HStack>
+								</Badge>
+							);
+						})}
+					</GridItem>
+				</Grid>
+			</Box>
+		);
+	};
 
 	useEffect(getCategories, [searchQuery, getCategories]);
 
@@ -122,14 +152,14 @@ const FilterMobile = () => {
 					<DrawerContent>
 						<DrawerHeader>Filters</DrawerHeader>
 						<DrawerBody px={7}>
-							{
-								Object.keys(filter).length ? <Text fontSize='md'>Applied Filter: </Text> : <></>
-							}
-							{
-								Object.keys(filter).map((filter_key) => {
-									return displayAppliedFilters(filter_key);
-								})
-							}
+							{Object.keys(filter).length ? (
+								<Text fontSize='md'>Applied Filter: </Text>
+							) : (
+								<></>
+							)}
+							{Object.keys(filter).map((filter_key) => {
+								return displayAppliedFilters(filter_key);
+							})}
 							{isCategoryLoading ? (
 								<Spinner />
 							) : categoryList.length ? (
@@ -142,7 +172,9 @@ const FilterMobile = () => {
 													index={index}
 													obj={category}
 													defaultFilterValue={
-														filter[category.name.toString()] ? filter[category.name.toString()]["value"] : []
+														filter[category.name.toString()]
+															? filter[category.name.toString()]["value"]
+															: []
 													}
 													filter={filter}
 													setFilter={setFilter}
@@ -155,7 +187,9 @@ const FilterMobile = () => {
 													index={index}
 													obj={category}
 													defaultFilterValue={
-														filter[category.name.toString()] ? filter[category.name.toString()]["value"] : [category.value[0], category.value[1]]
+														filter[category.name.toString()]
+															? filter[category.name.toString()]["value"]
+															: [category.value[0], category.value[1]]
 													}
 													filter={filter}
 													setFilter={setFilter}
