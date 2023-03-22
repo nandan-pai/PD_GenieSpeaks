@@ -1,55 +1,83 @@
 import {
-    RangeSlider,
-    RangeSliderFilledTrack,
-    RangeSliderMark,
-    RangeSliderThumb,
-    RangeSliderTrack,
-    Text,
-    // useColorMode,
+	RangeSlider,
+	RangeSliderFilledTrack,
+	RangeSliderMark,
+	RangeSliderThumb,
+	RangeSliderTrack,
+	Text,
+	// useColorMode,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { BiRupee } from "react-icons/bi";
+// import { useState } from "react";
 
-export default function GenerateRange({ obj, index, setFilter, filter }) {
-    const [currRange, setCurrRange] = useState(obj.value);
-    // const { colorMode } = useColorMode();
-    // const isDark = colorMode === "dark";
+export default function GenerateRange({
+	index = 0,
+	obj = { identifier: "", name: "", return: "", type: "", value: [0, 100000] },
+	defaultFilterValue = [0, 100000],
+	filter = {},
+	setFilter,
+}) {
+	// const [currRange, setCurrRange] = useState(obj.value);
+	// const { colorMode } = useColorMode();
+	// const isDark = colorMode === "dark";
 
-    return (
-        <div className='filter-category price' key={index}>
-            <Text fontSize='md' fontWeight='semibold' mt='5'>
-                {obj.name}
-            </Text>
-            <RangeSlider
-                defaultValue={[obj.value[0], obj.value[1]]}
-                min={obj.value[0]}
-                max={obj.value[1]}
-                step={10000}
-                onChange={(val) => {
-                    // console.log(val)
-                    setCurrRange(val)
-                    setFilter({
-                        ...filter,
-                        [obj.name.toString()]: {
-                            identifier: obj.identifier,
-                            type: obj.return,
-                            value: val,
-                        },
-                    })
-                }}
-            >
-                <RangeSliderTrack bg='gray'>
-                    <RangeSliderFilledTrack bg='tomato' />
-                </RangeSliderTrack>
-                <RangeSliderMark value={currRange[0]} mt='1' ml='-2.5' fontSize='sm'>
-                    {currRange[0]}
-                </RangeSliderMark>
-                <RangeSliderMark value={currRange[1]} mt='1' ml='-35' fontSize='sm'>
-                    {currRange[1]}
-                </RangeSliderMark>
+	const handleRangeChange = (val) => {
+		// setCurrRange(val)
+		if (!val.length) {
+			delete filter[obj.name.toString()];
+		} else {
+			filter[obj.name.toString()] = {
+				name: obj.name,
+				type: obj.type,
+				identifier: obj.identifier,
+				return_format: obj.return_format,
+				return_type: obj.return_type,
+				value: val,
+			};
+		}
+		setFilter({
+			...filter,
+		});
+	};
 
-                <RangeSliderThumb index={0} />
-                <RangeSliderThumb index={1} />
-            </RangeSlider>
-        </div>
-    );
+	return (
+		<div className='filter-category price' key={index}>
+			<Text fontSize='md' fontWeight='semibold' mt='5'>
+				{obj.name}
+			</Text>
+			<RangeSlider
+				defaultValue={defaultFilterValue}
+				value={defaultFilterValue}
+				min={obj.value[0]}
+				max={obj.value[1]}
+				step={10000}
+				onChange={(e) => {
+					handleRangeChange(e);
+				}}
+			>
+				<RangeSliderTrack bg='gray'>
+					<RangeSliderFilledTrack bg='tomato' />
+				</RangeSliderTrack>
+				<RangeSliderMark
+					value={defaultFilterValue[0]}
+					mt='1'
+					ml='-2.5'
+					fontSize='sm'
+				>
+					{defaultFilterValue[0]}
+				</RangeSliderMark>
+				<RangeSliderMark
+					value={defaultFilterValue[1]}
+					mt='1'
+					ml='-35'
+					fontSize='sm'
+				>
+					{defaultFilterValue[1]}
+				</RangeSliderMark>
+
+				<RangeSliderThumb index={0} as={BiRupee} />
+				<RangeSliderThumb index={1} as={BiRupee} />
+			</RangeSlider>
+		</div>
+	);
 }

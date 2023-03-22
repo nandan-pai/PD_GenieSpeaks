@@ -49,6 +49,7 @@ const ProductList = () => {
 			return navigate("/");
 		}
 		showLoader(true);
+		// console.log("ProductListgetter", filter)
 		const payload = {
 			query: searchQuery,
 			limit,
