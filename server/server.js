@@ -1,38 +1,32 @@
-const express = require('express')
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const passport = require("passport");
+const authRoute = require("./routes/auth");
+const cookieSession = require("cookie-session");
+const passportStrategy = require("./passport");
+const app = express();
 
-require('dotenv').config()
+app.use(
+	cookieSession({
+		name: "session",
+		keys: ["cyberwolve"],
+		maxAge: 24 * 60 * 60 * 100,
+	})
+);
 
-const app = express()
+app.use(passport.initialize());
+app.use(passport.session());
 
-// middlewares
-app.use(express.json())
-app.use(cookieParser())
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+		methods: "GET,POST,PUT,DELETE",
+		credentials: true,
+	})
+);
 
-// cors
-app.use(cors({
-  origin: true,
-  credentials: true
-}))
+app.use("/auth", authRoute);
 
-// logging middleware
-const requestLogger = (req, res, next) => {
-  const method = req.method
-  const url = req.url
-  const log = `${method}:${url}`
-  console.log(log)
-  next()
-}
-
-app.use(requestLogger)
-
-// Links
-app.use('/api/static', express.static('public'))
-
-app.use('/api/user', require('./UserRouter/user.router.js'))
-app.use('/api/prod', require('./ProductRouter/product.router.js'))
-
-app.use('*', (req, res) => res.status(404).json({ message: 'link not found' }))
-
-module.exports = app
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`Listenting on port ${port}...`));
