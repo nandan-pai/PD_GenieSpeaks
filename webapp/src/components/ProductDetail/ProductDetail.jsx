@@ -176,6 +176,17 @@ const ProductDetail = (props) => {
 								<AvailableMenu ecommerce={productInfo.ecommerce} />
 							</GridItem>
 						</Show>
+						<Show below='md'>
+							<Button
+								leftIcon={<BsPencilFill />}
+								bgColor='gray.100'
+								color='white'
+								onClick={handleReviewBtn}
+								w='90vw'
+							>
+								Write a Review
+							</Button>
+						</Show>
 
 						<Tabs>
 							<TabList>
