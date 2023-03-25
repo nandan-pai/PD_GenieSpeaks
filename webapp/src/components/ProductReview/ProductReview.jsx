@@ -101,7 +101,7 @@ const ProductReview = (props) => {
 				/>
 				<form onSubmit={handleSubmit}>
 					<Box
-						ml={{ xl: "15%", lg: "15%", md: "10%", sm: "5%", base: "5%" }}
+						ml={{ xl: "15%", lg: "15%", md: "10%", sm: "0px", base: "0px" }}
 						p={5}
 					>
 						<HStack

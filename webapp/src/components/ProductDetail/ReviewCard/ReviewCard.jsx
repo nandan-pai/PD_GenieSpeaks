@@ -21,11 +21,22 @@ import { SiFlipkart } from "react-icons/si";
 import { GoVerified } from "react-icons/go";
 import { FiExternalLink } from "react-icons/fi";
 
-const ReviewCard = (props) => {
-	// console.log(props.stars);
-
+const ReviewCard = ({
+	_id,
+	name = "null",
+	title = "null",
+	stars = "null",
+	remainingStars = "null",
+	reviewURL = "null",
+	desc = "null",
+	user = "null",
+	verified = false,
+	ecommerce = "null",
+	upvotes = "null",
+	authentic = false,
+}) => {
 	return (
-		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2} key={props._id}>
+		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2} key={_id}>
 			<HStack spacing={{ xl: 8, lg: 6, md: 4, sm: 2, base: 2 }}>
 				<Show above='md'>
 					<Image
@@ -33,7 +44,7 @@ const ReviewCard = (props) => {
 						boxSize='50px'
 						src='https://bit.ly/dan-abramov'
 						// src={ApiBaseUrl+ "/static/" + props.user.profilepic}
-						alt={props.user.name}
+						alt={user.name}
 					/>
 				</Show>
 				<VStack>
@@ -43,12 +54,12 @@ const ReviewCard = (props) => {
 							fontWeight='semibold'
 							alignSelf='start'
 						>
-							{props.name}
+							{name}
 						</Text>
-						<Link href={props.reviewURL} isExternal>
+						<Link href={reviewURL} isExternal>
 							<Icon as={FiExternalLink} color='gray.100' mt='5px' />
 						</Link>
-						{props.verified && (
+						{verified && (
 							<HStack>
 								<Text color='blue'>Verified</Text>
 								<GoVerified color='blue' />
@@ -56,18 +67,18 @@ const ReviewCard = (props) => {
 						)}
 					</HStack>
 					<HStack mb='2' alignSelf='start'>
-						{[...Array(props.stars)].map((e, i) => {
+						{[...Array(stars)].map((e, i) => {
 							return (
 								<Icon
 									as={FaStar}
-									color='yellow'
+									color='orange'
 									mr='2px'
 									fontSize='20px'
 									key={i}
 								/>
 							);
 						})}
-						{[...Array(props.remainingStars)].map((e, i) => {
+						{[...Array(remainingStars)].map((e, i) => {
 							return <Icon as={FaRegStar} mr='2px' fontSize='20px' key={i} />;
 						})}
 					</HStack>
@@ -75,7 +86,7 @@ const ReviewCard = (props) => {
 				<Spacer />
 				<VStack>
 					<Text fontWeight='semibold'>Posted on</Text>
-					{props.ecommerce === "Amazon" ? (
+					{ecommerce === "Amazon" ? (
 						<Link href='https://www.amazon.com' isExternal>
 							<Icon as={FaAmazon} mr='2' fontSize='20px' />
 						</Link>
@@ -89,10 +100,10 @@ const ReviewCard = (props) => {
 			<Box>
 				<VStack mt='15px' mb='15px' textAlign='left' width='100%'>
 					<Text fontSize='md' fontWeight='semibold' alignSelf='start'>
-						{props.title}
+						{title}
 					</Text>
 					<Text alignSelf='start' noOfLines={[1, 2, 3]} mt={5}>
-						{props.desc}
+						{desc}
 					</Text>
 					{/* <HStack>
 						<Icon as={FaRegThumbsUp} mr='1' fontSize='20px' />
