@@ -1,5 +1,6 @@
 from ..DBConn.MongoDBConn import MongoDBConn
 
+from ..reviewFilter import ReviewFilter
 
 class ReviewMapper(MongoDBConn):
 
@@ -23,6 +24,15 @@ class ReviewMapper(MongoDBConn):
             new_review["product"] = product
             new_review["user"] = user
             new_review["ecommerce"] = ecommerce
+
+            reviewFilter = ReviewFilter()
+            sentiment = reviewFilter.analyze_sentiment(
+                review=review['description'])
+            normalized_rating = reviewFilter.normalize_rating(
+                stars=review['stars'])
+
+            new_review['authentic'] = reviewFilter.authenticity_measure(
+                anal_review=sentiment, normies=normalized_rating)
 
             saved_review = self.review.insert_one(new_review)
             return saved_review.inserted_id

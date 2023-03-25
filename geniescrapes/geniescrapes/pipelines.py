@@ -25,7 +25,7 @@ class GeniescrapesPipeline(MongoDBConn):
                                 default='mongodb://localhost:27017'),
             # port=27017
         )
-        dbref = conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaksV5')]
+        dbref = conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaksV6')]
         print(dbref)
         super().__init__(dbref=dbref)
 
