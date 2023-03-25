@@ -9,11 +9,11 @@
 import os
 import pymongo
 from .DBConn.MongoDBConn import MongoDBConn
-from .repository.ECommerceRepository import ECommerceRepository
-from .repository.OrganizationRepository import OrganizationRepository
-from .repository.ProductRepository import ProductRepository
-from .repository.ReviewRepository import ReviewRepository
-from .repository.UserRepository import UserRepository
+from .mapper.ECommerceMapper import ECommerceMapper
+from .mapper.OrganizationMapper import OrganizationMapper
+from .mapper.ProductMapper import ProductMapper
+from .mapper.ReviewMapper import ReviewMapper
+from .mapper.UserMapper import UserMapper
 
 
 class GeniescrapesPipeline(MongoDBConn):
@@ -25,15 +25,15 @@ class GeniescrapesPipeline(MongoDBConn):
                                 default='mongodb://localhost:27017'),
             # port=27017
         )
-        dbref = conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaksV4')]
+        dbref = conn[os.environ.get('MONGO_DB_NAME', default='GenieSpeaksV5')]
         print(dbref)
         super().__init__(dbref=dbref)
 
-        self.userRepository = UserRepository(dbref=dbref)
-        self.productRepository = ProductRepository(dbref=dbref)
-        self.ecommerceRepository = ECommerceRepository(dbref=dbref)
-        self.organizationRepository = OrganizationRepository(dbref=dbref)
-        self.reviewRepository = ReviewRepository(dbref=dbref)
+        self.userMapper = UserMapper(dbref=dbref)
+        self.productMapper = ProductMapper(dbref=dbref)
+        self.ecommerceMapper = ECommerceMapper(dbref=dbref)
+        self.organizationMapper = OrganizationMapper(dbref=dbref)
+        self.reviewMapper = ReviewMapper(dbref=dbref)
 
     def process_item(self, item, spider):
         '''pipeline to store data into mongodb'''
@@ -59,15 +59,15 @@ class GeniescrapesPipeline(MongoDBConn):
         #         print(similar_finds)
         #         break
 
-        org_id = self.organizationRepository.get_organization_id(
+        org_id = self.organizationMapper.get_organization_id(
             name=item['organization'])
-        ecom_id = self.ecommerceRepository.get_ecommerce_id(
+        ecom_id = self.ecommerceMapper.get_ecommerce_id(
             name=item['ecommerce']['ecommerceSite'])
         review_ids = []
         rating_sum = 0
         for review in item['reviews']:
-            user_id = self.userRepository.get_user_id(name=review['user'])
-            review_id = self.reviewRepository.create_review(
+            user_id = self.userMapper.get_user_id(name=review['user'])
+            review_id = self.reviewMapper.create_review(
                 review=review,
                 product="",
                 user=user_id,
@@ -79,7 +79,7 @@ class GeniescrapesPipeline(MongoDBConn):
                 review_id
             )
 
-            self.userRepository.update_user_review_list_add(
+            self.userMapper.update_user_review_list_add(
                 user_id=user_id, review_id=review_id)
 
         item['rating_sum'] = rating_sum
@@ -96,25 +96,25 @@ class GeniescrapesPipeline(MongoDBConn):
         }
 
         if similar_finds:
-            prod_id = self.productRepository.update_add_ecommerce(
+            prod_id = self.productMapper.update_add_ecommerce(
                 prod_to_update=similar_finds,
                 new_prod_detail=item,
                 ecommerce_detail=ecommerce,
                 new_review_id_list=review_ids)
         else:
-            prod_id = self.productRepository.create_product(
+            prod_id = self.productMapper.create_product(
                 product=item,
                 organization=org_id,
                 ecommerce=[ecommerce],
                 review_id_list=review_ids
             )
 
-            self.ecommerceRepository.update_scrap_list_add(
+            self.ecommerceMapper.update_scrap_list_add(
                 ecom_id=ecom_id, prod_id=prod_id)
-            self.organizationRepository.update_product_list_add(
+            self.organizationMapper.update_product_list_add(
                 org_id=org_id, prod_id=prod_id)
 
         for review_id in review_ids:
-            self.reviewRepository.update_product_id(
+            self.reviewMapper.update_product_id(
                 review_id=review_id, prod_id=prod_id)
         return item

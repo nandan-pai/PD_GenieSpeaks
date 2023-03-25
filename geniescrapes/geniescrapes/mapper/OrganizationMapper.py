@@ -1,7 +1,7 @@
 from ..DBConn.MongoDBConn import MongoDBConn
 
 
-class OrganizationRepository(MongoDBConn):
+class OrganizationMapper(MongoDBConn):
 
     def __init__(self, dbref) -> None:
         super().__init__(dbref=dbref)
@@ -13,9 +13,9 @@ class OrganizationRepository(MongoDBConn):
                 return self.create_organization(name=name)
             return org_data["_id"]
         except Exception as error:
-            print("OrganizationRepository: Error fetching organization id", error)
+            print("OrganizationMapper: Error fetching organization id", error)
             raise Exception(
-                "OrganizationRepository: Error fetching organization id")
+                "OrganizationMapper: Error fetching organization id")
 
     def create_organization(self, name):
         '''creates organization in the database and returns the orgID'''
@@ -28,9 +28,9 @@ class OrganizationRepository(MongoDBConn):
             saved_organization = self.organization.insert_one(new_organization)
             return saved_organization.inserted_id
         except Exception as error:
-            print("OrganizationRepository: Failed to create new Organization", error)
+            print("OrganizationMapper: Failed to create new Organization", error)
             raise Exception(
-                "OrganizationRepository: Failed to create new Organization")
+                "OrganizationMapper: Failed to create new Organization")
 
     def update_product_list_add(self, org_id, prod_id):
         try:
@@ -38,6 +38,6 @@ class OrganizationRepository(MongoDBConn):
                 {"_id": org_id}, {"$push": {"products": prod_id}}
             )
         except Exception as error:
-            print("OrganizationRepository: Failed to add product in product list", error)
+            print("OrganizationMapper: Failed to add product in product list", error)
             raise Exception(
-                "OrganizationRepository: Failed to add product in product list")
+                "OrganizationMapper: Failed to add product in product list")

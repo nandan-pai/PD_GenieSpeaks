@@ -1,7 +1,7 @@
 from ..DBConn.MongoDBConn import MongoDBConn
 
 
-class ReviewRepository(MongoDBConn):
+class ReviewMapper(MongoDBConn):
 
     def __init__(self, dbref) -> None:
         super().__init__(dbref=dbref)
@@ -27,8 +27,8 @@ class ReviewRepository(MongoDBConn):
             saved_review = self.review.insert_one(new_review)
             return saved_review.inserted_id
         except Exception as error:
-            print("ReviewRepository: Failed to create new Review", error)
-            raise Exception("ReviewRepository: Failed to create new Review")
+            print("ReviewMapper: Failed to create new Review", error)
+            raise Exception("ReviewMapper: Failed to create new Review")
 
     def update_product_id(self, review_id, prod_id):
         try:
@@ -36,5 +36,5 @@ class ReviewRepository(MongoDBConn):
                 {"_id": review_id}, {"$set": {"product": prod_id}}
             )
         except Exception as error:
-            print("ReviewRepository: Failed to update product id", error)
-            raise Exception("ReviewRepository: Failed to update product id")
+            print("ReviewMapper: Failed to update product id", error)
+            raise Exception("ReviewMapper: Failed to update product id")

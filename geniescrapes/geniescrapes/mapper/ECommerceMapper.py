@@ -1,7 +1,7 @@
 from ..DBConn.MongoDBConn import MongoDBConn
 
 
-class ECommerceRepository(MongoDBConn):
+class ECommerceMapper(MongoDBConn):
 
     def __init__(self, dbref) -> None:
         super().__init__(dbref=dbref)
@@ -13,9 +13,9 @@ class ECommerceRepository(MongoDBConn):
                 return self.create_ecommerce(name=name)
             return ecom_data["_id"]
         except Exception as error:
-            print("ECommerceRepository: error fetching ECommerce id", error)
+            print("ECommerceMapper: error fetching ECommerce id", error)
             raise Exception(
-                "ECommerceRepository: error fetching ECommerce id")
+                "ECommerceMapper: error fetching ECommerce id")
 
     def create_ecommerce(self, name):
         '''creates ECommerce in the database and returns the ecomID'''
@@ -31,9 +31,9 @@ class ECommerceRepository(MongoDBConn):
             saved_ecommerce = self.ecommerce.insert_one(new_ecommerce)
             return saved_ecommerce.inserted_id
         except Exception as error:
-            print("ECommerceRepository: Failed to create new ECommerce", error)
+            print("ECommerceMapper: Failed to create new ECommerce", error)
             raise Exception(
-                "ECommerceRepository: Failed to create new ECommerce")
+                "ECommerceMapper: Failed to create new ECommerce")
 
     def update_scrap_list_add(self, ecom_id, prod_id):
         try:
@@ -43,4 +43,4 @@ class ECommerceRepository(MongoDBConn):
         except Exception as error:
             print("Failed to add product in scrap list", error)
             raise Exception(
-                "ECommerceRepository: Failed to add product in scrap list")
+                "ECommerceMapper: Failed to add product in scrap list")

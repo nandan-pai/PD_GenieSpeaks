@@ -1,7 +1,7 @@
 from ..DBConn.MongoDBConn import MongoDBConn
 
 
-class ProductRepository(MongoDBConn):
+class ProductMapper(MongoDBConn):
 
     def __init__(self, dbref) -> None:
         super().__init__(dbref=dbref)
@@ -25,8 +25,8 @@ class ProductRepository(MongoDBConn):
             saved_prod = self.product.insert_one(new_prod)
             return saved_prod.inserted_id
         except Exception as error:
-            print("ProductRepository: Failed to create new product", error)
-            raise Exception("ProductRepository: Failed to create new product")
+            print("ProductMapper: Failed to create new product", error)
+            raise Exception("ProductMapper: Failed to create new product")
 
     def update_add_ecommerce(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
         '''updates product details to existing product and
@@ -51,5 +51,5 @@ class ProductRepository(MongoDBConn):
 
             return prod_to_update
         except Exception as error:
-            print("ProductRepository: Failed to add new ecommerce details", error)
-            raise Exception("ProductRepository: Failed to add new ecommerce details")
+            print("ProductMapper: Failed to add new ecommerce details", error)
+            raise Exception("ProductMapper: Failed to add new ecommerce details")
