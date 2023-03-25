@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 function Home(userDetails) {
 	const user = userDetails.user;
 	const logout = () => {
-		window.open(`${process.env.REACT_APP_API_URL}/auth/logout`, "_self");
+		window.open(`http://localhost:8080/auth/logout`, "_self");
 	};
 	return (
 		<div className={styles.container}>
