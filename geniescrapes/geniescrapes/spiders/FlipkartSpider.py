@@ -101,22 +101,47 @@ class FlipkartSpider(scrapy.Spider):
 
     def parse_product_review_list(self, response) -> list:
         '''parse_product_review_list'''
-        review = {
-            'title': '',
-            'description': '',
-            'stars': 0,
-            'url': '',
-            'images': [],
-            'product': '',
-            'user': 'Flipkart Reviewer',
-            'ecommerce': 'Flipkart',
-            'reviewed_on': '',
-            'scrapped_on': datetime.today(),
-            'verified': False
-        }
+        # review = {
+        #     'title': '',
+        #     'description': '',
+        #     'stars': 0,
+        #     'url': '',
+        #     'images': [],
+        #     'product': '',
+        #     'user': 'Flipkart Reviewer',
+        #     'ecommerce': 'Flipkart',
+        #     'reviewed_on': '',
+        #     'scrapped_on': datetime.today(),
+        #     'verified': False
+        # }
+
         reviews = []
         try:
-            pass
+            for (review_title, description, review_star, raw_date) in zip(
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/p/text()').extract(),
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="t-ZTKy"]/div/div[@class=""]/text()').extract(),
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="_3LWZlK"]/text()').extract(),
+                response.xpath('//div[@class="_2sc7ZR"]/text()').extract()
+            ):
+                stars = int(review_star[0])
+                review_data = raw_date
+
+                reviews.append({
+                    'title': review_title,
+                    'description': description,
+                    'stars': stars,
+                    'url': '',
+                    'images': [],
+                    'product': '',
+                    'user': 'Flipkart Reviewer',
+                    'ecommerce': 'Flipkart',
+                    'reviewed_on': review_data,
+                    'scrapped_on': datetime.today(),
+                    'verified': True
+                })
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch review list || {str(error)}")
