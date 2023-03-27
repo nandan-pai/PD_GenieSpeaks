@@ -36,7 +36,15 @@ const ReviewCard = ({
 	authentic = false,
 }) => {
 	return (
-		<Box rounded='md' borderWidth='1px' p={5} mt={5} mr={2} key={_id}>
+		<Box
+			rounded='md'
+			borderWidth='1px'
+			borderColor={authentic ? "" : "red"}
+			p={5}
+			mt={5}
+			mr={2}
+			key={_id}
+		>
 			<HStack spacing={{ xl: 8, lg: 6, md: 4, sm: 2, base: 2 }}>
 				<Show above='md'>
 					<Image
