@@ -20,6 +20,7 @@ class AmazonSpider(scrapy.Spider):
         self.logger.info("CurrProdNo\tTotalProdReq\tFromPage\tASIN")
 
         self.query = getattr(self, 'query', None)
+        self.category = getattr(self, 'category', None)
 
         url = "https://www.amazon.in/s?" + \
             urlencode({'k': self.query})
@@ -120,7 +121,7 @@ class AmazonSpider(scrapy.Spider):
                     'ecommerce': 'Amazon',
                     'reviewed_on': review_data,
                     'scrapped_on': datetime.today(),
-                    'verified': False
+                    'verified': True
                 })
 
         except Exception as error:
@@ -155,10 +156,12 @@ class AmazonSpider(scrapy.Spider):
 
     def try_parse_feature(self, response):
         try:
-            tables = response.xpath('//*[@id="productOverview_feature_div"]//tr')
+            tables = response.xpath(
+                '//*[@id="productOverview_feature_div"]//tr')
             for row in tables:
                 key = row.xpath('td//span//text()').extract_first().strip()
-                value = row.xpath('td[last()]//span//text()').extract_first().strip()
+                value = row.xpath(
+                    'td[last()]//span//text()').extract_first().strip()
                 if(key.lower() == "brand"):
                     return value
         except Exception as error:
@@ -190,10 +193,11 @@ class AmazonSpider(scrapy.Spider):
              attributes,
              identifiers) = self.parse_product_org_attributes_identifiers(response=response)
 
-            tags = list(set(identifiers.values()))
-
             if not organization:
                 organization = self.try_parse_feature(response=response)
+
+            tags = [*list(set(identifiers.values())),
+                    self.category, organization]
 
             self.logger.info(
                 f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{asin}")
