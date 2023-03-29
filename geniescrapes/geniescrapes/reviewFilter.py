@@ -24,11 +24,13 @@ class ReviewFilter:
 
     def authenticity_measure(self, anal_review, normies):
         '''Provides a measure of authenticity of a review'''
-
-        if abs(anal_review - normies) > 0.5:
-            return False
-        else:
+        if (anal_review >= 0 and normies >= 0) or (anal_review <= 0 and normies <= 0):
             return True
+        else:
+            if abs(anal_review - normies) > 0.5:
+                return False
+            else:
+                return True
 
 
 # review_list = ReviewFilter()
