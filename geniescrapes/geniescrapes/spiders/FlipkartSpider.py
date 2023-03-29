@@ -19,6 +19,7 @@ class FlipkartSpider(scrapy.Spider):
         self.logger.info("CurrProdNo\tTotalProdReq\tFromPage\tdataID")
 
         self.query = getattr(self, 'query', None)
+        self.category = getattr(self, 'category', None)
 
         url = "https://www.flipkart.com/search?" + \
             urlencode({'q': self.query})
@@ -53,17 +54,16 @@ class FlipkartSpider(scrapy.Spider):
 
     def parse_product_title_org(self, response):
         '''parse_product_title_org'''
-        title = ""
-        organization = ""
         try:
             prod_title = response.xpath(
                 '//*[@class="B_NuCI"]/text()').extract_first().split()
             title = " ".join(prod_title[1:])
             organization = prod_title[0]
+            return title, organization
         except Exception as error:
             self.logger.warning(
-                f"{self.total_scraped_items+1}: Couldnt fetch title || {str(error)}")
-        return title, organization
+                f"{self.total_scraped_items+1}: FlipkartSpider: Title Parse Error || {str(error)}")
+            raise Exception("FlipkartSpider: Title Parse Error")
 
     def parse_product_image_list(self, response) -> list:
         '''parse_product_image_list'''
@@ -101,22 +101,34 @@ class FlipkartSpider(scrapy.Spider):
 
     def parse_product_review_list(self, response) -> list:
         '''parse_product_review_list'''
-        review = {
-            'title': '',
-            'description': '',
-            'stars': 0,
-            'url': '',
-            'images': [],
-            'product': '',
-            'user': 'Flipkart Reviewer',
-            'ecommerce': 'Flipkart',
-            'reviewed_on': '',
-            'scrapped_on': datetime.today(),
-            'verified': False
-        }
+
         reviews = []
         try:
-            pass
+            for (review_title, description, review_star, raw_date) in zip(
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/p/text()').extract(),
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="t-ZTKy"]/div/div[@class=""]/text()').extract(),
+                response.xpath(
+                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="_3LWZlK"]/text()').extract(),
+                response.xpath('//div[@class="_2sc7ZR"]/text()').extract()
+            ):
+                stars = int(review_star[0])
+                review_data = raw_date
+
+                reviews.append({
+                    'title': review_title,
+                    'description': description,
+                    'stars': stars,
+                    'url': '',
+                    'images': [],
+                    'product': '',
+                    'user': 'Flipkart Reviewer',
+                    'ecommerce': 'Flipkart',
+                    'reviewed_on': review_data,
+                    'scrapped_on': datetime.today(),
+                    'verified': True
+                })
         except Exception as error:
             self.logger.warning(
                 f"{self.total_scraped_items+1}: Couldnt fetch review list || {str(error)}")
@@ -143,39 +155,49 @@ class FlipkartSpider(scrapy.Spider):
 
     def parse_product_response(self, response, data_id, page, product_url, curr_prod_no):
         '''parsing each products by visiting the page'''
-        title, organization = self.parse_product_title_org(response=response)
-        ecommerce = {
-            'ecommerceSite': 'Flipkart',
-            'rating': 0,
-            'last_scrapped': datetime.today(),
-            'scrapped_times': 1,
-            'curr_price': self.parse_product_curr_price(response=response),
-            'init_price': self.parse_product_init_price(response=response),
-            'identifiers': {},
-            'product_url': product_url
-        }
 
-        images = self.parse_product_image_list(response=response)
-        reviews = self.parse_product_review_list(response=response)
+        try:
+            title, organization = self.parse_product_title_org(
+                response=response)
+            ecommerce = {
+                'ecommerceSite': 'Flipkart',
+                'rating': 0,
+                'last_scrapped': datetime.today(),
+                'scrapped_times': 1,
+                'curr_price': self.parse_product_curr_price(response=response),
+                'init_price': self.parse_product_init_price(response=response),
+                'identifiers': {},
+                'product_url': product_url
+            }
 
-        (attributes,
-         identifiers) = self.parse_product_attributes_identifiers(response=response)
+            images = self.parse_product_image_list(response=response)
+            reviews = self.parse_product_review_list(response=response)
 
-        tags = list(set(identifiers.values()))
+            (attributes,
+             identifiers) = self.parse_product_attributes_identifiers(response=response)
 
-        if not organization:
+            if not organization:
+                return
+            
+            tags = [*list(set(identifiers.values())),
+                    self.category, organization]
+
+
+            self.logger.info(
+                f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
+            yield {
+                'title': title,
+                'images': images,
+                'organization': organization.lower(),
+                'ecommerce': ecommerce,
+                'reviews': reviews,
+                'attributes': attributes,
+                'identifiers': identifiers,
+                'tags': tags
+            }
+            self.total_scraped_items += 1
+
+        except Exception as error:
+            self.logger.info(
+                f"{self.total_scraped_items+1}: Skipped Scrapeing || {str(error)}")
             return
-
-        self.logger.info(
-            f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
-        yield {
-            'title': title,
-            'images': images,
-            'organization': organization,
-            'ecommerce': ecommerce,
-            'reviews': reviews,
-            'attributes': attributes,
-            'identifiers': identifiers,
-            'tags': tags
-        }
-        self.total_scraped_items += 1
