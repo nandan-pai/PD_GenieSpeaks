@@ -135,6 +135,7 @@ router.get('/', async (req, res) => {
               'scrapped_on': '$reviews.scrapped_on',
               'reviewed_on': '$reviews.reviewed_on',
               'verified': '$reviews.verified',
+              'authentic': '$reviews.authentic',
               'user': '$reviews.user',
               'ecommerce': '$reviews.ecommerce'
             }

@@ -8,8 +8,6 @@ import Loader from "../Loader/Loader";
 import {
 	Box,
 	Button,
-	Container,
-	Grid,
 	GridItem,
 	Heading,
 	HStack,
@@ -27,11 +25,12 @@ import {
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
 import { BsDot, BsPencilFill } from "react-icons/bs";
-import ReviewCard from "./ReviewCard/ReviewCard";
 import AvailableMenu from "./AvailableMenu/AvailableMenu";
 import RatingCard from "./RatingCard/RatingCard";
 
 import "./ProductDetail.css";
+import AttributeTab from "./AttributeTab";
+import ReviewTab from "./ReviewTab";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
@@ -196,148 +195,10 @@ const ProductDetail = (props) => {
 
 							<TabPanels>
 								<TabPanel>
-									<Box
-										className='scrollable-content'
-										h='90vh'
-										w={{
-											xl: "48vw",
-											lg: "48vw",
-											md: "60vw",
-											sm: "95vw",
-											base: "95vw",
-										}}
-										overflow='auto'
-									>
-										<Grid
-											templateColumns='repeat(2, 1fr)'
-											w={{
-												xl: "100%",
-												lg: "100%",
-												md: "80%",
-												sm: "90vw",
-												base: "90vw",
-											}}
-											gap={{
-												xl: "5px",
-												lg: "3px",
-												md: "1px",
-												sm: "0px",
-												base: "0px",
-											}}
-										>
-											{Object.keys(productInfo.identifiers).map(
-												(identifier, index) => {
-													return (
-														<>
-															<GridItem key={identifier}>
-																<Text color='gray'>{identifier}</Text>
-															</GridItem>
-															<GridItem key={index}>
-																<Text fontWeight='semibold'>
-																	{productInfo.identifiers[identifier]}
-																</Text>
-															</GridItem>
-														</>
-													);
-												}
-											)}
-
-											{Object.keys(productInfo.attributes).map(
-												(attribute, index) => {
-													return (
-														<>
-															<GridItem key={attribute}>
-																<Text color='gray'>{attribute}</Text>
-															</GridItem>
-															<GridItem key={index * -1}>
-																<Text fontWeight='semibold'>
-																	{productInfo.attributes[attribute]}
-																</Text>
-															</GridItem>
-														</>
-													);
-												}
-											)}
-										</Grid>
-									</Box>
+									<AttributeTab attributes={{...productInfo.identifiers, ...productInfo.attributes}} />
 								</TabPanel>
 								<TabPanel>
-									<Box
-										className='scrollable-reviews'
-										h='90vh'
-										w={{
-											xl: "48vw",
-											lg: "48vw",
-											md: "60vw",
-											sm: "95vw",
-											base: "95vw",
-										}}
-										overflow='auto'
-									>
-										{/* Real Reviews */}
-										<Container
-											size='2xl'
-											maxW='800px'
-											maxH='200px'
-											w='fit-content'
-										>
-											{isLoading ? (
-												<div></div>
-											) : (
-												productInfo.reviews
-													.filter((review) => review.authentic === true)
-													.map((filteredReview, index) => {
-														return (
-															<ReviewCard
-																key={filteredReview._id}
-																name={filteredReview.user.name}
-																title={filteredReview.title}
-																stars={filteredReview.stars}
-																remainingStars={5 - filteredReview.stars}
-																reviewURL={filteredReview.url}
-																desc={filteredReview.description}
-																user={filteredReview.user}
-																ecommerce={filteredReview.ecommerce.name}
-																upVote='18'
-																authentic={filteredReview.authentic}
-															/>
-														);
-													})
-											)}
-										</Container>
-
-										{/* Fake Reviews */}
-										<Container
-											size='2xl'
-											maxW='800px'
-											maxH='200px'
-											w='fit-content'
-										>
-											{isLoading ? (
-												<div></div>
-											) : (
-												productInfo.reviews
-													.filter((review) => review.authentic === false)
-													.map((filteredReview, index) => {
-														return (
-															<ReviewCard
-																key={filteredReview._id}
-																name={filteredReview.user.name}
-																title={filteredReview.title}
-																stars={filteredReview.stars}
-																remainingStars={5 - filteredReview.stars}
-																reviewURL={filteredReview.url}
-																desc={filteredReview.description}
-																user={filteredReview.user}
-																ecommerce={filteredReview.ecommerce.name}
-																upVote='18'
-																authentic={filteredReview.authentic}
-															/>
-														);
-													})
-											)}
-										</Container>
-									</Box>
+									<ReviewTab reviews={productInfo.reviews}/>
 								</TabPanel>
 							</TabPanels>
 						</Tabs>
