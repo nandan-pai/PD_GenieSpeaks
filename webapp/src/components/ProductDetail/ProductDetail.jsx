@@ -274,6 +274,7 @@ const ProductDetail = (props) => {
 										}}
 										overflow='auto'
 									>
+										{/* Real Reviews */}
 										<Container
 											size='2xl'
 											maxW='800px'
@@ -283,22 +284,57 @@ const ProductDetail = (props) => {
 											{isLoading ? (
 												<div></div>
 											) : (
-												productInfo.reviews.map((review, index) => {
-													return (
-														<ReviewCard
-															key={review._id}
-															name={review.user.name}
-															title={review.title}
-															stars={review.stars}
-															remainingStars={5 - review.stars}
-															reviewURL={review.url}
-															desc={review.description}
-															user={review.user}
-															ecommerce={review.ecommerce.name}
-															upVote='18'
-														/>
-													);
-												})
+												productInfo.reviews
+													.filter((review) => review.authentic === true)
+													.map((filteredReview, index) => {
+														return (
+															<ReviewCard
+																key={filteredReview._id}
+																name={filteredReview.user.name}
+																title={filteredReview.title}
+																stars={filteredReview.stars}
+																remainingStars={5 - filteredReview.stars}
+																reviewURL={filteredReview.url}
+																desc={filteredReview.description}
+																user={filteredReview.user}
+																ecommerce={filteredReview.ecommerce.name}
+																upVote='18'
+																authentic={filteredReview.authentic}
+															/>
+														);
+													})
+											)}
+										</Container>
+
+										{/* Fake Reviews */}
+										<Container
+											size='2xl'
+											maxW='800px'
+											maxH='200px'
+											w='fit-content'
+										>
+											{isLoading ? (
+												<div></div>
+											) : (
+												productInfo.reviews
+													.filter((review) => review.authentic === false)
+													.map((filteredReview, index) => {
+														return (
+															<ReviewCard
+																key={filteredReview._id}
+																name={filteredReview.user.name}
+																title={filteredReview.title}
+																stars={filteredReview.stars}
+																remainingStars={5 - filteredReview.stars}
+																reviewURL={filteredReview.url}
+																desc={filteredReview.description}
+																user={filteredReview.user}
+																ecommerce={filteredReview.ecommerce.name}
+																upVote='18'
+																authentic={filteredReview.authentic}
+															/>
+														);
+													})
 											)}
 										</Container>
 									</Box>
