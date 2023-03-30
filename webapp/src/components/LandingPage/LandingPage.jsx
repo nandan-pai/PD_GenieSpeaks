@@ -1,4 +1,11 @@
-import { HStack, Heading, Icon, LinkBox, Text } from "@chakra-ui/react";
+import {
+	HStack,
+	Heading,
+	Icon,
+	LinkBox,
+	Text,
+	useColorMode,
+} from "@chakra-ui/react";
 
 import NavBar from "../NavBar/NavBar";
 import LandingSearchBar from "../SearchBar/LandingSearchBar/LandingSearchBar";
@@ -10,6 +17,9 @@ import { AiOutlineMobile } from "react-icons/ai";
 
 const LandingPage = () => {
 	const navigate = useNavigate();
+	const { colorMode } = useColorMode();
+
+	const isDark = colorMode === "dark";
 
 	const { searchQuery, setSearchQuery } = useContext(SearchContext);
 
@@ -37,14 +47,14 @@ const LandingPage = () => {
 						w='180px'
 						h='50px'
 						textAlign='center'
-						bgColor='blue.100'
+						bgColor={isDark ? "blue.300" : "blue.100"}
 						rounded='md'
 						_hover={{ cursor: "pointer" }}
 						onClick={() => handleClick("laptop")}
 					>
 						<HStack justify='center' mt='10px'>
-							<Icon as={IoMdLaptop} boxSize={6} />
-							<Text fontSize='lg' fontWeight='semibold'>
+							<Icon as={IoMdLaptop} boxSize={6} color='black' />
+							<Text fontSize='lg' fontWeight='semibold' color='black'>
 								Laptop
 							</Text>
 						</HStack>
@@ -53,14 +63,14 @@ const LandingPage = () => {
 						w='180px'
 						h='50px'
 						textAlign='center'
-						bgColor='teal.100'
+						bgColor={isDark ? "teal.300" : "teal.100"}
 						rounded='md'
 						_hover={{ cursor: "pointer" }}
 						onClick={() => handleClick("mobile")}
 					>
 						<HStack justify='center' mt='10px'>
-							<Icon as={AiOutlineMobile} boxSize={6} />
-							<Text fontSize='lg' fontWeight='semibold'>
+							<Icon as={AiOutlineMobile} boxSize={6} color='black' />
+							<Text fontSize='lg' fontWeight='semibold' color='black'>
 								Mobile
 							</Text>
 						</HStack>
