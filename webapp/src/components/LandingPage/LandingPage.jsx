@@ -21,9 +21,10 @@ const LandingPage = () => {
 
 	const isDark = colorMode === "dark";
 
-	const { searchQuery, setSearchQuery } = useContext(SearchContext);
+	const { setSearchQuery, resetFashion } = useContext(SearchContext);
 
 	const handleClick = (query) => {
+		resetFashion();
 		setSearchQuery(query);
 		navigate("/search");
 	};
