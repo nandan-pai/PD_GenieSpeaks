@@ -14,13 +14,11 @@ We plan to achieve this goal by scraping reviews from various authentic websites
 
 **Product Owner:** [Gaurav Gupta](https://github.com/GauravGupta035)
 
-**Scrum Master:** [Alisha Chinmayee](https://github.com/AlishaChinmayee)
-
 **Quality & Compliance Owner:** [Nandan Pai](https://github.com/nandan-pai)
 
-**Operations / Deployment:** [Shambhavi Jhala](https://github.com/shambhavi210) (Lead) and [Shivansh Pandey](https://github.com/shivansh1012)
+**Operations / Deployment:** [Shivansh Pandey](https://github.com/shivansh1012)
 
-**Developers:** [Shivansh Pandey](https://github.com/shivansh1012) (Lead), [Gaurav Gupta](https://github.com/GauravGupta035), [Noor Poonia](https://github.com/noorpoonia), [Nandan Pai](https://github.com/nandan-pai) and [Shambhavi Jhala](https://github.com/shambhavi210)
+**Developers:** [Shivansh Pandey](https://github.com/shivansh1012) (Lead), [Gaurav Gupta](https://github.com/GauravGupta035), and [Nandan Pai](https://github.com/nandan-pai)
 
 ## WebApp Architecture
 

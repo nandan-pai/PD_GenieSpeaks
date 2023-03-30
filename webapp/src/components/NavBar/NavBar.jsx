@@ -30,7 +30,7 @@ const Logo = () => {
 					fontWeight='bold'
 					fontSize='xl'
 				>
-					GENIESPEAKS
+					{window.location.pathname === "/" ? "GENIESPEAKS" : "GS"}
 				</Text>
 			</Link>
 		</Box>
@@ -136,11 +136,35 @@ const NavBar = () => {
 
 	return (
 		<NavBarContainer>
-			<HStack display='inline-flex' w='70%' spacing='50px'>
+			<HStack
+				display='inline-flex'
+				w='70%'
+				spacing={{
+					xl: "50px",
+					lg: "50px",
+					md: "30px",
+					sm: "15px",
+					base: "15px",
+				}}
+			>
 				<Show above='sm'>
 					<Logo />
 				</Show>
-				{location.pathname === "/" ? "" : <NavSearchBar />}
+				{/* <Show below='sm'>
+					<Logo />
+				</Show> */}
+				{location.pathname === "/" ? (
+					<Show below='sm'>
+						<Logo />
+					</Show>
+				) : (
+					<>
+						<Show below='sm'>
+							<Logo />
+						</Show>
+						<NavSearchBar />
+					</>
+				)}
 			</HStack>
 
 			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />

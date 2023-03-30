@@ -149,7 +149,10 @@ const FilterMobile = () => {
 					finalFocusRef={btnRef}
 				>
 					<DrawerOverlay />
-					<DrawerContent>
+					<DrawerContent
+						style={
+							isDark ? { backgroundColor: "#2d3748" } : { backgroundColor: "#ffffff" }
+						}>
 						<DrawerHeader>Filters</DrawerHeader>
 						<DrawerBody px={7}>
 							{Object.keys(filter).length ? (
