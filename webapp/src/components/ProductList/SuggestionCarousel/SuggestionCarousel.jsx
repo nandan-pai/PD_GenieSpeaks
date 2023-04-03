@@ -1,8 +1,6 @@
 import { Box, IconButton, useBreakpointValue } from "@chakra-ui/react";
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
-import { ApiBaseUrl } from "../../../config";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import SuggestionCard from "../SuggestionCard/SuggestionCard";
 
@@ -20,8 +18,8 @@ const settings = {
 	lazyload: "ondemand",
 };
 
-const SuggestionCarousel = () => {
-	const [suggestionList, setSuggestionList] = useState([]);
+const SuggestionCarousel = ({suggestionList=[]}) => {
+	// const [suggestionList, setSuggestionList] = useState([]);
 	const [slider, setSlider] = useState(null);
 
 	const top = useBreakpointValue({
@@ -39,15 +37,15 @@ const SuggestionCarousel = () => {
 		base: "10px",
 	});
 
-	const getSuggestionList = useCallback(() => {
-		axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
-			setSuggestionList(res.data.suggestions);
-		});
-	}, []);
+	// const getSuggestionList = useCallback(() => {
+	// 	axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
+	// 		setSuggestionList(res.data.suggestions);
+	// 	});
+	// }, []);
 
-	useEffect(() => {
-		getSuggestionList();
-	}, [getSuggestionList]);
+	// useEffect(() => {
+	// 	getSuggestionList();
+	// }, [getSuggestionList]);
 
 	return (
 		<Box position='relative' height='350px' width='full' overflow='hidden'>
