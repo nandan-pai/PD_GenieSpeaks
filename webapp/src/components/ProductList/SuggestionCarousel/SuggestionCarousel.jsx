@@ -41,7 +41,7 @@ const SuggestionCarousel = () => {
 
 	const getSuggestionList = useCallback(() => {
 		axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
-			setSuggestionList(res.data.randomSuggestions);
+			setSuggestionList(res.data.suggestions);
 		});
 	}, []);
 

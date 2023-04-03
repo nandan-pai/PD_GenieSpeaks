@@ -5,6 +5,7 @@ const Review = require("../models/review.model.js");
 const ECommerce = require("../models/ecommerce.model.js");
 const User = require("../models/user.model.js");
 const UserAuth = require("./userAuth.js");
+const mongoose = require('mongoose')
 
 router.post("/register", async (req, res) => {
 	try {
@@ -191,6 +192,15 @@ router.post("/review", UserAuth, async (req, res) => {
 
 router.get("/suggestions", async (req, res) => {
 	try {
+		const product_list = [
+			mongoose.Types.ObjectId('642470fd963c140e4f30fd31'), mongoose.Types.ObjectId('64247102963c140e4f30fd3b')
+		]
+
+		// product_list = product_list.map(function(el) { return mongoose.Types.ObjectId(el) })
+		// console.log(product_list)
+		let suggestions = []
+
+
 		const randomSuggestions = await Product.aggregate([
 			{
 				$sample: {
@@ -271,7 +281,54 @@ router.get("/suggestions", async (req, res) => {
 			},
 		]);
 
-		res.json({ randomSuggestions: randomSuggestions });
+		const matching_tags = await Product.aggregate(
+			[
+				{
+					'$match': {
+						'_id': {
+							'$in': product_list
+						}
+					}
+				}, {
+					'$unwind': {
+						'path': '$tags'
+					}
+				}, {
+					'$match': {
+						'tags': {
+							'$nin': [
+								'laptop', 'mobile'
+							]
+						}
+					}
+				}, {
+					'$group': {
+						'_id': null,
+						'all_tags': {
+							'$addToSet': '$tags'
+						}
+					}
+				}
+			]
+		)
+		// console.log(matching_tags)
+
+		suggestions = await Product.aggregate(
+			[
+				{
+					'$match': {
+						'tags': {
+							'$in': matching_tags.length ? matching_tags[0]['all_tags'] : []
+						}
+					}
+				}, {
+					'$sample': {
+						'size': 5
+					}
+				}
+			]
+		)
+		res.json({ product_list: req.cookies.product_list, suggestions: suggestions });
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
