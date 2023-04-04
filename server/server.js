@@ -17,6 +17,7 @@ app.use(
 	cors({
 		origin: true,
 		credentials: true,
+		methods: ["POST", "GET", "PUT", "OPTIONS", "HEAD"],
 	})
 );
 
@@ -54,11 +55,12 @@ app.use(
 	session({
 		secret: "some secret",
 		resave: false,
-		saveUninitialized: true,
+		saveUninitialized: false,
 		store: sessionStore,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-			secure: true,
+			secure: process.env.REACT_APP_NODE_ENV === "production",
+			httpOnly: true,
 		},
 	})
 );
