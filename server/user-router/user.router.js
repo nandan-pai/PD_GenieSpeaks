@@ -5,6 +5,7 @@ const Review = require("../models/review.model.js");
 const ECommerce = require("../models/ecommerce.model.js");
 const User = require("../models/user.model.js");
 const UserAuth = require("./userAuth.js");
+const mongoose = require('mongoose')
 
 router.post("/register", async (req, res) => {
 	try {
@@ -191,87 +192,99 @@ router.post("/review", UserAuth, async (req, res) => {
 
 router.get("/suggestions", async (req, res) => {
 	try {
-		const randomSuggestions = await Product.aggregate([
-			{
-				$sample: {
-					size: 5,
-				},
-			},
-			{
-				$addFields: {
-					review_count: {
-						$size: "$reviews",
-					},
-					satisfactory_rating: {
-						$cond: [
-							{
-								$eq: [
-									{
-										$size: "$reviews",
-									},
-									0,
-								],
-							},
-							0,
-							{
-								$multiply: [
-									{
-										$divide: [
-											"$rating_sum",
-											{
-												$multiply: [
-													{
-														$size: "$reviews",
-													},
-													5,
-												],
-											},
-										],
-									},
-									100,
-								],
-							},
-						],
-					},
-				},
-			},
-			{
-				$lookup: {
-					from: "Organization",
-					localField: "organization",
-					foreignField: "_id",
-					as: "organization",
-				},
-			},
-			{
-				$set: {
-					organization: {
-						$arrayElemAt: ["$organization", 0],
-					},
-				},
-			},
-			{
-				$addFields: {
-					min_price: {
-						$min: "$ecommerce.curr_price",
-					},
-				},
-			},
-			{
-				$project: {
-					_id: 1,
-					title: 1,
-					images: 1,
-					"organization._id": 1,
-					"organization.name": 1,
-					review_count: 1,
-					satisfactory_rating: 1,
-					min_price: 1,
-				},
-			},
-		]);
 
-		res.json({ randomSuggestions: randomSuggestions });
+		let suggestions = []
+
+		if (req.session.visitedProducts) {
+			const product_list = req.session.visitedProducts.map(function (el) { return mongoose.Types.ObjectId(el) })
+			// console.log(product_list)
+			const matching_tags = await Product.aggregate(
+				[
+					{
+						'$match': {
+							'_id': {
+								'$in': product_list
+							}
+						}
+					}, {
+						'$unwind': {
+							'path': '$tags'
+						}
+					}, {
+						'$match': {
+							'tags': {
+								'$nin': [
+									'laptop', 'mobile'
+								]
+							}
+						}
+					}, {
+						'$group': {
+							'_id': null,
+							'all_tags': {
+								'$addToSet': '$tags'
+							}
+						}
+					}
+				]
+			)
+
+			let match = {
+				'tags': {
+					'$in': matching_tags.length ? matching_tags[0]['all_tags'] : []
+				}
+			}
+			suggestions.push(...await generate_suggestions(match, req.session.searchQueries ? 3 : 5))
+
+		}
+		if (req.session.searchQueries) {
+			const query_list = req.session.searchQueries.map(function (e) { return new RegExp(e, "i"); });
+			console.log("query_list", query_list)
+			const matching_tags = await Product.aggregate(
+				[
+					{
+						'$match': {
+							'tags': {
+								'$in': query_list
+							}
+						}
+					}, {
+						'$unwind': {
+							'path': '$tags'
+						}
+					}, {
+						'$match': {
+							'tags': {
+								'$nin': [
+									'laptop', 'mobile'
+								]
+							}
+						}
+					}, {
+						'$group': {
+							'_id': null,
+							'all_tags': {
+								'$addToSet': '$tags'
+							}
+						}
+					}
+				]
+			)
+
+			let match = {
+				'tags': {
+					'$in': matching_tags.length ? matching_tags[0]['all_tags'] : []
+				}
+			}
+			suggestions.push(...await generate_suggestions(match, req.session.visitedProducts ? 2 : 5))
+
+		}
+
+		if (!suggestions) {
+			suggestions.push(...await generate_suggestions({}, 5))
+		}
+
+		res.json({ suggestions: suggestions });
 	} catch (e) {
 		console.error(e);
 		res.status(500).json({
@@ -284,5 +297,93 @@ router.get("/suggestions", async (req, res) => {
 		});
 	}
 });
+
+const generate_suggestions = async (match, count) => await Product.aggregate(
+	[
+		{
+			$match: match
+		},
+		{
+			$addFields: {
+				review_count: {
+					$size: "$reviews",
+				},
+				satisfactory_rating: {
+					$cond: [
+						{
+							$eq: [
+								{
+									$size: "$reviews",
+								},
+								0,
+							],
+						},
+						0,
+						{
+							$multiply: [
+								{
+									$divide: [
+										"$rating_sum",
+										{
+											$multiply: [
+												{
+													$size: "$reviews",
+												},
+												5,
+											],
+										},
+									],
+								},
+								100,
+							],
+						},
+					],
+				},
+			},
+		},
+		{
+			$sort: {
+				'satisfactory_rating': -1
+			}
+		}, 
+		{
+			$limit: parseInt(count, 10),
+		},
+		{
+			$lookup: {
+				from: "Organization",
+				localField: "organization",
+				foreignField: "_id",
+				as: "organization",
+			},
+		},
+		{
+			$set: {
+				organization: {
+					$arrayElemAt: ["$organization", 0],
+				},
+			},
+		},
+		{
+			$addFields: {
+				min_price: {
+					$min: "$ecommerce.curr_price",
+				},
+			},
+		},
+		{
+			$project: {
+				_id: 1,
+				title: 1,
+				images: 1,
+				"organization._id": 1,
+				"organization.name": 1,
+				review_count: 1,
+				satisfactory_rating: 1,
+				min_price: 1,
+			},
+		},
+	]
+)
 
 module.exports = router;

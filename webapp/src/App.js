@@ -9,6 +9,9 @@ import ProductDetail from "./components/ProductDetail/ProductDetail";
 
 import { SearchContextProvider } from "./context/SearchContext/SearchContext";
 import ProductReview from "./components/ProductReview/ProductReview";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 const App = () => {
 	return (

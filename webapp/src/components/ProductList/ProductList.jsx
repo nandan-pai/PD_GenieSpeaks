@@ -36,6 +36,7 @@ const ProductList = () => {
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
 	const [loader, showLoader] = useState(true);
+	const [suggestionList, setSuggestionList] = useState([]);
 
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
@@ -60,7 +61,10 @@ const ProductList = () => {
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
 			setProductList(res.data.product_list);
 			setProductCount(res.data.product_count);
-			showLoader(false);
+			axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
+				setSuggestionList(res.data.suggestions);
+				showLoader(false);
+			});
 		});
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
@@ -174,7 +178,7 @@ const ProductList = () => {
 										<GoInfo />
 									</Tooltip>
 								</HStack>
-								<SuggestionCarousel />
+								<SuggestionCarousel suggestionList={suggestionList}/>
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
 								{productList.map((product, index) => {
