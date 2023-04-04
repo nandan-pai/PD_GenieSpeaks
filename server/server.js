@@ -9,7 +9,7 @@ require("./db_init.js");
 require("dotenv").config();
 
 const app = express();
-
+app.set("trust proxy", 1);
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -58,6 +58,7 @@ app.use(
 		store: sessionStore,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+			secure: true,
 		},
 	})
 );

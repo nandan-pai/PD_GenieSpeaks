@@ -158,8 +158,26 @@ const ProductDetail = (props) => {
 								</Heading>
 							</Show>
 							<HStack mb='50px' alignSelf={["left", "left"]}>
-								<Icon as={FaRegThumbsUp} color='green' />
-								<Text fontWeight='semibold' color='green'>
+								<Icon
+									as={FaRegThumbsUp}
+									color={
+										productInfo.satisfactory_rating < 35
+											? "red"
+											: productInfo.satisfactory_rating < 70
+											? "orange"
+											: "green"
+									}
+								/>
+								<Text
+									fontWeight='semibold'
+									color={
+										productInfo.satisfactory_rating < 35
+											? "red"
+											: productInfo.satisfactory_rating < 70
+											? "orange"
+											: "green"
+									}
+								>
 									{parseFloat(productInfo.satisfactory_rating).toFixed(2)}%
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
@@ -195,10 +213,15 @@ const ProductDetail = (props) => {
 
 							<TabPanels>
 								<TabPanel>
-									<AttributeTab attributes={{...productInfo.identifiers, ...productInfo.attributes}} />
+									<AttributeTab
+										attributes={{
+											...productInfo.identifiers,
+											...productInfo.attributes,
+										}}
+									/>
 								</TabPanel>
 								<TabPanel>
-									<ReviewTab reviews={productInfo.reviews}/>
+									<ReviewTab reviews={productInfo.reviews} />
 								</TabPanel>
 							</TabPanels>
 						</Tabs>

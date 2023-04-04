@@ -5,7 +5,7 @@ const Review = require("../models/review.model.js");
 const ECommerce = require("../models/ecommerce.model.js");
 const User = require("../models/user.model.js");
 const UserAuth = require("./userAuth.js");
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 router.post("/register", async (req, res) => {
 	try {
@@ -192,96 +192,105 @@ router.post("/review", UserAuth, async (req, res) => {
 
 router.get("/suggestions", async (req, res) => {
 	try {
-
-		let suggestions = []
+		let suggestions = [];
 
 		if (req.session.visitedProducts) {
-			const product_list = req.session.visitedProducts.map(function (el) { return mongoose.Types.ObjectId(el) })
+			const product_list = req.session.visitedProducts.map(function (el) {
+				return mongoose.Types.ObjectId(el);
+			});
 			// console.log(product_list)
-			const matching_tags = await Product.aggregate(
-				[
-					{
-						'$match': {
-							'_id': {
-								'$in': product_list
-							}
-						}
-					}, {
-						'$unwind': {
-							'path': '$tags'
-						}
-					}, {
-						'$match': {
-							'tags': {
-								'$nin': [
-									'laptop', 'mobile'
-								]
-							}
-						}
-					}, {
-						'$group': {
-							'_id': null,
-							'all_tags': {
-								'$addToSet': '$tags'
-							}
-						}
-					}
-				]
-			)
+			const matching_tags = await Product.aggregate([
+				{
+					$match: {
+						_id: {
+							$in: product_list,
+						},
+					},
+				},
+				{
+					$unwind: {
+						path: "$tags",
+					},
+				},
+				{
+					$match: {
+						tags: {
+							$nin: ["laptop", "mobile"],
+						},
+					},
+				},
+				{
+					$group: {
+						_id: null,
+						all_tags: {
+							$addToSet: "$tags",
+						},
+					},
+				},
+			]);
 
 			let match = {
-				'tags': {
-					'$in': matching_tags.length ? matching_tags[0]['all_tags'] : []
-				}
-			}
-			suggestions.push(...await generate_suggestions(match, req.session.searchQueries ? 3 : 5))
-
+				tags: {
+					$in: matching_tags.length ? matching_tags[0]["all_tags"] : [],
+				},
+			};
+			suggestions.push(
+				...(await generate_suggestions(
+					match,
+					req.session.searchQueries ? 3 : 5
+				))
+			);
 		}
 		if (req.session.searchQueries) {
-			const query_list = req.session.searchQueries.map(function (e) { return new RegExp(e, "i"); });
-			console.log("query_list", query_list)
-			const matching_tags = await Product.aggregate(
-				[
-					{
-						'$match': {
-							'tags': {
-								'$in': query_list
-							}
-						}
-					}, {
-						'$unwind': {
-							'path': '$tags'
-						}
-					}, {
-						'$match': {
-							'tags': {
-								'$nin': [
-									'laptop', 'mobile'
-								]
-							}
-						}
-					}, {
-						'$group': {
-							'_id': null,
-							'all_tags': {
-								'$addToSet': '$tags'
-							}
-						}
-					}
-				]
-			)
+			const query_list = req.session.searchQueries.map(function (e) {
+				return new RegExp(e, "i");
+			});
+			console.log("query_list", query_list);
+			const matching_tags = await Product.aggregate([
+				{
+					$match: {
+						tags: {
+							$in: query_list,
+						},
+					},
+				},
+				{
+					$unwind: {
+						path: "$tags",
+					},
+				},
+				{
+					$match: {
+						tags: {
+							$nin: ["laptop", "mobile"],
+						},
+					},
+				},
+				{
+					$group: {
+						_id: null,
+						all_tags: {
+							$addToSet: "$tags",
+						},
+					},
+				},
+			]);
 
 			let match = {
-				'tags': {
-					'$in': matching_tags.length ? matching_tags[0]['all_tags'] : []
-				}
-			}
-			suggestions.push(...await generate_suggestions(match, req.session.visitedProducts ? 2 : 5))
-
+				tags: {
+					$in: matching_tags.length ? matching_tags[0]["all_tags"] : [],
+				},
+			};
+			suggestions.push(
+				...(await generate_suggestions(
+					match,
+					req.session.visitedProducts ? 2 : 5
+				))
+			);
 		}
 
-		if (!suggestions) {
-			suggestions.push(...await generate_suggestions({}, 5))
+		if (!suggestions.length) {
+			suggestions.push(...(await generate_suggestions({}, 5)));
 		}
 
 		res.json({ suggestions: suggestions });
@@ -298,10 +307,10 @@ router.get("/suggestions", async (req, res) => {
 	}
 });
 
-const generate_suggestions = async (match, count) => await Product.aggregate(
-	[
+const generate_suggestions = async (match, count) =>
+	await Product.aggregate([
 		{
-			$match: match
+			$match: match,
 		},
 		{
 			$addFields: {
@@ -343,9 +352,9 @@ const generate_suggestions = async (match, count) => await Product.aggregate(
 		},
 		{
 			$sort: {
-				'satisfactory_rating': -1
-			}
-		}, 
+				satisfactory_rating: -1,
+			},
+		},
 		{
 			$limit: parseInt(count, 10),
 		},
@@ -383,7 +392,6 @@ const generate_suggestions = async (match, count) => await Product.aggregate(
 				min_price: 1,
 			},
 		},
-	]
-)
+	]);
 
 module.exports = router;
