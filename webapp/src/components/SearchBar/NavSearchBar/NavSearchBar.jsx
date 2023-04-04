@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext, useState } from "react";
 import {
 	Button,
 	FormControl,
@@ -13,12 +13,13 @@ import {
 import { FaSearch } from "react-icons/fa";
 
 import "./NavSearchBar.css";
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 
-const NavSearchBar = (props) => {
-	const [buSearchQuery, setBuSearchQuery] = useState(props.searchQuery);
-	const isError = props.searchQuery === "";
+const NavSearchBar = () => {
+	const { searchQuery, setSearchQuery, resetFashion } = useContext(SearchContext);
+	const [buSearchQuery, setBuSearchQuery] = useState(searchQuery);
+	const isError = searchQuery === "";
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
@@ -27,15 +28,15 @@ const NavSearchBar = (props) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		if (buSearchQuery !== "") {
+			resetFashion()
+			setSearchQuery(buSearchQuery);
+		}
 
 		if (location.pathname !== "/search") {
 			navigate("/search");
 		}
 
-		if (buSearchQuery !== "") {
-			props.setFilter({});
-			props.setSearchQuery(buSearchQuery);
-		}
 	};
 
 	return (

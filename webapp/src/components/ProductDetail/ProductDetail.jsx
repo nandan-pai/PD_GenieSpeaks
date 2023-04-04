@@ -1,14 +1,13 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import Loader from "../Loader/Loader";
 import {
 	Box,
-	Container,
-	Grid,
+	Button,
 	GridItem,
 	Heading,
 	HStack,
@@ -22,15 +21,21 @@ import {
 	TabPanels,
 	Tabs,
 	Text,
+	VStack,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
-import { BsDot } from "react-icons/bs";
-import ReviewCard from "../Card/ReviewCard/ReviewCard";
-import AvailableMenu from "../AvailableMenu/AvailableMenu";
+import { BsDot, BsPencilFill } from "react-icons/bs";
+import AvailableMenu from "./AvailableMenu/AvailableMenu";
+import RatingCard from "./RatingCard/RatingCard";
+
+import "./ProductDetail.css";
+import AttributeTab from "./AttributeTab";
+import ReviewTab from "./ReviewTab";
 
 const ProductDetail = (props) => {
 	const [productInfo, setProductInfo] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
+	const navigate = useNavigate();
 
 	const { id } = useParams();
 
@@ -40,10 +45,13 @@ const ProductDetail = (props) => {
 			setProductInfo(res.data.productData);
 			setIsLoading(false);
 		});
-
 	};
 
 	useEffect(getProductInfo, [id]);
+
+	const handleReviewBtn = () => {
+		navigate(`/product/${id}/review`);
+	};
 
 	if (isLoading) {
 		return (
@@ -54,9 +62,9 @@ const ProductDetail = (props) => {
 					setFilter={props.setFilter}
 				/>
 
-				<Loader hidden={! isLoading} />
-				<Loader hidden={! isLoading} />
-				<Loader hidden={! isLoading} />
+				<Loader hidden={!isLoading} />
+				<Loader hidden={!isLoading} />
+				<Loader hidden={!isLoading} />
 			</div>
 		);
 	} else {
@@ -70,49 +78,107 @@ const ProductDetail = (props) => {
 
 				<SimpleGrid
 					templateColumns={{
-						base: "repeat(4, 1fr)",
 						xl: "repeat(5, 1fr)",
-						lg: "repeat(3, 1fr)",
-						md: "repeat(3, 1fr)",
+						lg: "repeat(5, 1fr)",
+						md: "repeat(5, 1fr)",
 						sm: "repeat(1, 1fr)",
+						base: "repeat(1, 1fr)",
 					}}
 					minChildWidth='500px'
-					spacing={5}
+					spacing={{ xl: 10, lg: 10, md: 5, sm: 3, base: 3 }}
 					mt={10}
-					ml={20}
+					ml={{ xl: 20, lg: 20, md: 10, sm: 5, base: 5 }}
 				>
 					<GridItem colSpan={1}>
+						<Show below='md'>
+							<Heading
+								mb='10px'
+								fontSize={{
+									md: "md",
+									sm: "md",
+									base: "md",
+								}}
+								textAlign={["left, left"]}
+								w='90%'
+							>
+								{productInfo.title}
+							</Heading>
+						</Show>
 						<Image
 							src={productInfo.images[0]}
-							w='300px'
-							h='300px'
+							w={{
+								xl: "300px",
+								lg: "250px",
+								md: "200px",
+								sm: "200px",
+								base: "200px",
+							}}
+							h={{
+								xl: "300px",
+								lg: "250px",
+								md: "200px",
+								sm: "200px",
+								base: "200px",
+							}}
 							ml='35px'
 							justifyContent='center'
 							alignItems='center'
 							alignSelf='center'
 							justifySelf='center'
 						/>
+
+						<Show above='md'>
+							<VStack>
+								<RatingCard reviews={productInfo.reviews} />
+								<Button
+									leftIcon={<BsPencilFill />}
+									bgColor='gray.100'
+									color='white'
+									onClick={handleReviewBtn}
+								>
+									Write a Review
+								</Button>
+							</VStack>
+						</Show>
 					</GridItem>
 
-					<GridItem colSpan={{ base: 2, xl: 3, lg: 3, md: 3, sm: 1 }} ml='10px'>
+					<GridItem colSpan={{ xl: 3, lg: 3, md: 3, sm: 1, base: 1 }}>
 						<Box textAlign={["left", "left"]}>
-							<Heading
-								mb='10px'
-								fontSize={{
-									base: "xl",
-									xl: "xl",
-									lg: "lg",
-									md: "md",
-									sm: "md",
-								}}
-								textAlign={["left, left"]}
-							>
-								{productInfo.title}
-							</Heading>
+							<Show above='md'>
+								<Heading
+									mb='10px'
+									fontSize={{
+										xl: "xl",
+										lg: "lg",
+										md: "md",
+									}}
+									textAlign={["left, left"]}
+								>
+									{productInfo.title}
+								</Heading>
+							</Show>
 							<HStack mb='50px' alignSelf={["left", "left"]}>
-								<Icon as={FaRegThumbsUp} color='green' />
-								<Text fontWeight='semibold' color='green'>
-									{productInfo.satisfactory_rating}%
+								<Icon
+									as={FaRegThumbsUp}
+									color={
+										productInfo.satisfactory_rating < 35
+											? "red"
+											: productInfo.satisfactory_rating < 70
+											? "orange"
+											: "green"
+									}
+								/>
+								<Text
+									fontWeight='semibold'
+									color={
+										productInfo.satisfactory_rating < 35
+											? "red"
+											: productInfo.satisfactory_rating < 70
+											? "orange"
+											: "green"
+									}
+								>
+									{parseFloat(productInfo.satisfactory_rating).toFixed(2)}%
 								</Text>
 								<Icon as={BsDot} color='gray.100' ml='20px' mr='20px' />
 								<Text>{productInfo.reviews.length} reviews</Text>
@@ -121,95 +187,51 @@ const ProductDetail = (props) => {
 
 						<Show below='xl'>
 							<GridItem
-								colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}
+								colSpan={{ xl: 1, lg: 2, md: 2, sm: 1, base: 1 }}
 								mb={5}
 							>
 								<AvailableMenu ecommerce={productInfo.ecommerce} />
 							</GridItem>
 						</Show>
+						<Show below='md'>
+							<Button
+								leftIcon={<BsPencilFill />}
+								bgColor='gray.100'
+								color='white'
+								onClick={handleReviewBtn}
+								w='90vw'
+							>
+								Write a Review
+							</Button>
+						</Show>
 
 						<Tabs>
 							<TabList>
 								<Tab>About Product</Tab>
-								<Tab>Reviews</Tab>
+								{productInfo.reviews.length > 0 ? <Tab>Reviews</Tab> : <></>}
 							</TabList>
 
 							<TabPanels>
 								<TabPanel>
-									<Grid
-										templateColumns='repeat(2, 1fr)'
-										w={{
-											base: "700px",
-											xl: "700px",
-											lg: "500px",
-											md: "300px",
-											sm: "100px",
+									<AttributeTab
+										attributes={{
+											...productInfo.identifiers,
+											...productInfo.attributes,
 										}}
-										minW='400px'
-										gap={{
-											base: "5px",
-											xl: "5px",
-											lg: "3px",
-											md: "1px",
-											sm: "0px",
-										}}
-									>
-										{
-											Object.keys(productInfo.identifiers).map((identifier, index) => {
-												return <>
-													<GridItem key={identifier}>
-														<Text color='gray'>{identifier}</Text>
-													</GridItem>
-													<GridItem key={index}>
-														<Text fontWeight='semibold'>{productInfo.identifiers[identifier]}</Text>
-													</GridItem>
-												</>
-											})
-										}
-
-										{
-											Object.keys(productInfo.attributes).map((attribute, index) => {
-												return <>
-													<GridItem key={attribute}>
-														<Text color='gray'>{attribute}</Text>
-													</GridItem>
-													<GridItem key={index*-1}>
-														<Text fontWeight='semibold'>{productInfo.attributes[attribute]}</Text>
-													</GridItem>
-												</>
-											})
-										}
-									</Grid>
+									/>
 								</TabPanel>
 								<TabPanel>
-									<Container size='2xl' maxW='800px' maxH='200px'>
-										{isLoading ? (
-											<div></div>
-										) : (
-											productInfo.reviews.map((review, index) => {
-												return (
-													<ReviewCard
-														key={review._id}
-														name={review.user.name}
-														title={review.title}
-														stars={review.stars}
-														reviewURL={review.url}
-														desc={review.description}
-														user={review.user}
-														ecommerce={review.ecommerce.name}
-														upVote='18'
-													/>
-												);
-											})
-										)}
-									</Container>
+									<ReviewTab reviews={productInfo.reviews} />
 								</TabPanel>
 							</TabPanels>
 						</Tabs>
 					</GridItem>
 
 					<Show above='xl'>
-						<GridItem colSpan={{ base: 1, xl: 1, lg: 2, md: 2, sm: 1 }}>
+						<GridItem
+							colSpan={{ xl: 1, lg: 2, md: 2, sm: 1, base: 1 }}
+							w='fit-content'
+						>
 							<AvailableMenu ecommerce={productInfo.ecommerce} />
 						</GridItem>
 					</Show>

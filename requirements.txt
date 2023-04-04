@@ -6,3 +6,5 @@ scrapy==2.6.2
 selenium==4.4.3
 twisted==21.7.0
 pyopenssl==22.0.0
+bcrypt==4.0.1
+textblob==0.17.1

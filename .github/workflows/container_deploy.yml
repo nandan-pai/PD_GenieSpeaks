@@ -6,10 +6,6 @@ name: Container image build and deploy
 on:
   workflow_call:
     inputs:
-      app_name:
-        description: App Name of the container in Azure
-        required: true
-        type: string
       registry:
         description: Container Registry to upload image
         required: true
@@ -20,6 +16,9 @@ on:
         type: string
 
     secrets:
+      app_name:
+        description: App Name of the container in Azure
+        required: true
       dockerhub_username:
         description: Dockerhub Username
         required: true
@@ -33,7 +32,7 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
 
     steps:
       - uses: actions/checkout@v2
@@ -51,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ inputs.app_name }}:${{ github.sha }}
+          tags: ${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ secrets.app_name }}:${{ github.sha }}
           file: ${{ inputs.dockerfile }}
 
   deploy:
@@ -66,7 +65,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ inputs.app_name }}
+          app-name: ${{ secrets.app_name }}
           slot-name: 'production'
           publish-profile: ${{ secrets.azure_publish_profile }}
-          images: '${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ inputs.app_name }}:${{ github.sha }}'
+          images: "${{ inputs.registry }}/${{ secrets.dockerhub_username }}/${{ secrets.app_name }}:${{ github.sha }}"

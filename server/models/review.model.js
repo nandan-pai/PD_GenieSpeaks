@@ -33,6 +33,10 @@ const ReviewSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  authentic: {
+    type: Boolean,
+    default: false
+  },
   product: {
     type: mongoose.Types.ObjectId,
     ref: 'Product',

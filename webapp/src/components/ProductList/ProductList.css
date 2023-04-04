@@ -5,3 +5,9 @@
 .warning {
     color: orange;
 }
+
+.suggestionContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}

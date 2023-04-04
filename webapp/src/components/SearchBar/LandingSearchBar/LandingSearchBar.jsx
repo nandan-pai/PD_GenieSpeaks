@@ -4,23 +4,27 @@ import {
 	Input,
 	InputGroup,
 	InputLeftElement,
+	Stack,
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
-import React from "react";
+import { useContext } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import SearchContext from "../../../context/SearchContext/SearchContext";
 import "./LandingSearchBar.css";
 
-const LandingSearchBar = (props) => {
+const LandingSearchBar = () => {
+	const { searchQuery, setSearchQuery, resetFashion } =
+		useContext(SearchContext);
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	const navigate = useNavigate();
 
 	const handleSubmit = () => {
-		props.setFilter({})
-		if (props.searchQuery !== "") {
+		resetFashion();
+		if (searchQuery !== "") {
 			navigate("/search");
 		}
 	};
@@ -28,25 +32,39 @@ const LandingSearchBar = (props) => {
 	return (
 		<form onSubmit={handleSubmit} className='landingSearch'>
 			<FormControl isRequired>
-				<InputGroup size='lg' width='50%' mt='5rem' mx='auto'>
-					<InputLeftElement pointerEvents='none' children={<FaSearch />} />
-					<Input
-						type='text'
-						value={props.searchQuery}
-						onChange={(e) => {
-							props.setSearchQuery(e.target.value);
-						}}
-						placeholder='Search for products or organization'
-					/>
+				<Stack
+					direction={{
+						xl: "row",
+						lg: "row",
+						md: "row",
+						sm: "column",
+						base: "column",
+					}}
+					w={{ xl: "50%", lg: "50%", md: "50%", sm: "70%", base: "70%" }}
+					spacing='10px'
+					mt='5rem'
+					mx='auto'
+				>
+					<InputGroup size='lg'>
+						<InputLeftElement pointerEvents='none' children={<FaSearch />} />
+						<Input
+							type='text'
+							value={searchQuery}
+							onChange={(e) => {
+								setSearchQuery(e.target.value);
+							}}
+							placeholder='Search for tech products'
+						/>
+					</InputGroup>
 					<Button
 						bg={isDark ? "white.100" : "gray.100"}
-						ml='10px'
 						type='submit'
 						className='submitBtn'
+						size='lg'
 					>
 						<Text color={isDark ? "gray.100" : "white.100"}>Search</Text>
 					</Button>
-				</InputGroup>
+				</Stack>
 			</FormControl>
 		</form>
 	);

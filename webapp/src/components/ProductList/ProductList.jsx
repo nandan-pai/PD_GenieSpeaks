@@ -8,34 +8,49 @@ import {
 	Spacer,
 	VStack,
 	Show,
+	Box,
+	Tooltip,
+	Flex,
+	useColorMode,
 } from "@chakra-ui/react";
 import ProductCard from "../Card/ProductCard/ProductCard";
-import { useState, useEffect, useCallback } from "react";
-import Filters from "../Filters/Filters";
+import { useState, useEffect, useCallback, useContext } from "react";
 import axios from "axios";
 import { ApiBaseUrl } from "../../config";
 import NavBar from "../NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
 import { BiError } from "react-icons/bi";
-import "./ProductList.css";
 import SortMenu from "../SortMenu/SortMenu";
-import FilterMenu from "../Filters/FilterMenu";
+import FilterDesktop from "./Filters/FilterDesktop";
+import FilterMobile from "./Filters/FilterMobile";
+import Paginator from "./Paginator/Paginator";
+import { GoInfo } from "react-icons/go";
+import SearchContext from "../../context/SearchContext/SearchContext";
+import SuggestionCarousel from "./SuggestionCarousel/SuggestionCarousel";
 
-const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
+import "./ProductList.css";
+
+const ProductList = () => {
+	const { searchQuery, filter, sort, setSort, limit, offset } =
+		useContext(SearchContext);
 	const [productList, setProductList] = useState([]);
 	const [productCount, setProductCount] = useState(0);
-	const [sort, setSort] = useState("_id");
-	const [limit, setLimit] = useState(20);
-	const [offset, setOffset] = useState(0);
 	const [loader, showLoader] = useState(true);
+	const [suggestionList, setSuggestionList] = useState([]);
+
+	const { colorMode } = useColorMode();
+	const isDark = colorMode === "dark";
 
 	let navigate = useNavigate();
+
+	useEffect(() => {});
 
 	const getProductList = useCallback(() => {
 		if (searchQuery === "") {
 			return navigate("/");
 		}
 		showLoader(true);
+		// console.log("ProductListgetter", filter)
 		const payload = {
 			query: searchQuery,
 			limit,
@@ -46,50 +61,85 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 		axios.post(`${ApiBaseUrl}/prod/search`, payload).then((res) => {
 			setProductList(res.data.product_list);
 			setProductCount(res.data.product_count);
-			showLoader(false);
+			axios.get(`${ApiBaseUrl}/user/suggestions`).then((res) => {
+				setSuggestionList(res.data.suggestions);
+				showLoader(false);
+			});
 		});
 	}, [searchQuery, navigate, limit, offset, sort, filter]);
 
-	useEffect(getProductList, [searchQuery, getProductList]);
+	useEffect(() => {
+		getProductList();
+	}, [searchQuery, getProductList]);
 
 	return (
 		<div className='prodList' mr='10px'>
-			<NavBar
-				searchQuery={searchQuery}
-				setSearchQuery={setSearchQuery}
-				setFilter={setFilter}
-			/>
+			<NavBar />
 			{productCount ? (
-				<HStack mr={{ base: "20px", lg: "20px", md: "5px", sm: "5px" }}>
+				<HStack mr={{ lg: "20px", md: "5px", sm: "5px", base: "5px" }}>
 					{productCount === 1 ? (
-						<Text
-							ml='25%'
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {productCount} of {productCount} result for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "25%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									Showing {productCount} of {productCount} result for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='md'>
+								<Text
+									ml={{ md: "25%", sm: "15%", base: "10%" }}
+									fontSize={{ xl: "md", lg: "md", md: "sm" }}
+								>
+									{productCount} of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					) : (
-						<Text
-							ml={{ base: "25%", lg: "25%", md: "20%", sm: "10%" }}
-							fontSize={{ base: "md", lg: "md", md: "sm", sm: "sm" }}
-						>
-							Showing {offset + 1} -{" "}
-							{offset + limit < productList.length
-								? offset + limit
-								: productList.length}{" "}
-							of {productCount} results for&nbsp;
-							<span className='query'>"{searchQuery}"</span>
-						</Text>
+						<>
+							<Show above='md'>
+								<Text
+									ml={{ xl: "25%", lg: "25%", md: "20%" }}
+									fontSize={{
+										xl: "md",
+										lg: "md",
+										md: "sm",
+									}}
+								>
+									Showing {offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} results for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+							<Show below='sm'>
+								<Text
+									ml={{ md: "20%", sm: "10%", base: "10%" }}
+									fontSize={{
+										md: "sm",
+										sm: "sm",
+										base: "sm",
+									}}
+								>
+									{offset + 1} -{" "}
+									{offset + limit < productList.length
+										? offset + limit
+										: offset + productList.length}{" "}
+									of {productCount} for&nbsp;
+									<span className='query'>"{searchQuery}"</span>
+								</Text>
+							</Show>
+						</>
 					)}
 					<Spacer />
 					<Show below='md'>
 						<HStack>
-							<FilterMenu
-								searchQuery={searchQuery}
-								setFilter={setFilter}
-								filter={filter}
-							/>
+							<FilterMobile />
 							<SortMenu sort={sort} setSort={setSort} />
 						</HStack>
 					</Show>
@@ -101,32 +151,57 @@ const ProductList = ({ searchQuery, setSearchQuery, filter, setFilter }) => {
 				<></>
 			)}
 			<Grid templateColumns='repeat(4, 1fr)'>
-				<GridItem colSpan={{ base: 1, lg: 1, md: 1 }}>
-					<Filters
-						searchQuery={searchQuery}
-						setFilter={setFilter}
-						filter={filter}
-					/>
+				<GridItem colSpan={{ lg: 1, md: 1, base: 1 }}>
+					<FilterDesktop />
 				</GridItem>
-				<GridItem colSpan={{ base: 3, lg: 3, md: 3, sm: 4 }}>
+				<GridItem colSpan={{ lg: 3, md: 3, sm: 4, base: 4 }}>
 					{loader ? (
 						<Spinner />
 					) : productList.length ? (
-						<SimpleGrid minChildWidth='420px' spacing='10px'>
-							{productList.map((product, index) => {
-								return (
-									<ProductCard
-										key={product._id}
-										_id={product._id}
-										productName={product.title}
-										productImage={product.images[0]}
-										price={product.min_price}
-										noOfReviews={product.review_count}
-										satisfactionRating={product.satisfactory_rating}
-									/>
-								);
-							})}
-						</SimpleGrid>
+						<>
+							<Box
+								w='98%'
+								mt='10px'
+								p='10px'
+								bgColor={isDark ? "#252525" : "#e3e6e8"}
+								borderRadius='md'
+							>
+								<HStack>
+									<Text fontWeight='semibold'>Suggestions</Text>
+									<Tooltip
+										label='Based on your previous searches and trending products'
+										fontSize='md'
+										fontWeight='md'
+										placement='auto'
+										hasArrow
+									>
+										<GoInfo />
+									</Tooltip>
+								</HStack>
+								<SuggestionCarousel suggestionList={suggestionList}/>
+							</Box>
+							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
+								{productList.map((product, index) => {
+									return (
+										<ProductCard
+											key={product._id}
+											_id={product._id}
+											productName={product.title}
+											productImage={product.images[0]}
+											price={product.min_price}
+											noOfReviews={product.review_count}
+											isRenewed={false}
+											satisfactionRating={parseFloat(
+												product.satisfactory_rating
+											).toFixed(2)}
+										/>
+									);
+								})}
+							</SimpleGrid>
+							<Flex align='center' justify='center'>
+								<Paginator pages={Math.ceil(productCount / limit)} />
+							</Flex>
+						</>
 					) : (
 						<VStack mt='10%'>
 							<BiError color='orange' ml='50%' size='50px' />

@@ -5,6 +5,7 @@ import {
 	HStack,
 	Icon,
 	IconButton,
+	Show,
 	Stack,
 	Text,
 	useColorMode,
@@ -29,7 +30,7 @@ const Logo = () => {
 					fontWeight='bold'
 					fontSize='xl'
 				>
-					GENIESPEAKS
+					{window.location.pathname === "/" ? "GENIESPEAKS" : "GS"}
 				</Text>
 			</Link>
 		</Box>
@@ -78,25 +79,14 @@ const MenuLinks = ({ isOpen }) => {
 				pt={[4, 4, 0]}
 			>
 				<Link to='/signin'>
-					<Text
-						color={isDark ? "white.100" : "gray.100"}
-						fontWeight='semibold'
-						_hover={{
-							textDecoration: "underline",
-						}}
-					>
-						Sign In
-					</Text>
-				</Link>
-
-				<Link to='/signup'>
 					<Button
 						bg={isDark ? "white.100" : "gray.100"}
 						borderRadius='md'
 						display='block'
 						color={isDark ? "gray.100" : "white.100"}
+						_hover={{ textDecoration: "underline" }}
 					>
-						Create a free account
+						Sign In
 					</Button>
 				</Link>
 
@@ -139,7 +129,7 @@ const NavBarContainer = ({ children }) => {
 	);
 };
 
-const NavBar = (props) => {
+const NavBar = () => {
 	const location = useLocation();
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleOpen = () => setIsOpen(!isOpen);
@@ -148,18 +138,32 @@ const NavBar = (props) => {
 		<NavBarContainer>
 			<HStack
 				display='inline-flex'
-				w={{ base: "50%", lg: "60%", md: "50%", sm: "70%" }}
-				spacing='50px'
+				w='70%'
+				spacing={{
+					xl: "50px",
+					lg: "50px",
+					md: "30px",
+					sm: "15px",
+					base: "15px",
+				}}
 			>
-				<Logo />
+				<Show above='sm'>
+					<Logo />
+				</Show>
+				{/* <Show below='sm'>
+					<Logo />
+				</Show> */}
 				{location.pathname === "/" ? (
-					""
+					<Show below='sm'>
+						<Logo />
+					</Show>
 				) : (
-					<NavSearchBar
-						searchQuery={props.searchQuery}
-						setSearchQuery={props.setSearchQuery}
-						setFilter={props.setFilter}
-					/>
+					<>
+						<Show below='sm'>
+							<Logo />
+						</Show>
+						<NavSearchBar />
+					</>
 				)}
 			</HStack>
 

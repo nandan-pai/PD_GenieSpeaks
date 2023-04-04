@@ -9,6 +9,7 @@ import {
 	Image,
 	LinkBox,
 	LinkOverlay,
+	Tag,
 	Text,
 	useColorMode,
 } from "@chakra-ui/react";
@@ -28,6 +29,7 @@ const ProductCard = ({
 	noOfReviews,
 	productImage,
 	satisfactionRating,
+	isRenewed,
 	_id,
 }) => {
 	const { colorMode } = useColorMode();
@@ -49,6 +51,7 @@ const ProductCard = ({
 			mr={5}
 			ml={{ sm: 5 }}
 			maxH='300px'
+			maxW='100vw'
 			bgColor={isDark ? "" : "white"}
 		>
 			<HStack spacing={5}>
@@ -56,18 +59,55 @@ const ProductCard = ({
 					<Image src={productImage} maxH='200px' />
 				</Box>
 				<Box>
+					{isRenewed ? (
+						<GridItem colSpan={2} rowSpan={1}>
+							<Tag size='md' variant='solid' colorScheme='green'>
+								Renewed
+							</Tag>
+						</GridItem>
+					) : (
+						<></>
+					)}
 					<Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(3, 1fr)'>
 						<GridItem colSpan={2} rowSpan={2}>
 							<LinkOverlay onClick={handleClick}>
-								<Text fontSize='lg' fontWeight='semibold' noOfLines={[1, 2, 3]}>
+								<Text
+									fontSize={{
+										xl: "lg",
+										lg: "lg",
+										md: "lg",
+										sm: "md",
+										base: "md",
+									}}
+									fontWeight='semibold'
+									noOfLines={{ xl: 4, lg: 4, md: 3, sm: 3, base: 3 }}
+								>
 									{productName}
 								</Text>
 							</LinkOverlay>
 						</GridItem>
 						<GridItem colSpan={2}>
 							<HStack mb='5'>
-								<Icon as={FaRegThumbsUp} color='green' />
-								<Text fontWeight='semibold' color='green'>
+								<Icon
+									as={FaRegThumbsUp}
+									color={
+										satisfactionRating < 35
+											? "red"
+											: satisfactionRating < 70
+											? "orange"
+											: "green"
+									}
+								/>
+								<Text
+									fontWeight='semibold'
+									color={
+										satisfactionRating < 35
+											? "red"
+											: satisfactionRating < 70
+											? "orange"
+											: "green"
+									}
+								>
 									{satisfactionRating}%
 								</Text>
 							</HStack>
