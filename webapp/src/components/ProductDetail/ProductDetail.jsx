@@ -129,7 +129,7 @@ const ProductDetail = (props) => {
 
 						<Show above='md'>
 							<VStack>
-								<RatingCard />
+								<RatingCard reviews={productInfo.reviews} />
 								<Button
 									leftIcon={<BsPencilFill />}
 									bgColor='gray.100'
