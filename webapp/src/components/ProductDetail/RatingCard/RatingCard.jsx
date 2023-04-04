@@ -9,7 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 
-const RatingCard = () => {
+const RatingCard = ({ reviews = [] }) => {
+	let ratings = [];
+
+	reviews.map((review) => ratings.push(review.stars));
+
 	return (
 		<div>
 			<Center>
@@ -25,7 +29,12 @@ const RatingCard = () => {
 			>
 				<Center>
 					<HStack mr={5}>
-						<Heading as='h3'>4.6</Heading>
+						<Heading as='h3'>
+							{parseFloat(
+								ratings.reduce((partialSum, a) => partialSum + a, 0) /
+									ratings.length
+							).toFixed(1)}
+						</Heading>
 						<Text fontSize='18px' color='gray'>
 							{" "}
 							/ 5.0
@@ -40,14 +49,18 @@ const RatingCard = () => {
 						<Progress
 							width='100%'
 							height='15px'
-							value={80}
+							value={
+								(ratings.filter((rating) => rating === 5).length /
+									ratings.length) *
+								100
+							}
 							borderWidth='0.5px'
 							borderColor='black'
 							borderRadius='10px'
 						/>
 					</Box>
 					<Text fontSize='16px' fontWeight='semibold'>
-						1020
+						{ratings.filter((rating) => rating === 5).length}
 					</Text>
 				</HStack>
 				<HStack>
@@ -57,14 +70,18 @@ const RatingCard = () => {
 						<Progress
 							width='100%'
 							height='15px'
-							value={75}
+							value={
+								(ratings.filter((rating) => rating === 4).length /
+									ratings.length) *
+								100
+							}
 							borderWidth='0.5px'
 							borderColor='black'
 							borderRadius='10px'
 						/>
 					</Box>
 					<Text fontSize='16px' fontWeight='semibold'>
-						710
+						{ratings.filter((rating) => rating === 4).length}
 					</Text>
 				</HStack>
 				<HStack>
@@ -74,14 +91,18 @@ const RatingCard = () => {
 						<Progress
 							width='100%'
 							height='15px'
-							value={5}
+							value={
+								(ratings.filter((rating) => rating === 3).length /
+									ratings.length) *
+								100
+							}
 							borderWidth='0.5px'
 							borderColor='black'
 							borderRadius='10px'
 						/>
 					</Box>
 					<Text fontSize='16px' fontWeight='semibold'>
-						4
+						{ratings.filter((rating) => rating === 3).length}
 					</Text>
 				</HStack>
 				<HStack>
@@ -91,14 +112,18 @@ const RatingCard = () => {
 						<Progress
 							width='100%'
 							height='15px'
-							value={10}
+							value={
+								(ratings.filter((rating) => rating === 2).length /
+									ratings.length) *
+								100
+							}
 							borderWidth='0.5px'
 							borderColor='black'
 							borderRadius='10px'
 						/>
 					</Box>
 					<Text fontSize='16px' fontWeight='semibold'>
-						10
+						{ratings.filter((rating) => rating === 2).length}
 					</Text>
 				</HStack>
 				<HStack>
@@ -108,14 +133,18 @@ const RatingCard = () => {
 						<Progress
 							width='100%'
 							height='15px'
-							value={13}
+							value={
+								(ratings.filter((rating) => rating === 1).length /
+									ratings.length) *
+								100
+							}
 							borderWidth='0.5px'
 							borderColor='black'
 							borderRadius='10px'
 						/>
 					</Box>
 					<Text fontSize='16px' fontWeight='semibold'>
-						20
+						{ratings.filter((rating) => rating === 1).length}
 					</Text>
 				</HStack>
 			</Box>
