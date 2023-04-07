@@ -9,7 +9,6 @@ import {
 	VStack,
 	Show,
 	Box,
-	Tooltip,
 	Flex,
 	useColorMode,
 } from "@chakra-ui/react";
@@ -24,7 +23,6 @@ import SortMenu from "../SortMenu/SortMenu";
 import FilterDesktop from "./Filters/FilterDesktop";
 import FilterMobile from "./Filters/FilterMobile";
 import Paginator from "./Paginator/Paginator";
-import { GoInfo } from "react-icons/go";
 import SearchContext from "../../context/SearchContext/SearchContext";
 import SuggestionCarousel from "./SuggestionCarousel/SuggestionCarousel";
 
@@ -168,17 +166,8 @@ const ProductList = () => {
 							>
 								<HStack>
 									<Text fontWeight='semibold'>Suggestions</Text>
-									<Tooltip
-										label='Based on your previous searches and trending products'
-										fontSize='md'
-										fontWeight='md'
-										placement='auto'
-										hasArrow
-									>
-										<GoInfo />
-									</Tooltip>
 								</HStack>
-								<SuggestionCarousel suggestionList={suggestionList}/>
+								<SuggestionCarousel suggestionList={suggestionList} />
 							</Box>
 							<SimpleGrid minChildWidth='420px' spacing='10px' mb={10}>
 								{productList.map((product, index) => {
