@@ -154,7 +154,9 @@ const ProductList = () => {
 				</GridItem>
 				<GridItem colSpan={{ lg: 3, md: 3, sm: 4, base: 4 }}>
 					{loader ? (
-						<Spinner />
+						<Flex justify='center' p={10}>
+							<Spinner />
+						</Flex>
 					) : productList.length ? (
 						<>
 							<Box
