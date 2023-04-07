@@ -62,7 +62,10 @@ const FilterMobile = () => {
 			delete filter[filter_key];
 		} else {
 			filter[filter_key]["value"] = filter[filter_key]["value"].filter(
-				(val) => val !== filter_value
+				(val) => val !== filter_value.value
+			);
+			filter[filter_key]["display_value"] = filter[filter_key]["display_value"].filter(
+				(val) => val !== filter_value.display_value
 			);
 		}
 		setFilter({
@@ -80,7 +83,7 @@ const FilterMobile = () => {
 				`${filter[filter_key]["value"][0]} - ${filter[filter_key]["value"][1]}`,
 			];
 		} else {
-			filter_body = filter[filter_key]["value"];
+			filter_body = filter[filter_key]["display_value"];
 		}
 
 		return (
@@ -93,9 +96,9 @@ const FilterMobile = () => {
 						</HStack>
 					</GridItem>
 					<GridItem colSpan={1}>
-						{filter_body.map((filter_value) => {
+						{filter_body.map((filter_value, index) => {
 							return (
-								<Badge variant='subtle' colorScheme='blue' ml='2px'>
+								<Badge variant='subtle' colorScheme='blue' ml='2px' key={filter[filter_key]["value"][index]}>
 									<HStack>
 										<Text maxW='120px' overflow='hidden'>
 											{filter_value}
@@ -103,7 +106,15 @@ const FilterMobile = () => {
 										<AiFillCloseCircle
 											color='gray'
 											onClick={() =>
-												handleFilterRemove(filter_key, filter_value)
+												handleFilterRemove(
+													filter_key,
+													filter[filter_key]["type"] === "range" ?
+														filter_value :
+														{
+															'value': filter[filter_key]["value"][index],
+															'display_value': filter_value
+														}
+												)
 											}
 										/>
 									</HStack>

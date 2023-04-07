@@ -130,14 +130,14 @@ const ProductDetail = (props) => {
 						<Show above='md'>
 							<VStack>
 								<RatingCard reviews={productInfo.reviews} />
-								<Button
+								{/* <Button
 									leftIcon={<BsPencilFill />}
 									bgColor='gray.100'
 									color='white'
 									onClick={handleReviewBtn}
 								>
 									Write a Review
-								</Button>
+								</Button> */}
 							</VStack>
 						</Show>
 					</GridItem>
@@ -193,7 +193,7 @@ const ProductDetail = (props) => {
 								<AvailableMenu ecommerce={productInfo.ecommerce} />
 							</GridItem>
 						</Show>
-						<Show below='md'>
+						{/* <Show below='md'>
 							<Button
 								leftIcon={<BsPencilFill />}
 								bgColor='gray.100'
@@ -203,7 +203,7 @@ const ProductDetail = (props) => {
 							>
 								Write a Review
 							</Button>
-						</Show>
+						</Show> */}
 
 						<Tabs>
 							<TabList>
