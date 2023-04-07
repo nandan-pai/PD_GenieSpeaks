@@ -78,7 +78,7 @@ const MenuLinks = ({ isOpen }) => {
 				direction='row'
 				pt={[4, 4, 0]}
 			>
-				<Link to='/signin'>
+				{/* <Link to='/signin'>
 					<Button
 						bg={isDark ? "white.100" : "gray.100"}
 						borderRadius='md'
@@ -88,7 +88,7 @@ const MenuLinks = ({ isOpen }) => {
 					>
 						Sign In
 					</Button>
-				</Link>
+				</Link> */}
 
 				<IconButton
 					icon={isDark ? <FaSun /> : <FaMoon />}
@@ -134,6 +134,10 @@ const NavBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleOpen = () => setIsOpen(!isOpen);
 
+	// Remove the below 2 lines when adding menu
+	const { colorMode, toggleColorMode } = useColorMode();
+	const isDark = colorMode === "dark";
+
 	return (
 		<NavBarContainer>
 			<HStack
@@ -167,8 +171,26 @@ const NavBar = () => {
 				)}
 			</HStack>
 
-			<MenuToggle toggle={toggleOpen} isOpen={isOpen} />
-			<MenuLinks isOpen={isOpen} />
+			{/* Remove the below IconButton when adding menu */}
+			<IconButton
+				icon={isDark ? <FaSun /> : <FaMoon />}
+				isRound='true'
+				bg={isDark ? "white.100" : "white.100"}
+				onClick={toggleColorMode}
+				_hover={
+					isDark
+						? {
+								bg: "gray.100",
+								color: "white.100",
+						  }
+						: {
+								bg: "gray.100",
+								color: "white.100",
+						  }
+				}
+			/>
+			{/* <MenuToggle toggle={toggleOpen} isOpen={isOpen} />
+			<MenuLinks isOpen={isOpen} /> */}
 		</NavBarContainer>
 	);
 };
