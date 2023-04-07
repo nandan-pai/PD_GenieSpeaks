@@ -19,8 +19,8 @@ export default function GenerateChecklist({
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
-	const handleCheckboxChange = (val) => {
-		if (!val.length) {
+	const handleCheckboxChange = (checked_values) => {
+		if (!checked_values.length) {
 			delete filter[obj.name.toString()]
 		} else {
 			filter[obj.name.toString()] = {
@@ -29,7 +29,10 @@ export default function GenerateChecklist({
 				identifier: obj.identifier,
                 return_format: obj.return_format,
                 return_type: obj.return_type,
-				value: val
+				value: checked_values,
+				display_value: checked_values.map(_id => {
+					return obj.value.find(o => o._id === _id).name
+				})
 			}
 		}
 		setFilter({
