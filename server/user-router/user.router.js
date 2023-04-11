@@ -1,11 +1,13 @@
 const router = require("express").Router();
+const mongoose = require("mongoose");
 
 const Product = require("../models/product.model.js");
 const Review = require("../models/review.model.js");
 const ECommerce = require("../models/ecommerce.model.js");
 const User = require("../models/user.model.js");
 const UserAuth = require("./userAuth.js");
-const mongoose = require("mongoose");
+
+const satisfactory_rating = require('../equations/satisfactory_rating.js');
 
 router.post("/register", async (req, res) => {
 	try {
@@ -317,37 +319,7 @@ const generate_suggestions = async (match, count) =>
 				review_count: {
 					$size: "$reviews",
 				},
-				satisfactory_rating: {
-					$cond: [
-						{
-							$eq: [
-								{
-									$size: "$reviews",
-								},
-								0,
-							],
-						},
-						0,
-						{
-							$multiply: [
-								{
-									$divide: [
-										"$rating_sum",
-										{
-											$multiply: [
-												{
-													$size: "$reviews",
-												},
-												5,
-											],
-										},
-									],
-								},
-								100,
-							],
-						},
-					],
-				},
+				satisfactory_rating,
 			},
 		},
 		{

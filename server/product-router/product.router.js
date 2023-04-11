@@ -6,6 +6,8 @@ const User = require("../models/user.model.js");
 const ECommerce = require("../models/ecommerce.model.js");
 const Organization = require("../models/organization.model.js");
 
+const satisfactory_rating = require('../equations/satisfactory_rating.js');
+
 router.get("/", async (req, res) => {
 	try {
 		const prodID = req.query.id;
@@ -43,37 +45,7 @@ router.get("/", async (req, res) => {
 			},
 			{
 				$addFields: {
-					satisfactory_rating: {
-						$cond: [
-							{
-								$eq: [
-									{
-										$size: "$reviews",
-									},
-									0,
-								],
-							},
-							"--",
-							{
-								$multiply: [
-									{
-										$divide: [
-											"$rating_sum",
-											{
-												$multiply: [
-													{
-														$size: "$reviews",
-													},
-													5,
-												],
-											},
-										],
-									},
-									100,
-								],
-							},
-						],
-					},
+					satisfactory_rating,
 				},
 			},
 			{
@@ -707,37 +679,7 @@ router.post("/search", async (req, res) => {
 								review_count: {
 									$size: "$reviews",
 								},
-								satisfactory_rating: {
-									$cond: [
-										{
-											$eq: [
-												{
-													$size: "$reviews",
-												},
-												0,
-											],
-										},
-										0,
-										{
-											$multiply: [
-												{
-													$divide: [
-														"$rating_sum",
-														{
-															$multiply: [
-																{
-																	$size: "$reviews",
-																},
-																5,
-															],
-														},
-													],
-												},
-												100,
-											],
-										},
-									],
-								},
+								satisfactory_rating,
 							},
 						},
 						{
