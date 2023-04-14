@@ -42,7 +42,7 @@ export default function GenerateRange({
 
 	return (
 		<div className='filter-category price' key={index}>
-			<Text fontSize='md' fontWeight='semibold' mt='5'>
+			<Text fontSize='md' fontWeight='semibold' mt='5' mb='2'>
 				{obj.name}
 			</Text>
 			<RangeSlider
@@ -68,7 +68,7 @@ export default function GenerateRange({
 				</RangeSliderMark>
 				<RangeSliderMark
 					value={defaultFilterValue[1]}
-					mt='1'
+					mt='-6'
 					ml='-35'
 					fontSize='sm'
 				>
