@@ -104,28 +104,19 @@ class FlipkartSpider(scrapy.Spider):
 
         reviews = []
         try:
-            for (review_title, description, review_star, raw_date) in zip(
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/p/text()').extract(),
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="t-ZTKy"]/div/div[@class=""]/text()').extract(),
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="_3LWZlK"]/text()').extract(),
-                response.xpath('//div[@class="_2sc7ZR"]/text()').extract()
-            ):
-                stars = int(review_star[0])
-                review_data = raw_date
+            for raw_review in response.xpath('//div[@class="_16PBlm"]'):
+                # print("review time::", raw_review.xpath('.//p[@class="_2sc7ZR"]//text()').extract_first())
 
                 reviews.append({
-                    'title': review_title,
-                    'description': description,
-                    'stars': stars,
+                    'title': raw_review.xpath('.//p[@class="_2-N8zT"]//text()').extract_first(),
+                    'description': raw_review.xpath('.//div[@class="t-ZTKy"]//text()').extract_first(),
+                    'stars': int(raw_review.xpath('.//div[@class="_3LWZlK _1BLPMq"]//text()').extract_first()),
                     'url': '',
                     'images': [],
                     'product': '',
                     'user': 'Flipkart Reviewer',
                     'ecommerce': 'Flipkart',
-                    'reviewed_on': review_data,
+                    'reviewed_on': datetime.today(),
                     'scrapped_on': datetime.today(),
                     'verified': True
                 })
