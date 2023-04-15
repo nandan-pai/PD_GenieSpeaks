@@ -247,7 +247,7 @@ router.get("/suggestions", async (req, res) => {
 			const query_list = req.session.searchQueries.map(function (e) {
 				return new RegExp(e, "i");
 			});
-			console.log("query_list", query_list);
+			// console.log("query_list", query_list);
 			const matching_tags = await Product.aggregate([
 				{
 					$match: {
