@@ -59,17 +59,12 @@ app.use(
 		store: sessionStore,
 		cookie: {
 			maxAge: 24 * 60 * 60 * 1000, // 24 hours
-			secure: process.env.NODE_ENV === "production",
 			httpOnly: true,
-			sameSite: 'none',
+			secure: process.env.NODE_ENV === "production",
+			sameSite: process.env.NODE_ENV === "production",
 		},
 	})
 );
-
-app.get("/", (req, res, next) => {
-	console.log(req.session);
-	res.send(`<h1>Working</h1>`);
-});
 
 // Links
 app.use("/api/static", express.static("public"));
