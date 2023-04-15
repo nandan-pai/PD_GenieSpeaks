@@ -104,13 +104,13 @@ class FlipkartSpider(scrapy.Spider):
 
         reviews = []
         try:
-            for raw_review in response.xpath('//div[@class="_16PBlm"]'):
+            for raw_review in [*response.xpath('//div[@class="_16PBlm"]'), *response.xpath('//div[@class="_16PBlm _3_IKGE"]')]:
                 # print("review time::", raw_review.xpath('.//p[@class="_2sc7ZR"]//text()').extract_first())
 
                 reviews.append({
                     'title': raw_review.xpath('.//p[@class="_2-N8zT"]//text()').extract_first(),
                     'description': raw_review.xpath('.//div[@class="t-ZTKy"]//text()').extract_first(),
-                    'stars': int(raw_review.xpath('.//div[@class="_3LWZlK _1BLPMq"]//text()').extract_first()),
+                    'stars': int(raw_review.xpath('.//div//div/div//div//text()').extract_first()),
                     'url': '',
                     'images': [],
                     'product': '',
@@ -169,10 +169,9 @@ class FlipkartSpider(scrapy.Spider):
 
             if not organization:
                 return
-            
+
             tags = [*list(set(identifiers.values())),
                     self.category, organization]
-
 
             self.logger.info(
                 f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
@@ -190,5 +189,5 @@ class FlipkartSpider(scrapy.Spider):
 
         except Exception as error:
             self.logger.info(
-                f"{self.total_scraped_items+1}: Skipped Scrapeing || {str(error)}")
+                f"{self.total_scraped_items+1}: Skipped Scrapeing || {str(error)} || {product_url}")
             return
