@@ -636,22 +636,19 @@ router.post("/search", async (req, res) => {
 		}
 
 		const search_query = {
-			$or: [
-				{
-					title: {
+			$or: [{
+				tags: {
+					$elemMatch: {
 						$regex: query,
 						$options: "i",
 					},
 				},
-				{
-					tags: {
-						$elemMatch: {
-							$regex: query,
-							$options: "i",
-						},
-					},
+			}, {
+				title: {
+					$regex: query,
+					$options: "i",
 				},
-			],
+			}],
 		};
 
 		//For Future me
