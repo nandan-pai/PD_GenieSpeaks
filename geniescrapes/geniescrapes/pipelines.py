@@ -112,6 +112,7 @@ class GeniescrapesPipeline(MongoDBConn):
                 prod_to_update=similar_finds,
                 new_prod_detail=item,
                 ecommerce_detail=ecommerce,
+                new_prod_tags = item['tags'],
                 new_review_id_list=review_ids)
         else:
             prod_id = self.productMapper.create_product(

@@ -28,7 +28,7 @@ class ProductMapper(MongoDBConn):
             print("ProductMapper: Failed to create new product", error)
             raise Exception("ProductMapper: Failed to create new product")
 
-    def add_ecommerce(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
+    def add_ecommerce(self, prod_to_update, new_prod_detail, new_prod_tags, ecommerce_detail, new_review_id_list):
         '''updates product details to existing product and
         stores it in database and returns the productID'''
         try:
@@ -45,6 +45,11 @@ class ProductMapper(MongoDBConn):
                     },
                     '$inc': {
                         'rating_sum': new_prod_detail['rating_sum']
+                    },
+                    '$addToSet': {
+                        'tags': {
+                            '$each': new_prod_tags
+                        }
                     }
                 }
             )

@@ -74,15 +74,14 @@ const ReviewCard = ({
 						>
 							{name}
 						</Text>
-						<Link href={reviewURL} isExternal>
-							<Icon as={FiExternalLink} color='gray.100' mt='5px' />
-						</Link>
 						{verified && (
 							<HStack>
-								<Text color='blue'>Verified</Text>
 								<GoVerified color='blue' />
 							</HStack>
 						)}
+						{ecommerce === "Amazon" && <Link href={reviewURL} isExternal>
+							<Icon as={FiExternalLink} color='gray.100' mt='5px' />
+						</Link>}
 					</HStack>
 					<HStack mb='2' alignSelf='start'>
 						{[...Array(stars)].map((e, i) => {

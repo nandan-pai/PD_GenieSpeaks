@@ -7,7 +7,6 @@ import NavBar from "../NavBar/NavBar";
 import Loader from "../Loader/Loader";
 import {
 	Box,
-	Button,
 	GridItem,
 	Heading,
 	HStack,
@@ -24,7 +23,7 @@ import {
 	VStack,
 } from "@chakra-ui/react";
 import { FaRegThumbsUp } from "react-icons/fa";
-import { BsDot, BsPencilFill } from "react-icons/bs";
+import { BsDot } from "react-icons/bs";
 import AvailableMenu from "./AvailableMenu/AvailableMenu";
 import RatingCard from "./RatingCard/RatingCard";
 
@@ -49,9 +48,9 @@ const ProductDetail = (props) => {
 
 	useEffect(getProductInfo, [id]);
 
-	const handleReviewBtn = () => {
-		navigate(`/product/${id}/review`);
-	};
+	// const handleReviewBtn = () => {
+	// 	navigate(`/product/${id}/review`);
+	// };
 
 	if (isLoading) {
 		return (
