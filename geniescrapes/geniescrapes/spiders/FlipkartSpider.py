@@ -157,8 +157,9 @@ class FlipkartSpider(scrapy.Spider):
                 'scrapped_times': 1,
                 'curr_price': self.parse_product_curr_price(response=response),
                 'init_price': self.parse_product_init_price(response=response),
-                'identifiers': {},
-                'product_url': product_url
+                'identifiers': {"uuid": data_id},
+                'product_url': product_url,
+                'data_id': data_id
             }
 
             images = self.parse_product_image_list(response=response)
@@ -171,7 +172,7 @@ class FlipkartSpider(scrapy.Spider):
                 return
 
             tags = [*list(set(identifiers.values())),
-                    self.category, organization]
+                    self.category, organization, data_id]
 
             self.logger.info(
                 f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
@@ -183,7 +184,8 @@ class FlipkartSpider(scrapy.Spider):
                 'reviews': reviews,
                 'attributes': attributes,
                 'identifiers': identifiers,
-                'tags': tags
+                'tags': tags,
+                'uuid': data_id
             }
             self.total_scraped_items += 1
 

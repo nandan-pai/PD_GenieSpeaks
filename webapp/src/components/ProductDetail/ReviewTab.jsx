@@ -29,20 +29,21 @@ export default function ReviewTab({
                 {
                     reviews
                         .sort((review1, review2) => (review1.authentic === review2.authentic) ? 0 : review1.authentic ? -1 : 1)
-                        .map((filteredReview) => {
+                        .map((review) => {
                             return (
                                 <ReviewCard
-                                    key={filteredReview._id}
-                                    name={filteredReview.user.name}
-                                    title={filteredReview.title}
-                                    stars={filteredReview.stars}
-                                    remainingStars={5 - filteredReview.stars}
-                                    reviewURL={filteredReview.url}
-                                    desc={filteredReview.description}
-                                    user={filteredReview.user}
-                                    ecommerce={filteredReview.ecommerce.name}
+                                    key={review._id}
+                                    name={review.user.name}
+                                    title={review.title}
+                                    stars={review.stars}
+                                    remainingStars={5 - review.stars}
+                                    reviewURL={review.url}
+                                    desc={review.description}
+                                    user={review.user}
+                                    ecommerce={review.ecommerce.name}
                                     upVote='18'
-                                    authentic={filteredReview.authentic}
+                                    verified={review.verified}
+                                    authentic={review.authentic}
                                 />
                             );
                         })

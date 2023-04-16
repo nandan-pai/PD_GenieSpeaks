@@ -104,9 +104,9 @@ const FilterDesktop = () => {
 													filter[filter_key]["type"] === "range"
 														? filter_value
 														: {
-																value: filter[filter_key]["value"][index],
-																display_value: filter_value,
-														  }
+															value: filter[filter_key]["value"][index],
+															display_value: filter_value,
+														}
 												)
 											}
 										/>
@@ -166,23 +166,21 @@ const FilterDesktop = () => {
 											setFilter={setFilter}
 										/>
 									);
-								} else if (category.type === "range") {
-									if (category.value[0] != category.value[1]) {
-										return (
-											<GenerateRange
-												key={index}
-												index={index}
-												obj={category}
-												defaultFilterValue={
-													filter[category.name.toString()]
-														? filter[category.name.toString()]["value"]
-														: [category.value[0], category.value[1]]
-												}
-												filter={filter}
-												setFilter={setFilter}
-											/>
-										);
-									}
+								} else if (category.type === "range" && category.value[0] !== category.value[1]) {
+									return (
+										<GenerateRange
+											key={index}
+											index={index}
+											obj={category}
+											defaultFilterValue={
+												filter[category.name.toString()]
+													? filter[category.name.toString()]["value"]
+													: [category.value[0], category.value[1]]
+											}
+											filter={filter}
+											setFilter={setFilter}
+										/>
+									);
 								} else {
 									return <></>;
 								}
