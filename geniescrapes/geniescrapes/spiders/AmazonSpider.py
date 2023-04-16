@@ -166,9 +166,28 @@ class AmazonSpider(scrapy.Spider):
                     return value
         except Exception as error:
             self.logger.warning(
-                f"{self.total_scraped_items+1}: Couldnt fetch productDetails || {str(error)}")
-            raise Exception("AmazonSpider: Got Organization as Null")
+                f"{self.total_scraped_items+1}: Couldnt fetch Organization || {str(error)}")
         raise Exception("AmazonSpider: Got Organization as Null")
+
+    def try_parse_basic_table(self, response):
+        identifiers = {}
+        attributes = {}
+        try:
+            tables = response.xpath(
+                '//*[@id="productOverview_feature_div"]//tr')
+            for row in tables:
+                key = row.xpath('td//span//text()').extract_first().strip()
+                value = row.xpath(
+                    'td[last()]//span//text()').extract_first().strip()
+                if key.lower() in ['series', 'item model number', 'model name', 'model', 'brand']:
+                    identifiers[key] = value
+                else:
+                    attributes[key] = value
+        except Exception as error:
+            self.logger.warning(
+                f"{self.total_scraped_items+1}: Couldnt fetch productDetails || {str(error)}")
+        return attributes, identifiers
+
 
     def parse_product_response(self, response, asin, page, product_url, curr_prod_no):
         '''parsing each products by visiting the page'''
@@ -196,6 +215,9 @@ class AmazonSpider(scrapy.Spider):
 
             if not organization:
                 organization = self.try_parse_feature(response=response)
+
+            if not len([*list(set(identifiers.values())),*list(set(attributes.values()))]):
+                (attributes, identifiers) = self.try_parse_basic_table(response=response)
 
             tags = [*list(set(identifiers.values())),
                     self.category, organization, asin]
