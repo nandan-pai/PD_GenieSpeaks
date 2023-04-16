@@ -183,7 +183,8 @@ class AmazonSpider(scrapy.Spider):
                 'init_price': 0,
                 'curr_price': self.parse_product_curr_price(response=response),
                 'identifiers': {"asin": asin},
-                'product_url': product_url
+                'product_url': product_url,
+                'data_id': asin
             }
 
             images = self.parse_product_image_list(response=response)
@@ -197,7 +198,7 @@ class AmazonSpider(scrapy.Spider):
                 organization = self.try_parse_feature(response=response)
 
             tags = [*list(set(identifiers.values())),
-                    self.category, organization]
+                    self.category, organization, asin]
 
             self.logger.info(
                 f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{asin}")
@@ -210,7 +211,8 @@ class AmazonSpider(scrapy.Spider):
                 'reviews': reviews,
                 'attributes': attributes,
                 'identifiers': identifiers,
-                'tags': tags
+                'tags': tags,
+                'uuid': asin
             }
             self.total_scraped_items += 1
 

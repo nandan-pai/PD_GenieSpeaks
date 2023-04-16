@@ -28,7 +28,7 @@ class ProductMapper(MongoDBConn):
             print("ProductMapper: Failed to create new product", error)
             raise Exception("ProductMapper: Failed to create new product")
 
-    def update_add_ecommerce(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
+    def add_ecommerce(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
         '''updates product details to existing product and
         stores it in database and returns the productID'''
         try:
@@ -50,6 +50,15 @@ class ProductMapper(MongoDBConn):
             )
 
             return prod_to_update
+        except Exception as error:
+            print("ProductMapper: Failed to add new ecommerce details", error)
+            raise Exception("ProductMapper: Failed to add new ecommerce details")
+
+    def update_ecommerce(self, prod_to_update, new_prod_detail, ecommerce_detail, new_review_id_list):
+        '''updates product details to existing product and
+        stores it in database and returns the productID'''
+        try:
+            return
         except Exception as error:
             print("ProductMapper: Failed to add new ecommerce details", error)
             raise Exception("ProductMapper: Failed to add new ecommerce details")

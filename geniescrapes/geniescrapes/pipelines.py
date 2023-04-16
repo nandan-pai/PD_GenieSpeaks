@@ -37,18 +37,30 @@ class GeniescrapesPipeline(MongoDBConn):
 
     def process_item(self, item, spider):
         '''pipeline to store data into mongodb'''
+
+        check_with_data_id = self.product.find_one(
+            {"tags": {"$in": [item["uuid"]]}})
         similar_finds = ""
-        for key, value in item["identifiers"].items():
-            if key.lower() not in ['item model number',
-                                   'model number',
-                                   'part number']:
-                continue
-            similar_finds = self.product.find_one(
-                {"tags": {"$in": [value]}})
-            if similar_finds:
-                similar_finds = similar_finds['_id']
-                print(similar_finds)
-                break
+        already_exists = False
+        if (check_with_data_id):
+            similar_finds = check_with_data_id['_id']
+            already_exists = True
+            print("similar_finds::", similar_finds,
+                  "already_exists::", already_exists)
+            return item
+        else:
+            for key, value in item["identifiers"].items():
+                if key.lower() not in ['item model number',
+                                       'model number',
+                                       'part number']:
+                    continue
+                similar_finds = self.product.find_one(
+                    {"tags": {"$in": [value]}})
+                if similar_finds:
+                    similar_finds = similar_finds['_id']
+                    print("similar_finds::", similar_finds,
+                          "already_exists::", already_exists)
+                    break
         # for tag in item["tags"]:
         #     if tag.lower() not in ['item model number', 'model number']:
         #         continue
@@ -96,7 +108,7 @@ class GeniescrapesPipeline(MongoDBConn):
         }
 
         if similar_finds:
-            prod_id = self.productMapper.update_add_ecommerce(
+            prod_id = self.productMapper.add_ecommerce(
                 prod_to_update=similar_finds,
                 new_prod_detail=item,
                 ecommerce_detail=ecommerce,
