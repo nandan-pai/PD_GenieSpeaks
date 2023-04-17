@@ -104,28 +104,19 @@ class FlipkartSpider(scrapy.Spider):
 
         reviews = []
         try:
-            for (review_title, description, review_star, raw_date) in zip(
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/p/text()').extract(),
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="t-ZTKy"]/div/div[@class=""]/text()').extract(),
-                response.xpath(
-                    '//div[@class="_2wzgFH"]/div[@class="row"]/div[@class="_3LWZlK"]/text()').extract(),
-                response.xpath('//div[@class="_2sc7ZR"]/text()').extract()
-            ):
-                stars = int(review_star[0])
-                review_data = raw_date
+            for raw_review in [*response.xpath('//div[@class="_16PBlm"]'), *response.xpath('//div[@class="_16PBlm _3_IKGE"]')]:
+                # print("review time::", raw_review.xpath('.//p[@class="_2sc7ZR"]//text()').extract_first())
 
                 reviews.append({
-                    'title': review_title,
-                    'description': description,
-                    'stars': stars,
+                    'title': raw_review.xpath('.//p[@class="_2-N8zT"]//text()').extract_first(),
+                    'description': raw_review.xpath('.//div[@class="t-ZTKy"]//text()').extract_first(),
+                    'stars': int(raw_review.xpath('.//div//div/div//div//text()').extract_first()),
                     'url': '',
                     'images': [],
                     'product': '',
                     'user': 'Flipkart Reviewer',
                     'ecommerce': 'Flipkart',
-                    'reviewed_on': review_data,
+                    'reviewed_on': datetime.today(),
                     'scrapped_on': datetime.today(),
                     'verified': True
                 })
@@ -166,8 +157,9 @@ class FlipkartSpider(scrapy.Spider):
                 'scrapped_times': 1,
                 'curr_price': self.parse_product_curr_price(response=response),
                 'init_price': self.parse_product_init_price(response=response),
-                'identifiers': {},
-                'product_url': product_url
+                'identifiers': {"uuid": data_id},
+                'product_url': product_url,
+                'data_id': data_id
             }
 
             images = self.parse_product_image_list(response=response)
@@ -178,10 +170,9 @@ class FlipkartSpider(scrapy.Spider):
 
             if not organization:
                 return
-            
-            tags = [*list(set(identifiers.values())),
-                    self.category, organization]
 
+            tags = [*list(set(identifiers.values())),
+                    self.category, organization, data_id]
 
             self.logger.info(
                 f"{curr_prod_no}\t\t{self.total_scraped_items+1}\t\t{page}\t\t{data_id}")
@@ -193,11 +184,12 @@ class FlipkartSpider(scrapy.Spider):
                 'reviews': reviews,
                 'attributes': attributes,
                 'identifiers': identifiers,
-                'tags': tags
+                'tags': tags,
+                'uuid': data_id
             }
             self.total_scraped_items += 1
 
         except Exception as error:
             self.logger.info(
-                f"{self.total_scraped_items+1}: Skipped Scrapeing || {str(error)}")
+                f"{self.total_scraped_items+1}: Skipped Scrapeing || {str(error)} || {product_url}")
             return

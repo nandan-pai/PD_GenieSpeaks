@@ -64,9 +64,9 @@ const FilterMobile = () => {
 			filter[filter_key]["value"] = filter[filter_key]["value"].filter(
 				(val) => val !== filter_value.value
 			);
-			filter[filter_key]["display_value"] = filter[filter_key]["display_value"].filter(
-				(val) => val !== filter_value.display_value
-			);
+			filter[filter_key]["display_value"] = filter[filter_key][
+				"display_value"
+			].filter((val) => val !== filter_value.display_value);
 		}
 		setFilter({
 			...filter,
@@ -98,7 +98,12 @@ const FilterMobile = () => {
 					<GridItem colSpan={1}>
 						{filter_body.map((filter_value, index) => {
 							return (
-								<Badge variant='subtle' colorScheme='blue' ml='2px' key={filter[filter_key]["value"][index]}>
+								<Badge
+									variant='subtle'
+									colorScheme='blue'
+									ml='2px'
+									key={filter[filter_key]["value"][index]}
+								>
 									<HStack>
 										<Text maxW='120px' overflow='hidden'>
 											{filter_value}
@@ -108,11 +113,11 @@ const FilterMobile = () => {
 											onClick={() =>
 												handleFilterRemove(
 													filter_key,
-													filter[filter_key]["type"] === "range" ?
-														filter_value :
-														{
-															'value': filter[filter_key]["value"][index],
-															'display_value': filter_value
+													filter[filter_key]["type"] === "range"
+														? filter_value
+														: {
+															value: filter[filter_key]["value"][index],
+															display_value: filter_value,
 														}
 												)
 											}
@@ -162,8 +167,11 @@ const FilterMobile = () => {
 					<DrawerOverlay />
 					<DrawerContent
 						style={
-							isDark ? { backgroundColor: "#2d3748" } : { backgroundColor: "#ffffff" }
-						}>
+							isDark
+								? { backgroundColor: "#2d3748" }
+								: { backgroundColor: "#ffffff" }
+						}
+					>
 						<DrawerHeader>Filters</DrawerHeader>
 						<DrawerBody px={7}>
 							{Object.keys(filter).length ? (
@@ -194,7 +202,7 @@ const FilterMobile = () => {
 													setFilter={setFilter}
 												/>
 											);
-										} else if (category.type === "range") {
+										} else if (category.type === "range" && category.value[0] !== category.value[1]) {
 											return (
 												<GenerateRange
 													key={index}

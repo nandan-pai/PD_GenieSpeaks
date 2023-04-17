@@ -17,7 +17,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SearchContext from "../../../context/SearchContext/SearchContext";
 
 const NavSearchBar = () => {
-	const { searchQuery, setSearchQuery, resetFashion } = useContext(SearchContext);
+	const { searchQuery, setSearchQuery, resetFashion } =
+		useContext(SearchContext);
 	const [buSearchQuery, setBuSearchQuery] = useState(searchQuery);
 	const isError = searchQuery === "";
 	const { colorMode } = useColorMode();
@@ -29,14 +30,13 @@ const NavSearchBar = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (buSearchQuery !== "") {
-			resetFashion()
+			resetFashion();
 			setSearchQuery(buSearchQuery);
 		}
 
 		if (location.pathname !== "/search") {
 			navigate("/search");
 		}
-
 	};
 
 	return (
@@ -56,8 +56,8 @@ const NavSearchBar = () => {
 							}}
 							color={isDark ? "white.100" : ""}
 						/>
-						<InputRightElement mr='5px' w='80px'>
-							<Show above='md'>
+						<Show above='md'>
+							<InputRightElement mr='5px' w='80px'>
 								<Button
 									type='submit'
 									size='md'
@@ -67,8 +67,8 @@ const NavSearchBar = () => {
 								>
 									Search
 								</Button>
-							</Show>
-						</InputRightElement>
+							</InputRightElement>
+						</Show>
 					</InputGroup>
 				</HStack>
 			</FormControl>
